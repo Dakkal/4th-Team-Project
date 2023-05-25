@@ -399,3 +399,6 @@ FodyWeavers.xsd
 
 # filter remove
 *.filters
+
+#File Ignore
+texture/
