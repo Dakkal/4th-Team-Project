@@ -29,6 +29,8 @@ void CMyForm::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CMyForm, CFormView)
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB1, &CMyForm::OnSelchangeTab1)
+	ON_WM_DESTROY()
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 void CMyForm::OnInitialUpdate()
@@ -44,8 +46,8 @@ void CMyForm::OnInitialUpdate()
 	CRect rect{};
 
 	m_tab.GetClientRect(rect);
-	m_tab.InsertItem(0, L"유닛툴");
-	m_tab.InsertItem(1, L"맵툴");
+	m_tab.InsertItem(0, L"Unit Tool");
+	m_tab.InsertItem(1, L"Map Tool");
 
 	m_tab.SetCurSel(0);
 
@@ -99,4 +101,46 @@ void CMyForm::OnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 		}
 	}
 	*pResult = 0;
+}
+
+
+void CMyForm::OnDestroy()
+{
+	CFormView::OnDestroy();
+
+	Safe_Delete(m_pUnitTool_Tab1);
+	Safe_Delete(m_pMapTool_Tab2);
+
+	// TODO: Add your message handler code here
+}
+
+
+void CMyForm::OnSize(UINT nType, int cx, int cy)
+{
+
+	CFormView::OnSize(nType, cx, cy);
+	if (::IsWindow(m_hWnd))
+	{
+		CRect rectClient{};
+		GetClientRect(&rectClient);
+
+		// 컨트롤들의 ID를 사용하여 위치와 크기를 조정
+		CWnd* pCtrl = GetDlgItem(IDC_TAB1);
+		if (pCtrl != nullptr)
+		{
+			pCtrl->MoveWindow(rectClient);
+
+		}
+
+		if (m_pUnitTool_Tab1 != nullptr)
+		{
+			m_pUnitTool_Tab1->MoveWindow(0, 30, rectClient.Width(), rectClient.Height());
+		}
+
+		if (m_pMapTool_Tab2 != nullptr)
+		{
+			m_pMapTool_Tab2->MoveWindow(0, 30, rectClient.Width(), rectClient.Height());
+		}
+	}
+	// TODO: Add your message handler code here
 }

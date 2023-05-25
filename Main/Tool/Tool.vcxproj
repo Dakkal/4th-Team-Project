@@ -211,6 +211,9 @@
     <ClInclude Include="ToolDoc.h" />
     <ClInclude Include="ToolView.h" />
     <ClInclude Include="UnitTool.h" />
+    <ClInclude Include="UnitTool_Item.h" />
+    <ClInclude Include="UnitTool_Monster.h" />
+    <ClInclude Include="UnitTool_Player.h" />
     <ClInclude Include="UnitTool_Tab1.h" />
   </ItemGroup>
   <ItemGroup>
@@ -235,6 +238,9 @@
     <ClCompile Include="ToolDoc.cpp" />
     <ClCompile Include="ToolView.cpp" />
     <ClCompile Include="UnitTool.cpp" />
+    <ClCompile Include="UnitTool_Item.cpp" />
+    <ClCompile Include="UnitTool_Monster.cpp" />
+    <ClCompile Include="UnitTool_Player.cpp" />
     <ClCompile Include="UnitTool_Tab1.cpp" />
   </ItemGroup>
   <ItemGroup>

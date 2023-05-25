@@ -45,6 +45,12 @@ public:
 	virtual void OnInitialUpdate();
 	CTabCtrl m_tab;
 	afx_msg void OnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult);
+
+
+	afx_msg void OnDestroy();
+
+
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 };
 
 

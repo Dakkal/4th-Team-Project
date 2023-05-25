@@ -1,8 +1,8 @@
 #pragma once
 
 
-#define		WINCX		800
-#define		WINCY		600
+#define		WINCX		1400
+#define		WINCY		1200
 
 #define		OBJ_NOEVENT		0
 #define		OBJ_DEAD		1
