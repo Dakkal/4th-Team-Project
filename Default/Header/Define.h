@@ -1,5 +1,6 @@
 #pragma once
 
+#define		COMMITTEST 1111;
 
 #define		WINCX		800
 #define		WINCY		600
