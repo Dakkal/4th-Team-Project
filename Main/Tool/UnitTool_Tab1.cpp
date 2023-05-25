@@ -85,17 +85,17 @@ BOOL CUnitTool_Tab1::OnInitDialog()
 
 	pDlgPlayer = new UnitTool_Player;
 	pDlgPlayer->Create(IDD_UNIT_PLAYER, &m_tab);
-	pDlgPlayer->MoveWindow(0, 20, rect.Width(), rect.Height());
+	pDlgPlayer->MoveWindow(0, TAB_HEIGHT, rect.Width(), rect.Height());
 	pDlgPlayer->ShowWindow(SW_SHOW);
 
 	pDlgMonster = new UnitTool_Monster;
 	pDlgMonster->Create(IDD_UNIT_MONSTER, &m_tab);
-	pDlgMonster->MoveWindow(0, 20, rect.Width(), rect.Height());
+	pDlgMonster->MoveWindow(0, TAB_HEIGHT, rect.Width(), rect.Height());
 	pDlgMonster->ShowWindow(SW_HIDE);
 
 	pDlgItme = new UnitTool_Item;
 	pDlgItme->Create(IDD_UNIT_ITEM, &m_tab);
-	pDlgItme->MoveWindow(0, 20, rect.Width(), rect.Height());
+	pDlgItme->MoveWindow(0, TAB_HEIGHT, rect.Width(), rect.Height());
 	pDlgItme->ShowWindow(SW_HIDE);
 
 	// TODO:  Add extra initialization here

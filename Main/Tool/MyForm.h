@@ -3,8 +3,10 @@
 #include "UnitTool.h"
 #include "MapTool.h"
 #include "afxcmn.h"
+
 #include "UnitTool_Tab1.h"
 #include "MapTool_Tab2.h"
+#include "TileTool_Tab3.h"
 
 // CMyForm Æû ºäÀÔ´Ï´Ù.
 
@@ -39,6 +41,7 @@ private:
 	CMapTool	m_MapTool;
 
 	CUnitTool_Tab1*	m_pUnitTool_Tab1;
+	CTileTool_Tab3* m_pTileTool_Tab3;
 	CMapTool_Tab2*	m_pMapTool_Tab2;
 
 public:

@@ -1,6 +1,7 @@
 #pragma once
 
-
+#define		TAB_HEIGHT	30
+#define		TAB_WIDTH	10
 #define		WINCX		1400
 #define		WINCY		1200
 

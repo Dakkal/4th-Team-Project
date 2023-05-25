@@ -82,42 +82,13 @@ void CMainFrame::Dump(CDumpContext& dc) const
 
 BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 {
-	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
-
-	// CreateStatic : 분할 창을 만들기 위한 함수(부모 윈도우 주소, 행의 수, 열의 수, 창 스타일, 자식창 id)
-	//m_MainSplitter.CreateStatic(this, 1, 2);
-
-	// CreateView : 분할 창에 표시할 view 창을 만드는 함수(배치할 행, 배치할 열, 배치할 view창의 생성 크기, 초기 크기, pContext)
-
-	//m_MainSplitter.CreateView(0, 0, RUNTIME_CLASS(CMyForm), CSize(300, WINCY), pContext);
-	//m_MainSplitter.CreateView(0, 1, RUNTIME_CLASS(CToolView), CSize(WINCX, WINCY), pContext);
-
-
-	//m_MainSplitter.CreateStatic(this, 2, 2);
-
-	//m_MainSplitter.CreateView(0, 0, RUNTIME_CLASS(CMiniView), CSize(300, 300), pContext);
-	//m_MainSplitter.CreateView(0, 1, RUNTIME_CLASS(CMyForm), CSize(300, 300), pContext);
-
-	//m_MainSplitter.CreateView(1, 0, RUNTIME_CLASS(CMyForm), CSize(300, 300), pContext);
-	//m_MainSplitter.CreateView(1, 1, RUNTIME_CLASS(CToolView), CSize(WINCX, WINCY), pContext);
-
-
-	SetMenu(NULL);
+	SetMenu(NULL); // 메뉴 상단바 삭제
 
 	m_MainSplitter.CreateStatic(this, 1, 2);
 
 	m_MainSplitter.CreateView(0, 0, RUNTIME_CLASS(CToolView), CSize(WINCX, WINCY), pContext);
+
 	m_MainSplitter.CreateView(0, 1, RUNTIME_CLASS(CMyForm), CSize(600, WINCY), pContext);
-
-	//m_SecondSplitter.CreateStatic(&m_MainSplitter, 2, 1, 
-	//								WS_CHILD | WS_VISIBLE, // WS_CHILD : 종속적인 자식 창, WS_VISIBLE | 생성 후 바로 화면에 표시하겠다는 옵션
-	//								m_MainSplitter.IdFromRowCol(0, 0)); //: IdFromRowCol(행, 열) - 지정한 행과 열의 창 id값을 반환
-
-	//m_SecondSplitter.CreateView(0, 0, RUNTIME_CLASS(CMiniView), CSize(300, 300), pContext);
-
-
-	//SetColumnInfo(열 번호, 열의 크기 지정, 허용 가능한 최소 크기)
-	//m_MainSplitter.SetColumnInfo(0, 300, 10);
 
 	return TRUE;
 }

@@ -16,6 +16,8 @@
 #define IDD_UNIT_MONSTER                318
 #define IDD_DIALOG4                     319
 #define IDD_UNIT_ITEM                   319
+#define IDD_DIALOG2                     323
+#define IDD_TILETOOL                    323
 #define IDC_EDIT1                       1001
 #define IDC_EDIT2                       1002
 #define IDC_EDIT3                       1003
@@ -42,7 +44,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        323
+#define _APS_NEXT_RESOURCE_VALUE        325
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1026
 #define _APS_NEXT_SYMED_VALUE           313
