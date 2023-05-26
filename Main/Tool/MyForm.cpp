@@ -38,6 +38,10 @@ END_MESSAGE_MAP()
 void CMyForm::OnInitialUpdate()
 {
 	CFormView::OnInitialUpdate();
+	
+	CRect rc;
+
+	this->GetClientRect(&rc);
 
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 	m_Font.CreatePointFont(180, L"궁서");

@@ -88,7 +88,6 @@ void CToolView::OnInitialUpdate()
 							int(WINCY + fColFrm), 
 							SWP_NOZORDER);	// 현재 순서를 유지하겠다는 옵션
 
-
 	//// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 
 	if (FAILED(CDevice::Get_Instance()->Initialize()))
@@ -141,12 +140,12 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 		{
 		case MID_TAB_TYPE::PLAYER:
 		{
-
+			
 		}
 			break;
 		case MID_TAB_TYPE::MONSTER:
 		{
-
+			
 		}
 			break;
 		case MID_TAB_TYPE::ITEM:

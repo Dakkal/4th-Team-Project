@@ -3,6 +3,7 @@
 
 // UnitTool_Monster dialog
 
+
 class UnitTool_Monster : public CDialogEx
 {
 	DECLARE_DYNAMIC(UnitTool_Monster)
