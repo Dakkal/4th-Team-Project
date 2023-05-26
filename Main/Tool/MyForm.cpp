@@ -6,6 +6,8 @@
 #include "MyForm.h"
 #include "UnitTool_Tab1.h"
 #include "MapTool_Tab2.h"
+#include "MainFrm.h"
+#include "ToolView.h"
 
 // CMyForm
 
@@ -89,8 +91,15 @@ void CMyForm::Dump(CDumpContext& dc) const
 
 void CMyForm::OnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 {
-	if (IDC_TAB1 == pNMHDR->idFrom) { // Tab Control ID명
+	if (IDC_TAB1 == pNMHDR->idFrom) 
+	{ 
 		int select = m_tab.GetCurSel();
+
+		CMainFrame*		pMainFrm = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
+		CToolView*		pToolView = dynamic_cast<CToolView*>(pMainFrm->m_MainSplitter.GetPane(0, 0));
+	
+		pToolView->Change_Tab((TOP_TAB_TYPE)select);
+
 		switch (select) {
 		case 0:
 			m_pUnitTool_Tab1->ShowWindow(SW_SHOW);
@@ -133,12 +142,12 @@ void CMyForm::OnSize(UINT nType, int cx, int cy)
 		GetClientRect(&rectClient);
 
 		// 컨트롤들의 ID를 사용하여 위치와 크기를 조정
-		CWnd* pCtrl = GetDlgItem(IDC_TAB1);
+		/*CWnd* pCtrl = GetDlgItem(IDC_TAB1);
 		if (pCtrl != nullptr)
 		{
 			pCtrl->MoveWindow(rectClient);
 
-		}
+		}*/
 
 		if (m_pUnitTool_Tab1 != nullptr)
 		{

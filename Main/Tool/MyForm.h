@@ -36,24 +36,19 @@ protected:
 public:
 
 private:
-	CFont		m_Font;
-	CUnitTool	m_UnitTool;
-	CMapTool	m_MapTool;
+	CFont				m_Font;
+	
+	CTabCtrl			m_tab; 
 
-	CUnitTool_Tab1*	m_pUnitTool_Tab1;
-	CTileTool_Tab3* m_pTileTool_Tab3;
-	CMapTool_Tab2*	m_pMapTool_Tab2;
+	CUnitTool_Tab1*		m_pUnitTool_Tab1;
+	CTileTool_Tab3*		m_pTileTool_Tab3;
+	CMapTool_Tab2*		m_pMapTool_Tab2;
 
 public:
-	virtual void OnInitialUpdate();
-	CTabCtrl m_tab;
-	afx_msg void OnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult);
-
-
-	afx_msg void OnDestroy();
-
-
-	afx_msg void OnSize(UINT nType, int cx, int cy);
+	virtual void		OnInitialUpdate();
+	afx_msg void		OnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void		OnDestroy();
+	afx_msg void		OnSize(UINT nType, int cx, int cy);
 };
 
 

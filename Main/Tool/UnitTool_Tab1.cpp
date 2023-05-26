@@ -5,7 +5,8 @@
 #include "Tool.h"
 #include "UnitTool_Tab1.h"
 #include "afxdialogex.h"
-
+#include "MainFrm.h"
+#include "ToolView.h"
 
 // CUnitTool_Tab1 dialog
 
@@ -36,6 +37,7 @@ BEGIN_MESSAGE_MAP(CUnitTool_Tab1, CDialogEx)
 	ON_WM_DESTROY()
 	ON_WM_DELETEITEM()
 	ON_WM_DESTROY()
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 
@@ -44,9 +46,16 @@ END_MESSAGE_MAP()
 
 void CUnitTool_Tab1::OnSelchangeTabUnit(NMHDR *pNMHDR, LRESULT *pResult)
 {
-	if (IDC_TAB_UNIT == pNMHDR->idFrom) { // Tab Control ID명
+	if (IDC_TAB_UNIT == pNMHDR->idFrom) 
+	{ 
+
 		int select = m_tab.GetCurSel();
-		switch (select) {
+		CMainFrame*		pMainFrm = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
+		CToolView*		pToolView = dynamic_cast<CToolView*>(pMainFrm->m_MainSplitter.GetPane(0, 0));
+
+		pToolView->Change_Tab(TOP_TAB_TYPE::UNIT, (MID_TAB_TYPE)select);
+		switch (select) 
+		{
 		case 0:
 			pDlgPlayer->ShowWindow(SW_SHOW);
 			pDlgMonster->ShowWindow(SW_HIDE);
@@ -106,3 +115,38 @@ BOOL CUnitTool_Tab1::OnInitDialog()
 
 
 
+
+
+void CUnitTool_Tab1::OnSize(UINT nType, int cx, int cy)
+{
+	CDialogEx::OnSize(nType, cx, cy);
+	if (::IsWindow(m_hWnd))
+	{
+		CRect rectClient{};
+		GetClientRect(&rectClient);
+
+		// 컨트롤들의 ID를 사용하여 위치와 크기를 조정
+		/*CWnd* pCtrl = GetDlgItem(IDC_TAB1);
+		if (pCtrl != nullptr)
+		{
+		pCtrl->MoveWindow(rectClient);
+
+		}*/
+
+		if (pDlgPlayer != nullptr)
+		{
+			pDlgPlayer->MoveWindow(0, TAB_HEIGHT, rectClient.Width(), rectClient.Height());
+		}
+
+		if (pDlgMonster != nullptr)
+		{
+			pDlgMonster->MoveWindow(0, TAB_HEIGHT, rectClient.Width(), rectClient.Height());
+		}
+
+		if (pDlgItme != nullptr)
+		{
+			pDlgItme->MoveWindow(0, TAB_HEIGHT, rectClient.Width(), rectClient.Height());
+		}
+	}
+	// TODO: Add your message handler code here
+}

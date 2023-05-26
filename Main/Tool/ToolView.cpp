@@ -97,6 +97,10 @@ void CToolView::OnInitialUpdate()
 		return;
 	}
 
+
+	m_eCurTopTab = TOP_TAB_TYPE::UNIT;
+	m_eCurMidTab = MID_TAB_TYPE::PLAYER;
+
 	//if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/Cube.png", TEX_SINGLE, L"Cube")))
 	//{
 	//	AfxMessageBox(L"CubeTexture Create Failed");
@@ -124,8 +128,43 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 	
 	CDevice::Get_Instance()->Render_Begin();
 
-	//m_pTerrain->Render();
+	switch (m_eCurTopTab)
+	{
+	case TOP_TAB_TYPE::UNIT:
+		switch (m_eCurMidTab)
+		{
+		case MID_TAB_TYPE::PLAYER:
+		{
 
+		}
+			break;
+		case MID_TAB_TYPE::MONSTER:
+		{
+
+		}
+			break;
+		case MID_TAB_TYPE::ITEM:
+		{
+
+		}
+			break;
+		default:
+			break;
+		}
+		break;
+	case TOP_TAB_TYPE::TILE:
+	{
+		// HEEJUNE
+	}
+		break;
+	case TOP_TAB_TYPE::MAP:
+	{
+
+	}
+		break;
+	default:
+		break;
+	}
 
 	CDevice::Get_Instance()->Render_End();
 }
@@ -198,11 +237,58 @@ CToolDoc* CToolView::GetDocument() const // 디버그되지 않은 버전은 인라인으로 지
 
 void CToolView::OnLButtonDown(UINT nFlags, CPoint point)
 {
+	CScrollView::OnLButtonDown(nFlags, point);
+
+	switch (m_eCurTopTab)
+	{
+	case TOP_TAB_TYPE::UNIT:
+		switch (m_eCurMidTab)
+		{
+		case MID_TAB_TYPE::PLAYER:
+		{
+
+		}
+		break;
+		case MID_TAB_TYPE::MONSTER:
+		{
+
+		}
+		break;
+		case MID_TAB_TYPE::ITEM:
+		{
+
+		}
+		break;
+		default:
+			break;
+		}
+		break;
+	case TOP_TAB_TYPE::TILE:
+	{
+		// HEEJUNE
+	}
+	break;
+	case TOP_TAB_TYPE::MAP:
+	{
+
+	}
+	break;
+	default:
+		break;
+	}
+
+
+
 	return;
+
+
+
+
+
+
 
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 
-	CScrollView::OnLButtonDown(nFlags, point);
 
 	// point : 마우스 좌표를 갖고 있음.
 
@@ -226,26 +312,111 @@ void CToolView::OnLButtonDown(UINT nFlags, CPoint point)
 
 	CMiniView*		pMiniView = dynamic_cast<CMiniView*>(pMainFrm->m_SecondSplitter.GetPane(0, 0));
 	pMiniView->Invalidate(FALSE);
-
-
 }
 
 
 void CToolView::OnMouseMove(UINT nFlags, CPoint point)
 {
-	return;
-	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-
 	CScrollView::OnMouseMove(nFlags, point);
+	switch (m_eCurTopTab)
+	{
+	case TOP_TAB_TYPE::UNIT:
+		switch (m_eCurMidTab)
+		{
+		case MID_TAB_TYPE::PLAYER:
+		{
+
+		}
+		break;
+		case MID_TAB_TYPE::MONSTER:
+		{
+
+		}
+		break;
+		case MID_TAB_TYPE::ITEM:
+		{
+
+		}
+		break;
+		default:
+			break;
+		}
+		break;
+	case TOP_TAB_TYPE::TILE:
+	{
+		// HEEJUNE
+	}
+	break;
+	case TOP_TAB_TYPE::MAP:
+	{
+
+	}
+	break;
+	default:
+		break;
+	}
+
+
+
+	return;
 	
 	if (GetAsyncKeyState(VK_LBUTTON))
 	{
 		m_pTerrain->Tile_Change({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, 0);
 		Invalidate(FALSE);
-
 		CMainFrame*		pMainFrm = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
 		CMiniView*		pMiniView = dynamic_cast<CMiniView*>(pMainFrm->m_SecondSplitter.GetPane(0, 0));
 		pMiniView->Invalidate(FALSE);
 	}
 
+}
+
+HRESULT CToolView::Change_Tab(const TOP_TAB_TYPE & _eTopTab, const MID_TAB_TYPE & _eMinTab)
+{
+	if(TOP_TAB_TYPE::TYPEEND == _eTopTab || MID_TAB_TYPE::TYPEEND == _eMinTab)
+		return E_FAIL;
+
+	// 매개변수로 넘어온 탭으로 변경하기전 현재 상황에서 처리해야할 일들을 구현한다.
+	switch (m_eCurTopTab)
+	{
+	case TOP_TAB_TYPE::UNIT:
+		switch (m_eCurMidTab)
+		{
+		case MID_TAB_TYPE::PLAYER:
+		{
+
+		}
+		break;
+		case MID_TAB_TYPE::MONSTER:
+		{
+
+		}
+		break;
+		case MID_TAB_TYPE::ITEM:
+		{
+
+		}
+		break;
+		default:
+			break;
+		}
+		break;
+	case TOP_TAB_TYPE::TILE:
+	{
+		// HEEJUNE
+	}
+	break;
+	case TOP_TAB_TYPE::MAP:
+	{
+
+	}
+	break;
+	default:
+		break;
+	}
+
+	m_eCurTopTab = _eTopTab;
+	m_eCurMidTab = _eMinTab;
+
+	return S_OK;
 }

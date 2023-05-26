@@ -53,6 +53,32 @@ public:
 public:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+
+/*-----------------------------------------------------------------------------------------------*/
+
+
+/* Together */
+public:
+	// 탭을 바꿀 때 호출되는 함수 (중간탭은 디폴트 매개변수이므로, 중간탭이 없을경우 상단 탭만 매개변수로 보낸다).
+	HRESULT	Change_Tab(const TOP_TAB_TYPE& _eTopTab, const MID_TAB_TYPE& _eMinTab = MID_TAB_TYPE::NONE); 
+
+	TOP_TAB_TYPE m_eCurTopTab;
+	MID_TAB_TYPE m_eCurMidTab;
+
+
+/* HEEJUNE */
+
+
+
+
+
+
+
+/* CHAN */
+
+
+
+
 };
 
 #ifndef _DEBUG  // ToolView.cpp의 디버그 버전

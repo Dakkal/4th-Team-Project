@@ -28,8 +28,10 @@ public:
 	UnitTool_Player* pDlgPlayer;
 	UnitTool_Monster* pDlgMonster;
 	UnitTool_Item* pDlgItme;
-	afx_msg void OnSelchangeTabUnit(NMHDR *pNMHDR, LRESULT *pResult);
 
+	afx_msg void OnSelchangeTabUnit(NMHDR *pNMHDR, LRESULT *pResult);
 	virtual BOOL OnInitDialog();
 
+
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 };
