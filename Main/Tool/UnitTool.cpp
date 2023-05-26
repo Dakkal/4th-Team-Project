@@ -32,7 +32,7 @@ void CUnitTool::DoDataExchange(CDataExchange* pDX)
 	CDialog::DoDataExchange(pDX);
 	DDX_Text(pDX, IDC_EDIT1, m_strTemp);
 	DDX_Text(pDX, IDC_EDIT2, m_strCopy);
-	DDX_Control(pDX, IDC_LIST1, m_ListBox);
+	//DDX_Control(pDX, IDC_LIST1, m_ListBox);
 	DDX_Text(pDX, IDC_EDIT3, m_strName);
 	DDX_Text(pDX, IDC_EDIT4, m_iHp);
 	DDX_Text(pDX, IDC_EDIT5, m_iAttack);
@@ -49,7 +49,6 @@ void CUnitTool::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CUnitTool, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON2, &CUnitTool::OnPush)
-	ON_LBN_SELCHANGE(IDC_LIST1, &CUnitTool::OnListBox)
 	ON_WM_DESTROY()
 	ON_BN_CLICKED(IDC_BUTTON4, &CUnitTool::OnDeleteData)
 	ON_EN_CHANGE(IDC_EDIT6, &CUnitTool::OnSearchData)

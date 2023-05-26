@@ -86,9 +86,16 @@ BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 
 	m_MainSplitter.CreateStatic(this, 1, 2);
 
-	m_MainSplitter.CreateView(0, 0, RUNTIME_CLASS(CToolView), CSize(WINCX, WINCY), pContext);
 
-	m_MainSplitter.CreateView(0, 1, RUNTIME_CLASS(CMyForm), CSize(600, WINCY), pContext);
+	m_MainSplitter.CreateView(0, 0, RUNTIME_CLASS(CToolView)	, CSize(WINCX	, WINCY	)	, pContext);
+
+	m_MainSplitter.CreateView(0, 1, RUNTIME_CLASS(CMyForm)		, CSize(WINCX	, WINCY	)	, pContext);
+
+	/*m_MainSplitter.SetColumnInfo(0, TOOL_CX, 10);
+	m_MainSplitter.SetColumnInfo(1, WINCX - TOOL_CX, 10);*/
+
+	
 
 	return TRUE;
 }
+	

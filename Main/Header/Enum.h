@@ -8,3 +8,7 @@ enum class TOP_TAB_TYPE { UNIT, MAP, TILE, TYPEEND }; // 상단 탭
 
 enum class MID_TAB_TYPE { PLAYER, MONSTER, ITEM, NONE, TYPEEND }; // 중간 탭 (각 상단탭 내부에 포함되어 있는 탭) 
 
+enum class OBJ_TYPE		{ PLAYER, MONSTER, NPC, ITEM, TERRAIN, UI, TYPEEND };
+
+enum class OBJ_STATE	{ STAND, WALK, DASH, ATTACK, DAMAGE, SKILL, DIE, TYPEEND };
+

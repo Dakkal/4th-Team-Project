@@ -200,6 +200,7 @@
     <ClInclude Include="MiniView.h" />
     <ClInclude Include="MultiTexture.h" />
     <ClInclude Include="MyForm.h" />
+    <ClInclude Include="Obj.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SingleTexture.h" />
     <ClInclude Include="stdafx.h" />
@@ -211,6 +212,7 @@
     <ClInclude Include="Tool.h" />
     <ClInclude Include="ToolDoc.h" />
     <ClInclude Include="ToolView.h" />
+    <ClInclude Include="Unit.h" />
     <ClInclude Include="UnitTool.h" />
     <ClInclude Include="UnitTool_Item.h" />
     <ClInclude Include="UnitTool_Monster.h" />
@@ -225,6 +227,7 @@
     <ClCompile Include="MiniView.cpp" />
     <ClCompile Include="MultiTexture.cpp" />
     <ClCompile Include="MyForm.cpp" />
+    <ClCompile Include="Obj.cpp" />
     <ClCompile Include="SingleTexture.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -239,6 +242,7 @@
     <ClCompile Include="Tool.cpp" />
     <ClCompile Include="ToolDoc.cpp" />
     <ClCompile Include="ToolView.cpp" />
+    <ClCompile Include="Unit.cpp" />
     <ClCompile Include="UnitTool.cpp" />
     <ClCompile Include="UnitTool_Item.cpp" />
     <ClCompile Include="UnitTool_Monster.cpp" />

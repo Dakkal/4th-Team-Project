@@ -98,6 +98,12 @@ void CToolView::OnInitialUpdate()
 	}
 
 
+	// 이걸로 사이즈 조절했는데 맞는 걸까?
+
+	/*GetParentSplitter(this, FALSE)->SetColumnInfo(0, 400, 10);
+	GetParentSplitter(this, FALSE)->RecalcLayout();*/
+
+
 	m_eCurTopTab = TOP_TAB_TYPE::UNIT;
 	m_eCurMidTab = MID_TAB_TYPE::PLAYER;
 

@@ -126,12 +126,12 @@ void CUnitTool_Tab1::OnSize(UINT nType, int cx, int cy)
 		GetClientRect(&rectClient);
 
 		// 컨트롤들의 ID를 사용하여 위치와 크기를 조정
-		/*CWnd* pCtrl = GetDlgItem(IDC_TAB1);
+		CWnd* pCtrl = GetDlgItem(IDC_TAB1);
 		if (pCtrl != nullptr)
 		{
 		pCtrl->MoveWindow(rectClient);
 
-		}*/
+		}
 
 		if (pDlgPlayer != nullptr)
 		{

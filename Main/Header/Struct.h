@@ -4,11 +4,21 @@ typedef struct tagInfo
 {
 	D3DXVECTOR3		vPos;
 	D3DXVECTOR3		vDir;
+	D3DXVECTOR3		vRot; 
 	D3DXVECTOR3		vLook;
 	D3DXVECTOR3		vSize;
 
 	D3DXMATRIX		matWorld;
 }INFO;
+
+typedef struct tagStat
+{
+	CString strName;
+	int	iHP;
+	int	iAD;
+	int iSpeed;
+
+}STAT;
 
 typedef	struct tagFrame
 {
