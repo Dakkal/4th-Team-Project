@@ -9,11 +9,12 @@ public:
 	virtual ~CObj();
 
 public:
-	virtual HRESULT		Initialize()			PURE;
-	virtual int			Update()				PURE;
-	virtual void		Late_Update()			PURE;
-	virtual void		Render()				PURE;
-	virtual void		Release()				PURE;
+	virtual HRESULT		Initialize()							PURE;
+	virtual int			Update()								PURE;
+	virtual void		Late_Update()							PURE;
+	virtual void		Render()								PURE;
+	virtual	void		Tool_Render(const D3DXVECTOR3& _vWorld)							PURE;
+	virtual void		Release()								PURE;
 
 public:
 

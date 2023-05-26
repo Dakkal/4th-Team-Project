@@ -131,44 +131,77 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 	if (!pDoc)
 		return;
 	
+	RECT	rc{};
+	GetClientRect(&rc);
+	int CX = rc.right - rc.left;
+	int CY = rc.bottom - rc.top;
+
 	CDevice::Get_Instance()->Render_Begin();
 
 	switch (m_eCurTopTab)
 	{
-	case TOP_TAB_TYPE::UNIT:
-		switch (m_eCurMidTab)
+		case TOP_TAB_TYPE::UNIT:
 		{
-		case MID_TAB_TYPE::PLAYER:
-		{
-			
-		}
+			// Draw Line
+			{
+				IDirect3DDevice9* g_pd3dDevice = CDevice::Get_Instance()->Get_Device();
+				ID3DXLine* g_pLine;
+
+				D3DXCreateLine(g_pd3dDevice, &g_pLine); // 라인 생성
+				g_pLine->SetWidth(2); // 굵기 설정
+				g_pLine->Begin();
+
+				D3DXVECTOR2 vList1[] =
+				{
+					D3DXVECTOR2(CX * 0.5f, 0),
+					D3DXVECTOR2(CX * 0.5f, WINCY),
+				};
+				g_pLine->Draw(vList1, 2, D3DCOLOR_XRGB(255, 0, 0));
+
+				D3DXVECTOR2 vList2[] =
+				{
+					D3DXVECTOR2(0, CY * 0.5f),
+					D3DXVECTOR2(CX, CY * 0.5f),
+				};
+				g_pLine->Draw(vList2, 2, D3DCOLOR_XRGB(255, 0, 0));
+				g_pLine->End();
+			}
+			switch (m_eCurMidTab)
+			{
+			case MID_TAB_TYPE::PLAYER:
+			{
+
+			}
 			break;
-		case MID_TAB_TYPE::MONSTER:
-		{
-			
-		}
+			case MID_TAB_TYPE::MONSTER:
+			{
+				if (nullptr == m_pCopyUnit) break;
+				D3DXVECTOR3 vCenter{ CX * 0.5f, CY * 0.5f, 0.f };
+				m_pCopyUnit->Tool_Render(vCenter);
+			}
 			break;
-		case MID_TAB_TYPE::ITEM:
+			case MID_TAB_TYPE::ITEM:
+			{
+
+			}
+			break;
+			default:
+				break;
+			}
+			break;
+		case TOP_TAB_TYPE::TILE:
+		{
+			// HEEJUNE
+		}
+		break;
+		case TOP_TAB_TYPE::MAP:
 		{
 
 		}
-			break;
+		break;
 		default:
 			break;
 		}
-		break;
-	case TOP_TAB_TYPE::TILE:
-	{
-		// HEEJUNE
-	}
-		break;
-	case TOP_TAB_TYPE::MAP:
-	{
-
-	}
-		break;
-	default:
-		break;
 	}
 
 	CDevice::Get_Instance()->Render_End();
@@ -178,9 +211,17 @@ void CToolView::OnDestroy()
 
 	CScrollView::OnDestroy();
 
-	/*Safe_Delete(m_pTerrain);
 
-	CTextureMgr::Get_Instance()->Destroy_Instance();*/
+
+
+	/* HEEJUNE */
+
+	/* CHAN */
+	if (nullptr != m_pCopyUnit)
+		Safe_Delete(m_pCopyUnit);
+
+
+	CTextureMgr::Get_Instance()->Destroy_Instance();
 	CDevice::Get_Instance()->Destroy_Instance();
 
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
@@ -319,7 +360,6 @@ void CToolView::OnLButtonDown(UINT nFlags, CPoint point)
 	pMiniView->Invalidate(FALSE);
 }
 
-
 void CToolView::OnMouseMove(UINT nFlags, CPoint point)
 {
 	CScrollView::OnMouseMove(nFlags, point);
@@ -381,10 +421,16 @@ HRESULT CToolView::Change_Tab(const TOP_TAB_TYPE & _eTopTab, const MID_TAB_TYPE 
 	if(TOP_TAB_TYPE::TYPEEND == _eTopTab || MID_TAB_TYPE::TYPEEND == _eMidTab)
 		return E_FAIL;
 
+	Invalidate(FALSE);
+
+	m_eCurTopTab = _eTopTab;
+	m_eCurMidTab = _eMidTab;
+
 	// 매개변수로 넘어온 탭으로 변경하기전 현재 상황에서 처리해야할 일들을 구현한다.
 	switch (m_eCurTopTab)
 	{
 	case TOP_TAB_TYPE::UNIT:
+	{
 		switch (m_eCurMidTab)
 		{
 		case MID_TAB_TYPE::PLAYER:
@@ -394,6 +440,16 @@ HRESULT CToolView::Change_Tab(const TOP_TAB_TYPE & _eTopTab, const MID_TAB_TYPE 
 		break;
 		case MID_TAB_TYPE::MONSTER:
 		{
+			if (nullptr != m_pCopyUnit) break;
+
+			m_pCopyUnit = new CUnit();
+			m_pCopyUnit->Initialize();
+			// Texture\01.Object\00.Player\00.Amazon\stand_8         0.png
+			if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/01.Object/00.Player/00.Amazon/stand_8/%d.png", TEX_MULTI, L"Player", L"Stand", 1)))
+			{
+				AfxMessageBox(L"TileTexture Create Failed");
+				return E_FAIL;
+			}
 
 		}
 		break;
@@ -405,6 +461,7 @@ HRESULT CToolView::Change_Tab(const TOP_TAB_TYPE & _eTopTab, const MID_TAB_TYPE 
 		default:
 			break;
 		}
+	}
 		break;
 	case TOP_TAB_TYPE::TILE:
 	{
@@ -419,9 +476,6 @@ HRESULT CToolView::Change_Tab(const TOP_TAB_TYPE & _eTopTab, const MID_TAB_TYPE 
 	default:
 		break;
 	}
-
-	m_eCurTopTab = _eTopTab;
-	m_eCurMidTab = _eMidTab;
 
 	return S_OK;
 }

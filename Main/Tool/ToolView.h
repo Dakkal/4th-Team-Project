@@ -85,7 +85,7 @@ public:
 
 #pragma region UnitTool
 
-	CUnit* pUnit = nullptr;
+	CUnit* m_pCopyUnit = nullptr;
 
 
 #pragma endregion

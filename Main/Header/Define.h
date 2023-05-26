@@ -3,6 +3,9 @@
 #define		TAB_HEIGHT	30
 #define		TAB_WIDTH	10
 
+#define		UNIT_CX		100
+#define		UNIT_CY		100
+
 #define		TOOL_CX		1000
 
 #define		WINCX		1400
