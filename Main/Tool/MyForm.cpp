@@ -38,6 +38,10 @@ END_MESSAGE_MAP()
 void CMyForm::OnInitialUpdate()
 {
 	CFormView::OnInitialUpdate();
+	
+	CRect rc;
+
+	this->GetClientRect(&rc);
 
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 	m_Font.CreatePointFont(180, L"궁서");
@@ -67,6 +71,11 @@ void CMyForm::OnInitialUpdate()
 	m_pTileTool_Tab3->MoveWindow(0, TAB_HEIGHT, rect.Width(), rect.Height() - TAB_HEIGHT);
 	m_pTileTool_Tab3->ShowWindow(SW_HIDE);
 
+
+	//GetParentSplitter(this, FALSE)->SetColumnInfo(0, WINCX , 10);
+
+	//GetParentSplitter(this, FALSE)->RecalcLayout();
+
 }
 
 
@@ -91,6 +100,8 @@ void CMyForm::Dump(CDumpContext& dc) const
 
 void CMyForm::OnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 {
+
+
 	if (IDC_TAB1 == pNMHDR->idFrom) 
 	{ 
 		int select = m_tab.GetCurSel();
@@ -100,7 +111,8 @@ void CMyForm::OnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 	
 		pToolView->Change_Tab((TOP_TAB_TYPE)select);
 
-		switch (select) {
+		switch (select) 
+		{
 		case 0:
 			m_pUnitTool_Tab1->ShowWindow(SW_SHOW);
 			m_pMapTool_Tab2->ShowWindow(SW_HIDE);
@@ -115,6 +127,7 @@ void CMyForm::OnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 			m_pUnitTool_Tab1->ShowWindow(SW_HIDE);
 			m_pMapTool_Tab2->ShowWindow(SW_HIDE);
 			m_pTileTool_Tab3->ShowWindow(SW_SHOW);
+			break;
 		}
 	}
 	*pResult = 0;
@@ -134,7 +147,6 @@ void CMyForm::OnDestroy()
 
 void CMyForm::OnSize(UINT nType, int cx, int cy)
 {
-
 	CFormView::OnSize(nType, cx, cy);
 	if (::IsWindow(m_hWnd))
 	{
@@ -142,12 +154,12 @@ void CMyForm::OnSize(UINT nType, int cx, int cy)
 		GetClientRect(&rectClient);
 
 		// 컨트롤들의 ID를 사용하여 위치와 크기를 조정
-		/*CWnd* pCtrl = GetDlgItem(IDC_TAB1);
+		CWnd* pCtrl = GetDlgItem(IDC_TAB1);
 		if (pCtrl != nullptr)
 		{
 			pCtrl->MoveWindow(rectClient);
 
-		}*/
+		}
 
 		if (m_pUnitTool_Tab1 != nullptr)
 		{

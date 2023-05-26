@@ -23,7 +23,6 @@
 #define IDC_EDIT3                       1003
 #define IDC_EDIT4                       1004
 #define IDC_EDIT5                       1005
-#define IDC_LIST1                       1006
 #define IDC_BUTTON2                     1007
 #define IDC_RADIO1                      1008
 #define IDC_RADIO2                      1009
@@ -39,6 +38,16 @@
 #define IDC_TAB1                        1022
 #define IDC_SLIDER1                     1024
 #define IDC_TAB_UNIT                    1025
+#define IDC_LIST_MONSTER                1026
+#define IDC_BUTTON_MONSTER_NEW          1027
+#define IDC_BUTTON_MONSTER_DELETE       1028
+#define IDC_BUTTON_MONSTER_EDIT         1029
+#define IDC_BUTTON_MONSTER_SAVE         1030
+#define IDC_STATIC_MONSTER_TRANSFORM    1031
+#define IDC_STATIC_MONSTER_STAT         1032
+#define IDC_STATIC_MONSTER_COLLIDER     1033
+#define IDC_STATIC_MONSTER_ANIMATION    1034
+#define IDC_LIST4                       1038
 
 // Next default values for new objects
 // 
@@ -46,7 +55,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        325
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1026
+#define _APS_NEXT_CONTROL_VALUE         1039
 #define _APS_NEXT_SYMED_VALUE           313
 #endif
 #endif

@@ -4,10 +4,21 @@
 
 #pragma once
 
+
+/* Together */
 #include "Include.h"
 #include "Terrain.h"
-
 class CToolDoc;
+
+
+/* HEEJUNE */
+
+
+
+/* CHAN */
+#include "Unit.h"
+
+
 class CToolView : public CScrollView
 {
 protected: // serialization에서만 만들어집니다.
@@ -57,10 +68,12 @@ public:
 /*-----------------------------------------------------------------------------------------------*/
 
 
+public: 
+
 /* Together */
-public:
+
 	// 탭을 바꿀 때 호출되는 함수 (중간탭은 디폴트 매개변수이므로, 중간탭이 없을경우 상단 탭만 매개변수로 보낸다).
-	HRESULT	Change_Tab(const TOP_TAB_TYPE& _eTopTab, const MID_TAB_TYPE& _eMinTab = MID_TAB_TYPE::NONE); 
+	HRESULT	Change_Tab(const TOP_TAB_TYPE& _eTopTab, const MID_TAB_TYPE& _eMidTab = MID_TAB_TYPE::NONE); 
 
 	TOP_TAB_TYPE m_eCurTopTab;
 	MID_TAB_TYPE m_eCurMidTab;
@@ -68,14 +81,14 @@ public:
 
 /* HEEJUNE */
 
-
-
-
-
-
-
 /* CHAN */
 
+#pragma region UnitTool
+
+	CUnit* pUnit = nullptr;
+
+
+#pragma endregion
 
 
 

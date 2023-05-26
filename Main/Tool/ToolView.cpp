@@ -88,7 +88,6 @@ void CToolView::OnInitialUpdate()
 							int(WINCY + fColFrm), 
 							SWP_NOZORDER);	// 현재 순서를 유지하겠다는 옵션
 
-
 	//// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 
 	if (FAILED(CDevice::Get_Instance()->Initialize()))
@@ -96,6 +95,12 @@ void CToolView::OnInitialUpdate()
 		AfxMessageBox(L"Device Create Failed");
 		return;
 	}
+
+
+	// 이걸로 사이즈 조절했는데 맞는 걸까?
+
+	/*GetParentSplitter(this, FALSE)->SetColumnInfo(0, 400, 10);
+	GetParentSplitter(this, FALSE)->RecalcLayout();*/
 
 
 	m_eCurTopTab = TOP_TAB_TYPE::UNIT;
@@ -135,12 +140,12 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 		{
 		case MID_TAB_TYPE::PLAYER:
 		{
-
+			
 		}
 			break;
 		case MID_TAB_TYPE::MONSTER:
 		{
-
+			
 		}
 			break;
 		case MID_TAB_TYPE::ITEM:
@@ -371,9 +376,9 @@ void CToolView::OnMouseMove(UINT nFlags, CPoint point)
 
 }
 
-HRESULT CToolView::Change_Tab(const TOP_TAB_TYPE & _eTopTab, const MID_TAB_TYPE & _eMinTab)
+HRESULT CToolView::Change_Tab(const TOP_TAB_TYPE & _eTopTab, const MID_TAB_TYPE & _eMidTab)
 {
-	if(TOP_TAB_TYPE::TYPEEND == _eTopTab || MID_TAB_TYPE::TYPEEND == _eMinTab)
+	if(TOP_TAB_TYPE::TYPEEND == _eTopTab || MID_TAB_TYPE::TYPEEND == _eMidTab)
 		return E_FAIL;
 
 	// 매개변수로 넘어온 탭으로 변경하기전 현재 상황에서 처리해야할 일들을 구현한다.
@@ -416,7 +421,7 @@ HRESULT CToolView::Change_Tab(const TOP_TAB_TYPE & _eTopTab, const MID_TAB_TYPE 
 	}
 
 	m_eCurTopTab = _eTopTab;
-	m_eCurMidTab = _eMinTab;
+	m_eCurMidTab = _eMidTab;
 
 	return S_OK;
 }
