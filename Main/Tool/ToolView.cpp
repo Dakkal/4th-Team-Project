@@ -381,6 +381,8 @@ HRESULT CToolView::Change_Tab(const TOP_TAB_TYPE & _eTopTab, const MID_TAB_TYPE 
 	if(TOP_TAB_TYPE::TYPEEND == _eTopTab || MID_TAB_TYPE::TYPEEND == _eMidTab)
 		return E_FAIL;
 
+	Invalidate(FALSE);
+
 	// 매개변수로 넘어온 탭으로 변경하기전 현재 상황에서 처리해야할 일들을 구현한다.
 	switch (m_eCurTopTab)
 	{

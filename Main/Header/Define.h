@@ -13,8 +13,8 @@
 
 #define		VK_MAX			0xff
 
-#define		TILECX			130
-#define		TILECY			68
+#define		TILECX			160
+#define		TILECY			80
 
 #define		TILEX			20
 #define		TILEY			30
@@ -25,6 +25,11 @@
 #define		RUBY			0x01		// -> 0001
 #define		DIAMOND			0x02		// -> 0010
 #define		SAPPHIRE		0x04		// -> 0100
+
+//타일옵션
+#define		NONETILE		0x05
+#define		BLOCKTILE		0x06
+#define		DAMAGETILE		0x07
 
 
 

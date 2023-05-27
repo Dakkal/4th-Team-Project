@@ -48,6 +48,22 @@
 #define IDC_STATIC_MONSTER_COLLIDER     1033
 #define IDC_STATIC_MONSTER_ANIMATION    1034
 #define IDC_LIST4                       1038
+#define IDC_LIST_TILE                   1041
+#define IDC_COMBO_TILE                  1042
+#define IDC_BUTTON2_TILE                1043
+#define IDC_BUTTON3_TILE                1044
+#define IDC_BUTTON_TILE                 1045
+#define IDC_SPIN_TILE                   1047
+#define IDC_STATIC_TILE                 1048
+#define IDC_STATIC2_TILE                1049
+#define IDC_CHECK1_TILE                 1050
+#define IDC_CHECK2_TILE                 1051
+#define IDC_CHECK3_TILE                 1052
+#define IDC_EDIT_TILE                   1053
+#define IDC_STATIC3_TILE                1054
+#define IDC_EDIT1_TILE                  1057
+#define IDC_EDIT1_TILE2                 1058
+#define IDC_EDIT2_TILE                  1058
 
 // Next default values for new objects
 // 
@@ -55,7 +71,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        325
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1039
+#define _APS_NEXT_CONTROL_VALUE         1058
 #define _APS_NEXT_SYMED_VALUE           313
 #endif
 #endif
