@@ -75,6 +75,23 @@
 #define IDC_SLIDER_MONSTER_AD           1064
 #define IDC_SLIDER_MONSTER_HP3          1065
 #define IDC_SLIDER_MONSTER_SPEED        1065
+#define IDC_LIST_TILE                   1066
+#define IDC_COMBO_TILE                  1067
+#define IDC_BUTTON2_TILE                1068
+#define IDC_BUTTON3_TILE                1069
+#define IDC_BUTTON_TILE                 1070
+#define IDC_SPIN_TILE                   1071
+#define IDC_STATIC_TILE                 1072
+#define IDC_STATIC2_TILE                1073
+#define IDC_CHECK1_TILE                 1074
+#define IDC_CHECK2_TILE                 1075
+#define IDC_CHECK3_TILE                 1076
+#define IDC_EDIT_TILE                   1077
+#define IDC_STATIC3_TILE                1078
+#define IDC_EDIT1_TILE                  1079
+#define IDC_EDIT1_TILE2                 1080
+#define IDC_EDIT2_TILE                  1081
+
 
 // Next default values for new objects
 // 
@@ -82,7 +99,11 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        325
 #define _APS_NEXT_COMMAND_VALUE         32771
+<<<<<<< HEAD
 #define _APS_NEXT_CONTROL_VALUE         1064
+=======
+#define _APS_NEXT_CONTROL_VALUE         1058
+>>>>>>> feature/Jun
 #define _APS_NEXT_SYMED_VALUE           313
 #endif
 #endif

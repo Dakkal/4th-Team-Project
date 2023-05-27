@@ -22,7 +22,4 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-	CListBox m_ListBox;
-	afx_msg void OnListBox();
-	afx_msg void OnDropFiles(HDROP hDropInfo);
 };
