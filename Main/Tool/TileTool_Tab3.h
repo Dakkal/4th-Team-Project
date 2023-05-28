@@ -59,9 +59,7 @@ public:
 	int	m_iDrawID = 0;
 
 public:
-	vector<TILE*>	m_vecTile_Act1;
-	vector<TILE*>	m_vecTile_Act2;
-	vector<TILE*>	m_vecTile_Act3;
+	vector<TILE*>	m_vecTile;
 
 	CToolView*		m_pMainView = nullptr;
 

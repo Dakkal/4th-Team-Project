@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Enum.h"
 
 #pragma region HEEJUNE
 
@@ -65,6 +65,8 @@ typedef struct tagTile
 {
 	D3DXVECTOR3	vPos;
 	D3DXVECTOR3 vSize;
+
+	TERRIAN_TYPE eType;
 
 	BYTE		byOption;
 	float		fDamage;
