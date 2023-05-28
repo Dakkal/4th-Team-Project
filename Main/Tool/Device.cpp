@@ -4,7 +4,7 @@
 IMPLEMENT_SINGLETON(CDevice)
 
 CDevice::CDevice()
-	: m_pSDK(nullptr), m_pDevice(nullptr), m_pSprite(nullptr)
+	: m_pSDK(nullptr), m_pDevice(nullptr), m_pSprite(nullptr), m_pLine(nullptr)
 {
 }
 
@@ -75,6 +75,7 @@ HRESULT CDevice::Initialize(void)
 		return E_FAIL;
 	}
 
+	D3DXCreateLine(m_pDevice, &m_pLine);
 
 	return S_OK;
 }

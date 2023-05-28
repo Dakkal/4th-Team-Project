@@ -35,7 +35,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 
-private:
+public:
 	CFont				m_Font;
 	
 	CTabCtrl			m_tab; 

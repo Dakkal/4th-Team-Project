@@ -11,9 +11,12 @@
 
 #include "ToolDoc.h"
 #include "ToolView.h"
+#include "MyForm.h"
 #include "Device.h"
 #include "TextureMgr.h"
 #include "MainFrm.h"
+#include "UnitTool_Tab1.h"
+#include "TimeMgr.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -144,27 +147,27 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 		{
 			// Draw Line
 			{
-				IDirect3DDevice9* g_pd3dDevice = CDevice::Get_Instance()->Get_Device();
-				ID3DXLine* g_pLine;
+				// 라인 굵기 설정
+				CDevice::Get_Instance()->Get_Line()->SetWidth(2);
 
-				D3DXCreateLine(g_pd3dDevice, &g_pLine); // 라인 생성
-				g_pLine->SetWidth(2); // 굵기 설정
-				g_pLine->Begin();
-
+				// 라인으로 사용할 정점 세팅
 				D3DXVECTOR2 vList1[] =
 				{
 					D3DXVECTOR2(CX * 0.5f, 0),
 					D3DXVECTOR2(CX * 0.5f, WINCY),
 				};
-				g_pLine->Draw(vList1, 2, D3DCOLOR_XRGB(255, 0, 0));
-
 				D3DXVECTOR2 vList2[] =
 				{
 					D3DXVECTOR2(0, CY * 0.5f),
 					D3DXVECTOR2(CX, CY * 0.5f),
 				};
-				g_pLine->Draw(vList2, 2, D3DCOLOR_XRGB(255, 0, 0));
-				g_pLine->End();
+
+				CDevice::Get_Instance()->Get_Line()->Begin(); // 라인 그리기 시작 (Render_Begin()처럼)
+
+				CDevice::Get_Instance()->Get_Line()->Draw(vList1, 2, D3DCOLOR_XRGB(255, 0, 0));
+				CDevice::Get_Instance()->Get_Line()->Draw(vList2, 2, D3DCOLOR_XRGB(255, 0, 0));
+
+				CDevice::Get_Instance()->Get_Line()->End();// 라인 그리기 종료 (Render_End()처럼)
 			}
 			switch (m_eCurMidTab)
 			{
@@ -175,9 +178,9 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 			break;
 			case MID_TAB_TYPE::MONSTER:
 			{
-				if (nullptr == m_pCopyUnit) break;
+				if (nullptr == m_pRenderUnit) break;
 				D3DXVECTOR3 vCenter{ CX * 0.5f, CY * 0.5f, 0.f };
-				m_pCopyUnit->Tool_Render(vCenter);
+				m_pRenderUnit->Tool_Render(vCenter);
 			}
 			break;
 			case MID_TAB_TYPE::ITEM:
@@ -217,11 +220,11 @@ void CToolView::OnDestroy()
 	/* HEEJUNE */
 
 	/* CHAN */
-	if (nullptr != m_pCopyUnit)
-		Safe_Delete(m_pCopyUnit);
+	CTimeMgr::Get_Instance()->Destroy_Instance();
 
 
 	CTextureMgr::Get_Instance()->Destroy_Instance();
+	
 	CDevice::Get_Instance()->Destroy_Instance();
 
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
@@ -426,7 +429,6 @@ HRESULT CToolView::Change_Tab(const TOP_TAB_TYPE & _eTopTab, const MID_TAB_TYPE 
 	m_eCurTopTab = _eTopTab;
 	m_eCurMidTab = _eMidTab;
 
-	// 매개변수로 넘어온 탭으로 변경하기전 현재 상황에서 처리해야할 일들을 구현한다.
 	switch (m_eCurTopTab)
 	{
 	case TOP_TAB_TYPE::UNIT:
@@ -440,16 +442,6 @@ HRESULT CToolView::Change_Tab(const TOP_TAB_TYPE & _eTopTab, const MID_TAB_TYPE 
 		break;
 		case MID_TAB_TYPE::MONSTER:
 		{
-			if (nullptr != m_pCopyUnit) break;
-
-			m_pCopyUnit = new CUnit();
-			m_pCopyUnit->Initialize();
-			// Texture\01.Object\00.Player\00.Amazon\stand_8         0.png
-			if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/01.Object/00.Player/00.Amazon/stand_8/%d.png", TEX_MULTI, L"Player", L"Stand", 1)))
-			{
-				AfxMessageBox(L"TileTexture Create Failed");
-				return E_FAIL;
-			}
 
 		}
 		break;

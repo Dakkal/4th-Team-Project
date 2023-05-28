@@ -1,5 +1,20 @@
 #pragma once
 
+
+#pragma region HEEJUNE
+
+
+#pragma endregion
+
+
+#pragma region CHAN
+
+
+
+#pragma endregion
+
+
+
 template<typename T>
 void Safe_Delete(T& Temp)
 {

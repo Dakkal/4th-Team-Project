@@ -16,11 +16,9 @@ CUnit::~CUnit()
 
 HRESULT CUnit::Initialize()
 {
-
 	m_tInfo.vPos = { 0.f, 0.f, 0.f };
 	m_tInfo.vRot = { 0.f, 0.f, 0.f };
 	m_tInfo.vSize = { 1.f, 1.f, 1.f };
-
 
 	return E_NOTIMPL;
 }
@@ -46,7 +44,7 @@ void CUnit::Tool_Render(const D3DXVECTOR3& _vWorld)
 {
 	D3DXMATRIX matScale, matRotZ, matTrans;
 
-	D3DXVECTOR3 vPos = m_tInfo.vPos + _vWorld; // 
+	D3DXVECTOR3 vPos = m_tInfo.vPos + _vWorld; // 플레이어 로컬 포지션에, 월드 포지션 값을 더해준다.
 
 	D3DXMatrixIdentity(&m_tInfo.matWorld);
 	D3DXMatrixScaling(&matScale, m_tInfo.vSize.x, m_tInfo.vSize.y, m_tInfo.vSize.z);
@@ -55,8 +53,8 @@ void CUnit::Tool_Render(const D3DXVECTOR3& _vWorld)
 
 	m_tInfo.matWorld = matScale * matRotZ * matTrans;
 
-
-	const TEXINFO*	pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Player", L"Stand", 0);
+	//const TEXINFO*	pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Player", L"Stand", 0);
+	const TEXINFO*	pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(m_strObjKey, m_strStateKey);
 
 	if (nullptr == pTexInfo) return;
 
@@ -65,7 +63,6 @@ void CUnit::Tool_Render(const D3DXVECTOR3& _vWorld)
 
 	// 이미지에 행렬을 반영
 	CDevice::Get_Instance()->Get_Sprite()->SetTransform(&m_tInfo.matWorld);
-
 	CDevice::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture,
 		nullptr,							// 출력할 이미지 영역에 대한 Rect 주소, null인 경우 이미지의 0, 0 기준으로 출력
 		&D3DXVECTOR3(fX, fY, 0.f),			// 출력할 이미지의 중심축에 대한 vector3 주소, null인 경우 이미지의 0, 0이 중심 좌표
