@@ -36,15 +36,18 @@ public:
 	INFO				m_tInfo; 
 	STAT				m_tStat;
 	FRAME				m_tFrame;
-	OBJ_TYPE			m_eType = OBJ_TYPE::TYPEEND;
-	OBJ_STATE			m_eState = OBJ_STATE::TYPEEND;
+	OBJ_TYPE			m_eType		= OBJ_TYPE::TYPEEND;
+	OBJ_STATE			m_eState	= OBJ_STATE::TYPEEND;
+	OBJ_DIR				m_eDir		= OBJ_DIR::TYPEEND;
 
 
 	/* 원래 이렇게 사용하는 변수들이 아니지만 지금만 이렇게 사용하도록 한다. */
 
-	CString				m_strPath			= L""; // 폴더 경로
-	CString				m_strObjKey			= L""; // 파일탐색기에서 오브젝트 폴더명 (지금은 텍스트 매니저 오브젝트 키값으로 사용)
-	CString				m_strStateKey		= L""; // 파일탐색게에서 오브젝트 폴더 안, 스테이트 폴더명 (지금은 텍스트 매니저 오브젝트 스테이트 키값으로 사용)
+	CString				m_strRelativePath			= L""; // 폴더 경로
+	CString				m_strObjKey					= L""; 
+	CString				m_strStateKey				= L""; 
+
+	ANIMATION			m_tAnimator;
 
 };
 

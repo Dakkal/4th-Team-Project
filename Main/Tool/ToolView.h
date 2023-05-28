@@ -78,6 +78,7 @@ public:
 	TOP_TAB_TYPE m_eCurTopTab;
 	MID_TAB_TYPE m_eCurMidTab;
 
+	afx_msg void OnTimer(UINT_PTR nIDEvent);	// 애니메이션 시간 컨트롤을 위한 타임매니저 호출 함수
 
 /* HEEJUNE */
 #pragma region TileTool

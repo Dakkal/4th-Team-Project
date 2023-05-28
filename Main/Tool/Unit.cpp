@@ -16,9 +16,21 @@ CUnit::~CUnit()
 
 HRESULT CUnit::Initialize()
 {
-	m_tInfo.vPos = { 0.f, 0.f, 0.f };
-	m_tInfo.vRot = { 0.f, 0.f, 0.f };
-	m_tInfo.vSize = { 1.f, 1.f, 1.f };
+	m_tInfo.vPos		= { 0.f, 0.f, 0.f };
+	m_tInfo.vRot		= { 0.f, 0.f, 0.f };
+	m_tInfo.vSize		= { 1.f, 1.f, 1.f };
+
+	m_tStat.strName		= L"New Unit";
+	m_tStat.iHP			= int(UNIT_MAX_HP * 0.5f);
+	m_tStat.iAD			= int(UNIT_MAX_AD * 0.5f);
+	m_tStat.iSpeed		= int(UNIT_MAX_SPEED * 0.5f);
+
+	m_eType				= OBJ_TYPE::TYPEEND;
+	m_eState			= OBJ_STATE::TYPEEND;
+	m_eDir				= OBJ_DIR::TYPEEND; 
+	
+	m_strObjKey			= L"";
+	m_strStateKey		= L"";
 
 	return E_NOTIMPL;
 }

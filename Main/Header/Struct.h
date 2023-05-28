@@ -21,6 +21,15 @@ typedef	struct tagUnitData
 
 }UNITDATA;
 
+
+typedef struct tagAnimation
+{
+	float	fSecondPerFrame;
+	bool	bLoop;
+	int		iMaxFrame;
+	int		iCurFrame;
+
+}ANIMATION;
 #pragma endregion
 
 
@@ -50,7 +59,6 @@ typedef	struct tagFrame
 {
 	float		fFrame; // 프레임을 세기 위한 변수
 	float		fMax;	// 최대 이미지의 프레임 수
-
 }FRAME;
 
 typedef struct tagTexture

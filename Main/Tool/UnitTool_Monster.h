@@ -25,23 +25,31 @@ public:
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
-
 public:
-	virtual			BOOL OnInitDialog();
-
+	virtual						BOOL OnInitDialog();
 
 public:
 	// User
-	void						Init_Dlg(); // 모든 컨트롤 초기화
+	void						Init_Dlg(const CUnit* _pUnit = nullptr); // 모든 컨트롤 초기화
+
 	void						Set_Editability(const bool& _bAlility); // 에딧 컨트롤 편집 가능 여부
+	HRESULT						Load_DB(); // 파일에 저장되어있는 유닛들을 가져와 벡터와 리스트 박스에 푸시한다.
 
 	CToolView*					m_pToolView = nullptr;
 	CUnit*						m_pOriginUnit = nullptr;
 	CUnit*						m_pCopyUnit = nullptr;
 
-	map<CString, CImage*>		m_mapPngImg; // 텍스처 이미지를 저장한다
 
+	// Unit List
+	vector<CUnit*>				m_vecUnit;		// 유닛 리스트에 올라가있는 유닛 리스트
+	CListBox					m_UnitListBox;
+	int							m_iCurUnitListIndex = 0; // 현재 유닛 리스트 인덱스
+
+	// Texture List
+	map<CString, CImage*>		m_mapPngImg;	// 텍스처 이미지를 저장한다
 	CString						m_FilePath = L""; // 파일명을 지운 순수 상대 경로
+	CListBox					m_TextureListBox;
+	CStatic						m_Picture;
 
 
 	// Control Field
@@ -64,15 +72,23 @@ public:
 	CSliderCtrl					SLIDE_CTRL_AD;
 	CSliderCtrl					SLIDE_CTRL_SPEED;
 
-	CListBox					m_ListBox;
-	CStatic						m_Picture;
-	CStatic						m_StaticText;
+	CComboBox					m_ComboUnitType;
 
 	// Control Method
 	DECLARE_MESSAGE_MAP()
 
-	afx_msg void				OnEnChangeEditMonsterName();
 
+	// Btn5
+	afx_msg void				OnBnClickedButtonMonsterNew();		// New
+	afx_msg void				OnBnClickedButtonMonsterInit();		// Init
+	afx_msg void				OnBnClickedButtonMonsterDelete();	// Delete
+	afx_msg void				OnBnClickedButtonMonsterEdit();		// Edit
+	afx_msg void				OnBnClickedButtonMonsterSave();		// Save			유닛이 변경된 사항을 저장한다.
+	afx_msg void				OnBnClickedButtonMonsterSaveDb();	// Save DB		DB를 새로 저장한다.
+	afx_msg void				OnBnClickedButtonMonsterTexLoad();	// Texture Load 텍스처를 로드할 파일을 탐색기로 연다.
+
+	// Edit
+	afx_msg void				OnEnChangeEditMonsterName();
 	afx_msg void				OnEnChangeEditMonsterPosX();
 	afx_msg void				OnEnChangeEditMonsterPosY();
 	afx_msg void				OnEnChangeEditMonsterPosZ();
@@ -87,18 +103,17 @@ public:
 	afx_msg void				OnEnChangeEditMonsterStatAdValue();
 	afx_msg void				OnEnChangeEditMonsterStatSpeedValue();
 
+	// Scroll
 	afx_msg void				OnNMCustomdrawSliderMonsterHp(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void				OnNMCustomdrawSliderMonsterAd(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void				OnNMCustomdrawSliderMonsterSpeed(NMHDR *pNMHDR, LRESULT *pResult);
 
-	afx_msg void				OnBnClickedButtonMonsterNew();
-	afx_msg void				OnBnClickedButtonMonsterInit();
-	afx_msg void				OnBnClickedButtonMonsterDelete();
-	afx_msg void				OnBnClickedButtonMonsterEdit();
-	afx_msg void				OnBnClickedButtonMonsterSave();
-
-	afx_msg HBRUSH				OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
-
+	// List 
+	afx_msg void				OnLbnSelchangeListMonster();		// 유닛 리스트 항목 변경
+	afx_msg void				OnLbnSelchangeListMonsterTexture(); // 텍스처 리스트 항목 변경
+	
+	// Combo Box
+	afx_msg void				OnCbnSelchangeComboMonsterType();
+	
 	afx_msg void				OnDropFiles(HDROP hDropInfo);
-	afx_msg void				OnLbnSelchangeListMonsterTexture();
 };
