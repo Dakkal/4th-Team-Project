@@ -138,8 +138,13 @@ void CMyForm::OnDestroy()
 {
 	CFormView::OnDestroy();
 
+	m_pUnitTool_Tab1->DestroyWindow();
 	Safe_Delete(m_pUnitTool_Tab1);
+
+	m_pMapTool_Tab2->DestroyWindow();
 	Safe_Delete(m_pMapTool_Tab2);
+
+	m_pTileTool_Tab3->DestroyWindow();
 	Safe_Delete(m_pTileTool_Tab3);
 	// TODO: Add your message handler code here
 }

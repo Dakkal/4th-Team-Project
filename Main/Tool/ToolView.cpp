@@ -14,6 +14,7 @@
 #include "Device.h"
 #include "TextureMgr.h"
 #include "MainFrm.h"
+#include "MyForm.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -192,6 +193,41 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 		case TOP_TAB_TYPE::TILE:
 		{
 			// HEEJUNE
+			RECT	rc{};
+			GetClientRect(&rc);
+			int CX = rc.right - rc.left;
+			int CY = rc.bottom - rc.top;
+
+			{
+				IDirect3DDevice9* g_pd3dDevice = CDevice::Get_Instance()->Get_Device();
+				ID3DXLine* g_pLine;
+
+				D3DXCreateLine(g_pd3dDevice, &g_pLine); // 라인 생성
+				g_pLine->SetWidth(2); // 굵기 설정
+				g_pLine->Begin();
+
+				D3DXVECTOR2 vList1[] =
+				{
+					D3DXVECTOR2(CX * 0.5f, 0),
+					D3DXVECTOR2(CX * 0.5f, WINCY),
+				};
+				g_pLine->Draw(vList1, 2, D3DCOLOR_XRGB(255, 0, 0));
+
+				D3DXVECTOR2 vList2[] =
+				{
+					D3DXVECTOR2(0, CY * 0.5f),
+					D3DXVECTOR2(CX, CY * 0.5f),
+				};
+				g_pLine->Draw(vList2, 2, D3DCOLOR_XRGB(255, 0, 0));
+				g_pLine->End();
+			}
+			{
+				CMainFrame*		pMainFrm = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
+				CMyForm*		pFormView = dynamic_cast<CMyForm*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
+				D3DXVECTOR3		vCenter{ CX * 0.5f, CY * 0.5f, 0.f };
+				pFormView->m_pTileTool_Tab3->Tool_Render(vCenter);
+			}
+			
 		}
 		break;
 		case TOP_TAB_TYPE::MAP:

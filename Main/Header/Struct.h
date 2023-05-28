@@ -41,7 +41,10 @@ typedef struct tagTile
 	D3DXVECTOR3 vSize;
 
 	BYTE		byOption;
+	float		fDamage;
+
 	BYTE		byDrawID;
+
 }TILE;
 
 typedef	struct tagUnitData

@@ -68,6 +68,7 @@
 #define IDC_STATIC_MONSTER_STAT_HP      1056
 #define IDC_STATIC_MONSTER_STAT_AD      1057
 #define IDC_STATIC_MONSTER_STAT_SPEED   1058
+#define IDC_BUTTON4_TILE                1058
 #define IDC_EDIT_MONSTER_STAT_HP_VALUE  1059
 #define IDC_EDIT_MONSTER_STAT_AD_VALUE  1060
 #define IDC_EDIT_MONSTER_STAT_SPEED_VALUE 1061
@@ -90,8 +91,8 @@
 #define IDC_STATIC3_TILE                1078
 #define IDC_EDIT1_TILE                  1079
 #define IDC_EDIT1_TILE2                 1080
+#define IDC_BUTTON2_TILE2               1080
 #define IDC_EDIT2_TILE                  1081
-
 
 // Next default values for new objects
 // 
@@ -99,11 +100,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        325
 #define _APS_NEXT_COMMAND_VALUE         32771
-<<<<<<< HEAD
-#define _APS_NEXT_CONTROL_VALUE         1064
-=======
-#define _APS_NEXT_CONTROL_VALUE         1058
->>>>>>> feature/Jun
+#define _APS_NEXT_CONTROL_VALUE         1059
 #define _APS_NEXT_SYMED_VALUE           313
 #endif
 #endif

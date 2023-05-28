@@ -30,9 +30,9 @@
 #define		SAPPHIRE		0x04		// -> 0100
 
 //타일옵션
-#define		NONETILE		0x05
-#define		BLOCKTILE		0x06
-#define		DAMAGETILE		0x07
+#define		NONETILE		0x00
+#define		BLOCKTILE		0x01
+#define		DAMAGETILE		0x02
 
 
 

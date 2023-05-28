@@ -109,6 +109,7 @@ void CTerrain_Act1::Release()
 {
 }
 
+
 void CTerrain_Act1::Set_Ratio(D3DXMATRIX * pOut, float fRatioX, float fRatioY)
 {
 	pOut->_11 *= fRatioX;

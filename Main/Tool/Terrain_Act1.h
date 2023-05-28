@@ -17,6 +17,9 @@ public:
 	virtual void Release() override;
 
 public:
+	void		Tool_Render(int _iDrawID);
+
+
 	void		Set_MainView(CToolView* pMainView) { m_pMainView = pMainView; }
 	void		Set_Ratio(D3DXMATRIX* pOut, float fRatioX, float fRatioY);
 
