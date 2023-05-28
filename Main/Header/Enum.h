@@ -4,6 +4,16 @@
 
 enum class TERRIAN_TYPE { ACT1, ACT2, ACT3, TYPEEND };
 
+#pragma region HEEJUNE
+
+
+#pragma endregion
+
+#pragma region CHAN
+
+enum class OBJ_TYPE { PLAYER, MONSTER, NPC, ITEM, TERRAIN, UI, TYPEEND };
+
+enum class OBJ_STATE { STAND, WALK, DASH, ATTACK, DAMAGE, SKILL, DIE, TYPEEND };
 
 #pragma endregion
 
@@ -15,9 +25,6 @@ enum class TOP_TAB_TYPE { UNIT, MAP, TILE, TYPEEND }; // »ó´Ü ÅÇ
 
 enum class MID_TAB_TYPE { PLAYER, MONSTER, ITEM, NONE, TYPEEND }; // Áß°£ ÅÇ (°¢ »ó´ÜÅÇ ³»ºÎ¿¡ Æ÷ÇÔµÇ¾î ÀÖ´Â ÅÇ) 
 
-enum class OBJ_TYPE		{ PLAYER, MONSTER, NPC, ITEM, TERRAIN, UI, TYPEEND };
-
-enum class OBJ_STATE	{ STAND, WALK, DASH, ATTACK, DAMAGE, SKILL, DIE, TYPEEND };
 
 
 

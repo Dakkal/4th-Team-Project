@@ -18,7 +18,7 @@ public:
 	LPDIRECT3DDEVICE9		Get_Device(void) { return m_pDevice; }
 	LPD3DXSPRITE			Get_Sprite(void) { return m_pSprite; }
 	LPD3DXFONT				Get_Font(void) { return m_pFont; }
-
+	ID3DXLine*				Get_Line() { return m_pLine; }
 public:
 	HRESULT		Initialize(void);
 
@@ -35,6 +35,7 @@ private:
 	LPDIRECT3DDEVICE9	m_pDevice;	// 장치를 제어할 객체 생성(디바이스 객체), 그래픽 장치를 제어하는 객체 포인터
 	LPD3DXSPRITE		m_pSprite;	// dx 상에서 2D 이미지를 출력해주는 객체
 	LPD3DXFONT			m_pFont;	
+	ID3DXLine*			m_pLine;
 
 };
 

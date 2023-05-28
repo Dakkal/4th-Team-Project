@@ -1,5 +1,31 @@
 #pragma once
 
+
+#pragma region HEEJUNE
+
+
+#pragma endregion
+
+
+#pragma region CHAN
+
+
+typedef	struct tagUnitData
+{
+	CString	strName;
+	int		iAttack;
+	int		iHp;
+
+	BYTE	byJobIndex;
+	BYTE	byItem;
+
+}UNITDATA;
+
+#pragma endregion
+
+
+
+
 typedef struct tagInfo
 {
 	D3DXVECTOR3		vPos;
@@ -47,16 +73,7 @@ typedef struct tagTile
 
 }TILE;
 
-typedef	struct tagUnitData
-{
-	CString	strName;
-	int		iAttack;
-	int		iHp;
 
-	BYTE	byJobIndex;
-	BYTE	byItem;
-
-}UNITDATA;
 
 typedef struct tagTexturePath
 {

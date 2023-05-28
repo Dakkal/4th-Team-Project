@@ -92,7 +92,7 @@ public:
 
 #pragma region UnitTool
 
-	CUnit* m_pCopyUnit = nullptr;
+	CUnit* m_pRenderUnit = nullptr;  
 
 
 #pragma endregion

@@ -1,10 +1,28 @@
 #pragma once
 
-#define		TAB_HEIGHT	30
-#define		TAB_WIDTH	10
+
+#pragma region HEEJUNE
+
+
+#pragma endregion
+
+
+#pragma region CHAN
 
 #define		UNIT_CX		100
 #define		UNIT_CY		100
+
+#define		UNIT_MAX_HP		300.f
+#define		UNIT_MAX_AD		100.f
+#define		UNIT_MAX_SPEED	500.f
+
+#pragma endregion
+
+
+
+#define		TAB_HEIGHT	30
+#define		TAB_WIDTH	10
+
 
 #define		TOOL_CX		1000
 

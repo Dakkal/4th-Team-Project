@@ -47,7 +47,9 @@
 #define IDC_STATIC_MONSTER_STAT         1032
 #define IDC_STATIC_MONSTER_COLLIDER     1033
 #define IDC_STATIC_MONSTER_ANIMATION    1034
+#define IDC_BUTTON_MONSTER_INIT         1035
 #define IDC_LIST4                       1038
+#define IDC_LIST_MONSTER_TEXTURE        1038
 #define IDC_STATIC_MONSTER_POS          1039
 #define IDC_STATIC_MONSTER_ROT          1040
 #define IDC_STATIC_MONSTER_SCL          1041
@@ -76,6 +78,7 @@
 #define IDC_SLIDER_MONSTER_AD           1064
 #define IDC_SLIDER_MONSTER_HP3          1065
 #define IDC_SLIDER_MONSTER_SPEED        1065
+
 #define IDC_LIST_TILE                   1066
 #define IDC_COMBO_TILE                  1067
 #define IDC_BUTTON2_TILE                1068
@@ -94,13 +97,22 @@
 #define IDC_BUTTON2_TILE2               1080
 #define IDC_EDIT2_TILE                  1081
 
+
+#define IDC_STATIC_MONSTER_TEXTURE      1082
+#define IDC_STATIC_MOSTER_LIST_DRAG     1083
+
+
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        325
 #define _APS_NEXT_COMMAND_VALUE         32771
+<<<<<<< HEAD
 #define _APS_NEXT_CONTROL_VALUE         1059
+=======
+#define _APS_NEXT_CONTROL_VALUE         1072
+>>>>>>> feature/Chan
 #define _APS_NEXT_SYMED_VALUE           313
 #endif
 #endif
