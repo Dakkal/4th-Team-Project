@@ -71,7 +71,7 @@ typedef struct tagTile
 	BYTE		byOption;
 	float		fDamage;
 
-	BYTE		byDrawID;
+	UINT		byDrawID;
 
 }TILE;
 

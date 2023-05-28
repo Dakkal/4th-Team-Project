@@ -19,7 +19,7 @@ IMPLEMENT_DYNAMIC(CTileTool_Tab3, CDialogEx)
 
 CTileTool_Tab3::CTileTool_Tab3(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_TILETOOL, pParent)
-	, m_iTileDamage(0)
+	, m_fTileDamage(0)
 	, m_iDrawId_First(0)
 	, m_iDrawId_Last(0)
 {
@@ -40,7 +40,7 @@ void CTileTool_Tab3::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CHECK3_TILE, m_Check_Tile[2]);
 	DDX_Control(pDX, IDC_SPIN_TILE, m_Spin_Tile);
 
-	DDX_Text(pDX, IDC_EDIT_TILE, m_iTileDamage);
+	DDX_Text(pDX, IDC_EDIT_TILE, m_fTileDamage);
 	DDX_Text(pDX, IDC_EDIT1_TILE, m_iDrawId_First);
 	DDX_Text(pDX, IDC_EDIT2_TILE, m_iDrawId_Last);
 	DDX_Control(pDX, IDC_EDIT_TILE, m_Edit_TileDmg);
@@ -65,17 +65,17 @@ BOOL CTileTool_Tab3::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	//텍스처 입력
-	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/00.Tile/Act1/Tile_%d.png", TEX_MULTI, L"Act1Terrain", L"Tile", 325)))
+	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/00.Tile/Act1/Tile_%d.png", TEX_MULTI, L"Act1Terrain", L"Tile", 326)))
 	{
 		AfxMessageBox(L"TileTexture Create Failed");
 		return E_FAIL;
 	}
-	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/00.Tile/Act2/Tile%d.png", TEX_MULTI, L"Act2Terrain", L"Tile", 31)))
+	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/00.Tile/Act2/Tile%d.png", TEX_MULTI, L"Act2Terrain", L"Tile", 32)))
 	{
 		AfxMessageBox(L"TileTexture Create Failed");
 		return E_FAIL;
 	}
-	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/00.Tile/Act3/Tile_%d.png", TEX_MULTI, L"Act3Terrain", L"Tile", 288)))
+	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/00.Tile/Act3/Tile_%d.png", TEX_MULTI, L"Act3Terrain", L"Tile", 289)))
 	{
 		AfxMessageBox(L"TileTexture Create Failed");
 		return E_FAIL;
@@ -146,40 +146,24 @@ void CTileTool_Tab3::Tool_Render(const D3DXVECTOR3& _vWorld)
 
 	TERRIAN_TYPE e_TerrainTYPE = static_cast<TERRIAN_TYPE>(m_Combo_Tile.GetCurSel());
 
+	TILE* pTile = nullptr;
+
 	switch (e_TerrainTYPE)
 	{
 	case TERRIAN_TYPE::ACT1:
 	{
 		for (auto& iter : m_vecTile)
 		{
-			if (iter->eType == TERRIAN_TYPE::ACT1 &&
+			if (m_List_Tile.GetSelCount() > 1 &&
+				iter->eType == TERRIAN_TYPE::ACT1 &&
+				iter->byDrawID == m_iDrawId_Last)
+			{
+				pTile = iter;
+			}
+			else if (iter->eType == TERRIAN_TYPE::ACT1 &&
 				iter->byDrawID == m_iDrawId_First)
 			{
-				D3DXMATRIX matWorld, matScale, matRotZ, matTrans;
-
-				D3DXVECTOR3 vPos = iter->vPos + _vWorld; // 
-
-				D3DXMatrixIdentity(&matWorld);
-				D3DXMatrixScaling(&matScale, iter->vSize.x, iter->vSize.y, iter->vSize.z);
-				D3DXMatrixTranslation(&matTrans, vPos.x, vPos.y, vPos.z);
-
-				matWorld = matScale *  matTrans;
-
-				const TEXINFO*	pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Act1Terrain", L"Tile", iter->byDrawID);
-
-				if (nullptr == pTexInfo) return;
-
-				float	fX = pTexInfo->tImgInfo.Width / 2.f;
-				float	fY = pTexInfo->tImgInfo.Height / 2.f;
-
-				// 이미지에 행렬을 반영
-				CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
-
-				CDevice::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture,
-					nullptr,							// 출력할 이미지 영역에 대한 Rect 주소, null인 경우 이미지의 0, 0 기준으로 출력
-					&D3DXVECTOR3(fX, fY, 0.f),			// 출력할 이미지의 중심축에 대한 vector3 주소, null인 경우 이미지의 0, 0이 중심 좌표
-					nullptr,							// 위치 좌표에 대한 vector3 주소, null인 경우 스크린 상의 0, 0좌표 출력
-					D3DCOLOR_ARGB(255, 255, 255, 255)); // 출력할 이미지와 섞을 색상 값, 0xffffffff를 넘겨주면 원본 색상 유지
+				pTile = iter;
 			}
 		}
 	}
@@ -188,34 +172,16 @@ void CTileTool_Tab3::Tool_Render(const D3DXVECTOR3& _vWorld)
 	{
 		for (auto& iter : m_vecTile)
 		{
-			if (iter->eType == TERRIAN_TYPE::ACT2 &&
+			if (m_List_Tile.GetSelCount() > 1 &&
+				iter->eType == TERRIAN_TYPE::ACT2 &&
+				iter->byDrawID == m_iDrawId_Last)
+			{
+				pTile = iter;
+			}
+			else if (iter->eType == TERRIAN_TYPE::ACT2 &&
 				iter->byDrawID == m_iDrawId_First)
 			{
-				D3DXMATRIX matWorld, matScale, matRotZ, matTrans;
-
-				D3DXVECTOR3 vPos = iter->vPos + _vWorld; // 
-
-				D3DXMatrixIdentity(&matWorld);
-				D3DXMatrixScaling(&matScale, iter->vSize.x, iter->vSize.y, iter->vSize.z);
-				D3DXMatrixTranslation(&matTrans, vPos.x, vPos.y, vPos.z);
-
-				matWorld = matScale *  matTrans;
-
-				const TEXINFO*	pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Act2Terrain", L"Tile", iter->byDrawID);
-
-				if (nullptr == pTexInfo) return;
-
-				float	fX = pTexInfo->tImgInfo.Width / 2.f;
-				float	fY = pTexInfo->tImgInfo.Height / 2.f;
-
-				// 이미지에 행렬을 반영
-				CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
-
-				CDevice::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture,
-					nullptr,							// 출력할 이미지 영역에 대한 Rect 주소, null인 경우 이미지의 0, 0 기준으로 출력
-					&D3DXVECTOR3(fX, fY, 0.f),			// 출력할 이미지의 중심축에 대한 vector3 주소, null인 경우 이미지의 0, 0이 중심 좌표
-					nullptr,							// 위치 좌표에 대한 vector3 주소, null인 경우 스크린 상의 0, 0좌표 출력
-					D3DCOLOR_ARGB(255, 255, 255, 255)); // 출력할 이미지와 섞을 색상 값, 0xffffffff를 넘겨주면 원본 색상 유지
+				pTile = iter;
 			}
 		}
 	}
@@ -224,34 +190,16 @@ void CTileTool_Tab3::Tool_Render(const D3DXVECTOR3& _vWorld)
 	{
 		for (auto& iter : m_vecTile)
 		{
-			if (iter->eType == TERRIAN_TYPE::ACT3 &&
+			if (m_List_Tile.GetSelCount() > 1 &&
+				iter->eType == TERRIAN_TYPE::ACT3 &&
+				iter->byDrawID == m_iDrawId_Last)
+			{
+				pTile = iter;
+			}
+			else if (iter->eType == TERRIAN_TYPE::ACT3 &&
 				iter->byDrawID == m_iDrawId_First)
 			{
-				D3DXMATRIX matWorld, matScale, matRotZ, matTrans;
-
-				D3DXVECTOR3 vPos = iter->vPos + _vWorld; // 
-
-				D3DXMatrixIdentity(&matWorld);
-				D3DXMatrixScaling(&matScale, iter->vSize.x, iter->vSize.y, iter->vSize.z);
-				D3DXMatrixTranslation(&matTrans, vPos.x, vPos.y, vPos.z);
-
-				matWorld = matScale *  matTrans;
-
-				const TEXINFO*	pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Act3Terrain", L"Tile", iter->byDrawID);
-
-				if (nullptr == pTexInfo) return;
-
-				float	fX = pTexInfo->tImgInfo.Width / 2.f;
-				float	fY = pTexInfo->tImgInfo.Height / 2.f;
-
-				// 이미지에 행렬을 반영
-				CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
-
-				CDevice::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture,
-					nullptr,							// 출력할 이미지 영역에 대한 Rect 주소, null인 경우 이미지의 0, 0 기준으로 출력
-					&D3DXVECTOR3(fX, fY, 0.f),			// 출력할 이미지의 중심축에 대한 vector3 주소, null인 경우 이미지의 0, 0이 중심 좌표
-					nullptr,							// 위치 좌표에 대한 vector3 주소, null인 경우 스크린 상의 0, 0좌표 출력
-					D3DCOLOR_ARGB(255, 255, 255, 255)); // 출력할 이미지와 섞을 색상 값, 0xffffffff를 넘겨주면 원본 색상 유지
+				pTile = iter;
 			}
 		}
 	}
@@ -260,7 +208,31 @@ void CTileTool_Tab3::Tool_Render(const D3DXVECTOR3& _vWorld)
 		break;
 	}
 
-	
+	D3DXMATRIX matWorld, matScale, matRotZ, matTrans;
+
+	D3DXVECTOR3 vPos = pTile->vPos + _vWorld; // 
+
+	D3DXMatrixIdentity(&matWorld);
+	D3DXMatrixScaling(&matScale, pTile->vSize.x, pTile->vSize.y, pTile->vSize.z);
+	D3DXMatrixTranslation(&matTrans, vPos.x, vPos.y, vPos.z);
+
+	matWorld = matScale *  matTrans;
+
+	const TEXINFO*	pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Act1Terrain", L"Tile", pTile->byDrawID);
+
+	if (nullptr == pTexInfo) return;
+
+	float	fX = pTexInfo->tImgInfo.Width / 2.f;
+	float	fY = pTexInfo->tImgInfo.Height / 2.f;
+
+	// 이미지에 행렬을 반영
+	CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
+
+	CDevice::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture,
+		nullptr,							// 출력할 이미지 영역에 대한 Rect 주소, null인 경우 이미지의 0, 0 기준으로 출력
+		&D3DXVECTOR3(fX, fY, 0.f),			// 출력할 이미지의 중심축에 대한 vector3 주소, null인 경우 이미지의 0, 0이 중심 좌표
+		nullptr,							// 위치 좌표에 대한 vector3 주소, null인 경우 스크린 상의 0, 0좌표 출력
+		D3DCOLOR_ARGB(255, 255, 255, 255)); // 출력할 이미지와 섞을 색상 값, 0xffffffff를 넘겨주면 원본 색상 유지
 	
 	UpdateData(FALSE);
 
@@ -372,8 +344,6 @@ void CTileTool_Tab3::OnListTile()
 	// TODO: Add your control notification handler code here
 	UpdateData(TRUE);
 
-	
-
 	if (m_List_Tile.GetSelCount() > 1) {
 		// 선택된 항목들의 인덱스 배열을 저장할 배열 선언
 		CArray<int, int> selectedIndices;
@@ -401,7 +371,7 @@ void CTileTool_Tab3::OnListTile()
 			if (iter->eType == TERRIAN_TYPE::ACT1 &&
 				iter->byDrawID == m_iDrawId_First)
 			{
-				m_iTileDamage = iter->fDamage;
+				m_fTileDamage = iter->fDamage;
 				for (int i = 0; i < 3; ++i)
 				{
 					m_Check_Tile[i].SetCheck(FALSE);
@@ -423,7 +393,7 @@ void CTileTool_Tab3::OnListTile()
 			if (iter->eType == TERRIAN_TYPE::ACT2 &&
 				iter->byDrawID == m_iDrawId_First)
 			{
-				m_iTileDamage = iter->fDamage;
+				m_fTileDamage = iter->fDamage;
 				for (int i = 0; i < 3; ++i)
 				{
 					m_Check_Tile[i].SetCheck(FALSE);
@@ -445,7 +415,7 @@ void CTileTool_Tab3::OnListTile()
 			if (iter->eType == TERRIAN_TYPE::ACT3 &&
 				iter->byDrawID == m_iDrawId_First)
 			{
-				m_iTileDamage = iter->fDamage;
+				m_fTileDamage = iter->fDamage;
 				for (int i = 0; i < 3; ++i)
 				{
 					m_Check_Tile[i].SetCheck(FALSE);
@@ -478,13 +448,13 @@ void CTileTool_Tab3::OnSet_TileDamage(NMHDR *pNMHDR, LRESULT *pResult)
 	
 	UpdateData(TRUE);
 
-	m_Spin_Tile.SetPos(m_iTileDamage);
+	m_Spin_Tile.SetPos((int)m_fTileDamage);
 
 	int iValue = pNMUpDown->iPos + pNMUpDown->iDelta;
 
 	if (0 <= iValue && iValue <= 10)
 	{
-		m_iTileDamage = iValue;
+		m_fTileDamage = (float)iValue;
 	}
 
 	UpdateData(FALSE);
@@ -508,7 +478,7 @@ void CTileTool_Tab3::OnPush_Tile()
 				if (iter->eType == TERRIAN_TYPE::ACT1 &&
 					iter->byDrawID == m_iDrawId_First)
 				{
-					iter->fDamage = m_iTileDamage;
+					iter->fDamage = m_fTileDamage;
 					if (m_Check_Tile[0].GetCheck())
 						iter->byOption = NONETILE;
 					if (m_Check_Tile[1].GetCheck())
@@ -524,7 +494,7 @@ void CTileTool_Tab3::OnPush_Tile()
 				if (iter->eType == TERRIAN_TYPE::ACT2 &&
 					iter->byDrawID == m_iDrawId_First)
 				{
-					iter->fDamage = m_iTileDamage;
+					iter->fDamage = m_fTileDamage;
 					if (m_Check_Tile[0].GetCheck())
 						iter->byOption = NONETILE;
 					if (m_Check_Tile[1].GetCheck())
@@ -540,7 +510,7 @@ void CTileTool_Tab3::OnPush_Tile()
 				if (iter->eType == TERRIAN_TYPE::ACT3 &&
 					iter->byDrawID == m_iDrawId_First)
 				{
-					iter->fDamage = m_iTileDamage;
+					iter->fDamage = m_fTileDamage;
 					if (m_Check_Tile[0].GetCheck())
 						iter->byOption = NONETILE;
 					if (m_Check_Tile[1].GetCheck())
@@ -590,7 +560,7 @@ void CTileTool_Tab3::OnPush_Tile()
 
 			for (vector<TILE*>::iterator iter = pFirstTile; iter != pLastTile; ++iter)
 			{
-				(*iter)->fDamage = m_iTileDamage;
+				(*iter)->fDamage = m_fTileDamage;
 				if (m_Check_Tile[0].GetCheck())
 					(*iter)->byOption = NONETILE;
 				if (m_Check_Tile[1].GetCheck())
@@ -617,7 +587,7 @@ void CTileTool_Tab3::OnPush_Tile()
 
 			for (vector<TILE*>::iterator iter = pFirstTile; iter != pLastTile; ++iter)
 			{
-				(*iter)->fDamage = m_iTileDamage;
+				(*iter)->fDamage = m_fTileDamage;
 				if (m_Check_Tile[0].GetCheck())
 					(*iter)->byOption = NONETILE;
 				if (m_Check_Tile[1].GetCheck())
@@ -644,7 +614,7 @@ void CTileTool_Tab3::OnPush_Tile()
 
 			for (vector<TILE*>::iterator iter = pFirstTile; iter !=pLastTile; ++iter)
 			{
-				(*iter)->fDamage = m_iTileDamage;
+				(*iter)->fDamage = m_fTileDamage;
 				if (m_Check_Tile[0].GetCheck())
 					(*iter)->byOption = NONETILE;
 				if (m_Check_Tile[1].GetCheck())
@@ -715,7 +685,7 @@ void CTileTool_Tab3::OnClear_Tile()
 		m_Check_Tile[i].SetCheck(FALSE);
 	}
 	m_Check_Tile[0].SetCheck(TRUE);
-	m_iTileDamage = 0;
+	m_fTileDamage = 0;
 	
 	UpdateData(FALSE);
 }
@@ -829,7 +799,7 @@ void CTileTool_Tab3::OnLoadDB_Tile()
 				if (iter->eType == TERRIAN_TYPE::ACT1 &&
 					iter->byDrawID == m_iDrawId_First)
 				{
-					m_iTileDamage = iter->fDamage;
+					m_fTileDamage = iter->fDamage;
 					for (int i = 0; i < 3; ++i)
 					{
 						m_Check_Tile[i].SetCheck(FALSE);
@@ -851,7 +821,7 @@ void CTileTool_Tab3::OnLoadDB_Tile()
 				if (iter->eType == TERRIAN_TYPE::ACT2 &&
 					iter->byDrawID == m_iDrawId_First)
 				{
-					m_iTileDamage = iter->fDamage;
+					m_fTileDamage = iter->fDamage;
 					for (int i = 0; i < 3; ++i)
 					{
 						m_Check_Tile[i].SetCheck(FALSE);
@@ -873,7 +843,7 @@ void CTileTool_Tab3::OnLoadDB_Tile()
 				if (iter->eType == TERRIAN_TYPE::ACT3 &&
 					iter->byDrawID == m_iDrawId_First)
 				{
-					m_iTileDamage = iter->fDamage;
+					m_fTileDamage = iter->fDamage;
 					for (int i = 0; i < 3; ++i)
 					{
 						m_Check_Tile[i].SetCheck(FALSE);
@@ -899,247 +869,17 @@ void CTileTool_Tab3::OnLoadDB_Tile()
 	UpdateData(FALSE);
 }
 
-//void CTileTool_Tab3::Sort_File(TERRIAN_TYPE _eTerrainType)
-//{
-//	UpdateData(TRUE);
-//
-//	RECT	rc{};
-//	m_pMainView->GetClientRect(&rc);
-//	float CX = float(rc.right - rc.left);
-//	float CY = float(rc.bottom - rc.top);
-//
-//	switch (_eTerrainType)
-//	{
-//	case TERRIAN_TYPE::ACT1:
-//		if (m_vecTile_Act1.empty())
-//		{
-//			vector<CString> fileList;
-//			for (int i = 0; i < m_List_Tile.GetCount(); i++)
-//			{
-//				CString fileName;
-//				m_List_Tile.GetText(i, fileName);
-//				fileList.push_back(fileName);
-//			}
-//
-//			sort(fileList.begin(), fileList.end(), [](const CString& str1, const CString& str2) {
-//				CString numStr1 = str1.Mid(10, str1.GetLength() - (4 * sizeof(TCHAR)));
-//				int num1 = _wtoi(numStr1);
-//
-//				CString numStr2 = str2.Mid(10, str2.GetLength() - (4 * sizeof(TCHAR)));
-//				int num2 = _wtoi(numStr2);
-//
-//				return num1 < num2;
-//			});
-//
-//			m_List_Tile.ResetContent();
-//			int iDrawIdCount = 0;
-//
-//			for (const CString& fileName : fileList)
-//			{
-//				m_List_Tile.AddString(fileName);
-//
-//				TILE*	pTile = new TILE;
-//
-//				pTile->eType = TERRIAN_TYPE::ACT1;
-//				pTile->vPos = { 0.f, 0.f, 0.f };
-//				pTile->vSize = { 1.f, 1.f , 1.f };
-//				pTile->byOption = NONETILE;
-//				pTile->fDamage = 0;
-//				pTile->byDrawID = iDrawIdCount;
-//				iDrawIdCount++;
-//
-//				m_vecTile_Act1.push_back(pTile);
-//			}
-//		}
-//		else
-//		{
-//			vector<CString> fileList;
-//			for (int i = 0; i < m_List_Tile.GetCount(); i++)
-//			{
-//				CString fileName;
-//				m_List_Tile.GetText(i, fileName);
-//				fileList.push_back(fileName);
-//			}
-//
-//			sort(fileList.begin(), fileList.end(), [](const CString& str1, const CString& str2) {
-//				CString numStr1 = str1.Mid(10, str1.GetLength() - (4 * sizeof(TCHAR)));
-//				int num1 = _wtoi(numStr1);
-//
-//				CString numStr2 = str2.Mid(10, str2.GetLength() - (4 * sizeof(TCHAR)));
-//				int num2 = _wtoi(numStr2);
-//
-//				return num1 < num2;
-//			});
-//
-//			m_List_Tile.ResetContent();
-//			for (const CString& fileName : fileList)
-//			{
-//				m_List_Tile.AddString(fileName);
-//			}
-//		}
-//		break;
-//	case TERRIAN_TYPE::ACT2:
-//		if (m_vecTile_Act2.empty())
-//		{
-//			vector<CString> fileList;
-//			for (int i = 0; i < m_List_Tile.GetCount(); i++)
-//			{
-//				CString fileName;
-//				m_List_Tile.GetText(i, fileName);
-//				fileList.push_back(fileName);
-//			}
-//
-//			sort(fileList.begin(), fileList.end(), [](const CString& str1, const CString& str2) {
-//				CString numStr1 = str1.Mid(9, str1.GetLength() - (4 * sizeof(TCHAR)));
-//				int num1 = _wtoi(numStr1);
-//
-//				CString numStr2 = str2.Mid(9, str2.GetLength() - (4 * sizeof(TCHAR)));
-//				int num2 = _wtoi(numStr2);
-//
-//				return num1 < num2;
-//			});
-//
-//			m_List_Tile.ResetContent();
-//			int iDrawIdCount = 0;
-//
-//			for (const CString& fileName : fileList)
-//			{
-//				m_List_Tile.AddString(fileName);
-//
-//				TILE*	pTile = new TILE;
-//
-//				pTile->eType = TERRIAN_TYPE::ACT2;
-//				pTile->vPos = { 0.f, 0.f, 0.f };
-//				pTile->vSize = { 1.f, 1.f , 1.f };
-//				pTile->byOption = NONETILE;
-//				pTile->fDamage = 0;
-//				pTile->byDrawID = iDrawIdCount;
-//				iDrawIdCount++;
-//
-//				m_vecTile_Act2.push_back(pTile);
-//			}
-//		}
-//		else
-//		{
-//			vector<CString> fileList;
-//			for (int i = 0; i < m_List_Tile.GetCount(); i++)
-//			{
-//				CString fileName;
-//				m_List_Tile.GetText(i, fileName);
-//				fileList.push_back(fileName);
-//			}
-//
-//			sort(fileList.begin(), fileList.end(), [](const CString& str1, const CString& str2) {
-//				CString numStr1 = str1.Mid(9, str1.GetLength() - (4 * sizeof(TCHAR)));
-//				int num1 = _wtoi(numStr1);
-//
-//				CString numStr2 = str2.Mid(9, str2.GetLength() - (4 * sizeof(TCHAR)));
-//				int num2 = _wtoi(numStr2);
-//
-//				return num1 < num2;
-//			});
-//
-//			m_List_Tile.ResetContent();
-//			for (const CString& fileName : fileList)
-//			{
-//				m_List_Tile.AddString(fileName);
-//			}
-//		}
-//		break;
-//	case TERRIAN_TYPE::ACT3:
-//		if (m_vecTile_Act3.empty())
-//		{
-//			vector<CString> fileList;
-//			for (int i = 0; i < m_List_Tile.GetCount(); i++)
-//			{
-//				CString fileName;
-//				m_List_Tile.GetText(i, fileName);
-//				fileList.push_back(fileName);
-//			}
-//
-//			sort(fileList.begin(), fileList.end(), [](const CString& str1, const CString& str2) {
-//				CString numStr1 = str1.Mid(10, str1.GetLength() - (4 * sizeof(TCHAR)));
-//				int num1 = _wtoi(numStr1);
-//
-//				CString numStr2 = str2.Mid(10, str2.GetLength() - (4 * sizeof(TCHAR)));
-//				int num2 = _wtoi(numStr2);
-//
-//				return num1 < num2;
-//			});
-//
-//			m_List_Tile.ResetContent();
-//			int iDrawIdCount = 0;
-//
-//			for (const CString& fileName : fileList)
-//			{
-//				m_List_Tile.AddString(fileName);
-//
-//				TILE*	pTile = new TILE;
-//
-//				pTile->eType = TERRIAN_TYPE::ACT3;
-//				pTile->vPos = { 0.f, 0.f, 0.f };
-//				pTile->vSize = { 1.f, 1.f , 1.f };
-//				pTile->byOption = NONETILE;
-//				pTile->fDamage = 0;
-//				pTile->byDrawID = iDrawIdCount;
-//				iDrawIdCount++;
-//
-//				m_vecTile_Act3.push_back(pTile);
-//			}
-//		}
-//		else
-//		{
-//			vector<CString> fileList;
-//			for (int i = 0; i < m_List_Tile.GetCount(); i++)
-//			{
-//				CString fileName;
-//				m_List_Tile.GetText(i, fileName);
-//				fileList.push_back(fileName);
-//			}
-//
-//			sort(fileList.begin(), fileList.end(), [](const CString& str1, const CString& str2) {
-//				CString numStr1 = str1.Mid(10, str1.GetLength() - (4 * sizeof(TCHAR)));
-//				int num1 = _wtoi(numStr1);
-//
-//				CString numStr2 = str2.Mid(10, str2.GetLength() - (4 * sizeof(TCHAR)));
-//				int num2 = _wtoi(numStr2);
-//
-//				return num1 < num2;
-//			});
-//
-//			m_List_Tile.ResetContent();
-//			for (const CString& fileName : fileList)
-//			{
-//				m_List_Tile.AddString(fileName);
-//			}
-//		}
-//		break;
-//	default:
-//		break;
-//	}
-//
-//	UpdateData(FALSE);
-//}
-
-
-
-
 
 void CTileTool_Tab3::Sort_File(TERRIAN_TYPE _eTerrainType)
 {
 	UpdateData(TRUE);
-
-	RECT	rc{};
-	m_pMainView->GetClientRect(&rc);
-	float CX = float(rc.right - rc.left);
-	float CY = float(rc.bottom - rc.top);
 
 	switch (_eTerrainType)
 	{
 	case TERRIAN_TYPE::ACT1:
 		{
 			vector<CString> fileList;
-			for (int i = 0; i < m_List_Tile.GetCount(); i++)
+			for (int i = 0; i < m_List_Tile.GetCount(); ++i)
 			{
 				CString fileName;
 				m_List_Tile.GetText(i, fileName);
@@ -1184,9 +924,10 @@ void CTileTool_Tab3::Sort_File(TERRIAN_TYPE _eTerrainType)
 					pTile->byOption = NONETILE;
 					pTile->fDamage = 0;
 					pTile->byDrawID = iDrawIdCount;
-					iDrawIdCount++;
-
+					
 					m_vecTile.push_back(pTile);
+
+					++iDrawIdCount;
 				}
 			}
 		}
@@ -1194,7 +935,7 @@ void CTileTool_Tab3::Sort_File(TERRIAN_TYPE _eTerrainType)
 	case TERRIAN_TYPE::ACT2:
 		{
 			vector<CString> fileList;
-			for (int i = 0; i < m_List_Tile.GetCount(); i++)
+			for (int i = 0; i < m_List_Tile.GetCount(); ++i)
 			{
 				CString fileName;
 				m_List_Tile.GetText(i, fileName);
@@ -1239,9 +980,10 @@ void CTileTool_Tab3::Sort_File(TERRIAN_TYPE _eTerrainType)
 					pTile->byOption = NONETILE;
 					pTile->fDamage = 0;
 					pTile->byDrawID = iDrawIdCount;
-					iDrawIdCount++;
 
 					m_vecTile.push_back(pTile);
+
+					++iDrawIdCount;
 				}
 			}
 		}
@@ -1249,7 +991,7 @@ void CTileTool_Tab3::Sort_File(TERRIAN_TYPE _eTerrainType)
 	case TERRIAN_TYPE::ACT3:
 		{
 			vector<CString> fileList;
-			for (int i = 0; i < m_List_Tile.GetCount(); i++)
+			for (int i = 0; i < m_List_Tile.GetCount(); ++i)
 			{
 				CString fileName;
 				m_List_Tile.GetText(i, fileName);
@@ -1294,9 +1036,10 @@ void CTileTool_Tab3::Sort_File(TERRIAN_TYPE _eTerrainType)
 					pTile->byOption = NONETILE;
 					pTile->fDamage = 0;
 					pTile->byDrawID = iDrawIdCount;
-					iDrawIdCount++;
-
+					
 					m_vecTile.push_back(pTile);
+
+					++iDrawIdCount;
 				}
 			
 			}

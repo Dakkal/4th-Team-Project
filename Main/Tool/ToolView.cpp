@@ -160,7 +160,7 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 				D3DXVECTOR2 vList2[] =
 				{
 					D3DXVECTOR2(0, CY * 0.5f),
-					D3DXVECTOR2(CX, CY * 0.5f),
+					D3DXVECTOR2(float(CX), CY * 0.5f),
 				};
 
 				CDevice::Get_Instance()->Get_Line()->Begin(); // 라인 그리기 시작 (Render_Begin()처럼)
@@ -214,7 +214,7 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 				D3DXVECTOR2 vList2[] =
 				{
 					D3DXVECTOR2(0, CY * 0.5f),
-					D3DXVECTOR2(CX, CY * 0.5f),
+					D3DXVECTOR2(float(CX), CY * 0.5f),
 				};
 
 				CDevice::Get_Instance()->Get_Line()->Begin(); // 라인 그리기 시작 (Render_Begin()처럼)

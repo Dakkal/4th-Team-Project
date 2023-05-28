@@ -51,12 +51,10 @@ public:
 	CEdit				m_Edit_TileDmg;
 
 public:
-	int m_iTileDamage;
+	float m_fTileDamage;
 
 	int m_iDrawId_First;
 	int m_iDrawId_Last;
-	
-	int	m_iDrawID = 0;
 
 public:
 	vector<TILE*>	m_vecTile;
