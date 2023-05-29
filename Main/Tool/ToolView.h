@@ -18,7 +18,9 @@ class CToolDoc;
 /* CHAN */
 #include "Unit.h"
 
-
+class CTerrain_Act1;
+class CTerrain_Act2;
+class CTerrain_Act3;
 class CToolView : public CScrollView
 {
 protected: // serialization에서만 만들어집니다.
@@ -77,6 +79,26 @@ public:
 
 	TOP_TAB_TYPE m_eCurTopTab;
 	MID_TAB_TYPE m_eCurMidTab;
+
+#pragma region MapTool
+
+#pragma region Jun
+public:
+
+	CTerrain_Act1*	 m_pTerrain_Act1_View = nullptr;
+	CTerrain_Act2*	 m_pTerrain_Act2_View = nullptr;
+	CTerrain_Act3*	 m_pTerrain_Act3_View = nullptr;
+#pragma endregion
+
+#pragma region Chan
+
+#pragma endregion
+
+
+
+
+#pragma endregion
+
 
 
 /* HEEJUNE */

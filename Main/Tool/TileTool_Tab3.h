@@ -6,9 +6,6 @@
 
 // CTileTool_Tab3 dialog
 class CToolView;
-class CTerrain_Act1;
-class CTerrain_Act2;
-class CTerrain_Act3;
 class CTileTool_Tab3 : public CDialogEx
 {
 	DECLARE_DYNAMIC(CTileTool_Tab3)

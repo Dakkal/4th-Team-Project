@@ -18,6 +18,9 @@
 #include "MyForm.h"
 #include "UnitTool_Tab1.h"
 #include "TimeMgr.h"
+#include "Terrain_Act1.h"
+#include "Terrain_Act2.h"
+#include "Terrain_Act3.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -235,7 +238,33 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 		break;
 		case TOP_TAB_TYPE::MAP:
 		{
+			CMainFrame*		pMainFrm = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
+			CMyForm*		pFormView = dynamic_cast<CMyForm*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
 
+			TERRIAN_TYPE eTerrian_Type = static_cast<TERRIAN_TYPE>(pFormView->m_pMapTool_Tab2->m_Combo_SelecMap.GetCurSel());
+			switch (eTerrian_Type)
+			{
+			case TERRIAN_TYPE::ACT1:
+			{
+				if (m_pTerrain_Act1_View != nullptr)
+					m_pTerrain_Act1_View->Render();
+			}
+				break;
+			case TERRIAN_TYPE::ACT2:
+			{
+				if (m_pTerrain_Act2_View != nullptr)
+					m_pTerrain_Act2_View->Render();
+			}
+				break;
+			case TERRIAN_TYPE::ACT3:
+			{
+				if (m_pTerrain_Act3_View != nullptr)
+					m_pTerrain_Act3_View->Render();
+			}
+				break;
+			default:
+				break;
+			}
 		}
 		break;
 		default:
@@ -265,6 +294,7 @@ void CToolView::OnDestroy()
 
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
 }
+
 #pragma region 안봐
 BOOL CToolView::PreCreateWindow(CREATESTRUCT& cs)
 {
@@ -355,7 +385,26 @@ void CToolView::OnLButtonDown(UINT nFlags, CPoint point)
 	break;
 	case TOP_TAB_TYPE::MAP:
 	{
+		CMainFrame*		pMainFrm = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
+		CMyForm*		pFormView = dynamic_cast<CMyForm*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
+		TILE* pChangeTile = pFormView->m_pMapTool_Tab2->m_tSelectTile;
 
+		if (GetAsyncKeyState(VK_LBUTTON))
+		{
+			if (m_pTerrain_Act1_View != nullptr)
+			{
+				m_pTerrain_Act1_View->Tile_Change({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, pChangeTile);
+			}
+			else if (m_pTerrain_Act2_View != nullptr)
+			{
+				m_pTerrain_Act2_View->Tile_Change({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, pChangeTile);
+			}
+			else if (m_pTerrain_Act3_View != nullptr)
+			{
+				m_pTerrain_Act3_View->Tile_Change({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, pChangeTile);
+			}
+			Invalidate(FALSE);
+		}
 	}
 	break;
 	default:
@@ -433,7 +482,26 @@ void CToolView::OnMouseMove(UINT nFlags, CPoint point)
 	break;
 	case TOP_TAB_TYPE::MAP:
 	{
+		CMainFrame*		pMainFrm = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
+		CMyForm*		pFormView = dynamic_cast<CMyForm*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
+		TILE* pChangeTile = pFormView->m_pMapTool_Tab2->m_tSelectTile;
 
+		if (GetAsyncKeyState(VK_LBUTTON))
+		{
+			if (m_pTerrain_Act1_View != nullptr)
+			{
+				m_pTerrain_Act1_View->Tile_Change({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, pChangeTile);
+			}
+			else if (m_pTerrain_Act2_View != nullptr)
+			{
+				m_pTerrain_Act2_View->Tile_Change({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, pChangeTile);
+			}
+			else if (m_pTerrain_Act3_View != nullptr)
+			{
+				m_pTerrain_Act3_View->Tile_Change({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, pChangeTile);
+			}
+			Invalidate(FALSE);
+		}
 	}
 	break;
 	default:

@@ -3,7 +3,10 @@
 #include "Include.h"
 #include "afxwin.h"
 // CMapTool_Tab2 dialog
-
+class CToolView;
+class CTerrain_Act1;
+class CTerrain_Act2;
+class CTerrain_Act3;
 class CMapTool_Tab2 : public CDialogEx
 {
 	DECLARE_DYNAMIC(CMapTool_Tab2)
@@ -31,6 +34,7 @@ public:
 	afx_msg void OnList_Tile();
 	afx_msg void OnCombo_ChangeAct();
 	afx_msg void OnButton_ReloadTile();
+	afx_msg void OnButton_CreateMap();
 private:
 	void	Load_TileList();
 	void	Sort_TileList(TERRIAN_TYPE _eType);
@@ -39,11 +43,24 @@ public:
 	CListBox	m_ListTile;
 	CStatic		m_Texture_Tile;
 	CComboBox	m_ComboTile;
-public:
-	vector<TILE*>				m_vecTile;
-	TILE*						m_tSelectTile = nullptr;
+	CComboBox	m_Combo_SelecMap;
 
-	map<CString, CImage*>		m_TilePngImg;
+public:
+	CToolView* m_pMainView = nullptr;
+	CTerrain_Act1* m_pTerrain_Act1 = nullptr;
+	CTerrain_Act2* m_pTerrain_Act2 = nullptr;
+	CTerrain_Act3* m_pTerrain_Act3 = nullptr;
+
+	UINT		m_iTileX;
+	UINT		m_iTileY;
+	
+	vector<TILE*>	m_vecTile;
+	TILE*			m_tSelectTile = nullptr;
+	UINT			m_iTileDrawID;
+	CString			m_strTileType;
+	float			m_fTileDmg;
+	
+	map<CString, CImage*>	m_TilePngImg;
 
 #pragma endregion
 
@@ -62,4 +79,10 @@ public:
 	
 
 	
+	
+	
+	
+	afx_msg void OnButton_SaveMap();
+	afx_msg void OnButton_LoadMap();
+	afx_msg void OnCombo_ChangeActMap();
 };

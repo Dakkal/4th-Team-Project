@@ -102,9 +102,26 @@
 #define IDC_BUTTON1_MAP                 1079
 #define IDC_EDIT1_TILE2                 1080
 #define IDC_BUTTON2_TILE2               1080
+#define IDC_EDIT1_MAP                   1080
 #define IDC_EDIT2_TILE                  1081
+#define IDC_EDIT2_MAP                   1081
 #define IDC_STATIC_MONSTER_TEXTURE      1082
+#define IDC_EDIT3_MAP                   1082
 #define IDC_STATIC_MOSTER_LIST_DRAG     1083
+#define IDC_STATIC5_MAP                 1083
+#define IDC_STATIC6_MAP                 1084
+#define IDC_STATIC7_MAP                 1085
+#define IDC_COMBO2_MAP                  1086
+#define IDC_STATIC8_MAP                 1087
+#define IDC_STATIC9_MAP                 1088
+#define IDC_EDIT4_MAP                   1089
+#define IDC_EDIT5_MAP                   1090
+#define IDC_BUTTON2_MAP                 1091
+#define IDC_BUTTON3_MAP                 1092
+#define IDC_BUTTON4_MAP                 1093
+#define IDC_STATIC10_MAP                1094
+#define IDC_STATIC9_MAP3                1095
+#define IDC_STATIC11_MAP                1095
 
 // Next default values for new objects
 // 
@@ -112,7 +129,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        325
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1080
+#define _APS_NEXT_CONTROL_VALUE         1092
 #define _APS_NEXT_SYMED_VALUE           313
 #endif
 #endif
