@@ -18,9 +18,7 @@
 #include "MyForm.h"
 #include "UnitTool_Tab1.h"
 #include "TimeMgr.h"
-#include "Terrain_Act1.h"
-#include "Terrain_Act2.h"
-#include "Terrain_Act3.h"
+#include "Terrain_Act.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

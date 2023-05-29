@@ -6,9 +6,7 @@
 #include "MapTool_Tab2.h"
 #include "afxdialogex.h"
 #include "TextureMgr.h"
-#include "Terrain_Act1.h"
-#include "Terrain_Act2.h"
-#include "Terrain_Act3.h"
+#include "Terrain_Act.h"
 #include "MainFrm.h"
 #include "ToolView.h"
 
@@ -56,6 +54,7 @@ BEGIN_MESSAGE_MAP(CMapTool_Tab2, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON3_MAP, &CMapTool_Tab2::OnButton_SaveMap)
 	ON_BN_CLICKED(IDC_BUTTON4_MAP, &CMapTool_Tab2::OnButton_LoadMap)
 	ON_CBN_SELCHANGE(IDC_COMBO2_MAP, &CMapTool_Tab2::OnCombo_ChangeActMap)
+	ON_LBN_DBLCLK(IDC_LIST1_MAP, &CMapTool_Tab2::OnList_TileReset)
 END_MESSAGE_MAP()
 
 
@@ -605,6 +604,13 @@ void CMapTool_Tab2::OnButton_ReloadTile()
 	UpdateData(FALSE);
 }
 
+void CMapTool_Tab2::OnList_TileReset()
+{
+	m_ListTile.SetCurSel(-1);
+	m_tSelectTile = nullptr;
+}
+
+
 // Map
 void CMapTool_Tab2::OnCombo_ChangeActMap()
 {
@@ -659,7 +665,7 @@ void CMapTool_Tab2::OnButton_CreateMap()
 	{
 		if (m_pTerrain_Act1 == nullptr)
 		{
-			m_pTerrain_Act1 = new CTerrain_Act1;
+			m_pTerrain_Act1 = new CTerrain_Act;
 			m_pTerrain_Act1->Initialize();
 			m_pTerrain_Act1->Create_Terrian(m_iTileX, m_iTileY);
 			m_pMainView->m_pTerrain_Act1_View = m_pTerrain_Act1;
@@ -669,7 +675,7 @@ void CMapTool_Tab2::OnButton_CreateMap()
 		else
 		{
 			Safe_Delete(m_pTerrain_Act1);
-			m_pTerrain_Act1 = new CTerrain_Act1;
+			m_pTerrain_Act1 = new CTerrain_Act;
 			m_pTerrain_Act1->Initialize();
 			m_pTerrain_Act1->Create_Terrian(m_iTileX, m_iTileY);
 			m_pMainView->m_pTerrain_Act1_View = m_pTerrain_Act1;
@@ -682,7 +688,7 @@ void CMapTool_Tab2::OnButton_CreateMap()
 	{
 		if (m_pTerrain_Act2 == nullptr)
 		{
-			m_pTerrain_Act2 = new CTerrain_Act2;
+			m_pTerrain_Act2 = new CTerrain_Act;
 			m_pTerrain_Act2->Initialize();
 			m_pTerrain_Act2->Create_Terrian(m_iTileX, m_iTileY);
 			m_pMainView->m_pTerrain_Act2_View = m_pTerrain_Act2;
@@ -692,7 +698,7 @@ void CMapTool_Tab2::OnButton_CreateMap()
 		else
 		{
 			Safe_Delete(m_pTerrain_Act2);
-			m_pTerrain_Act2 = new CTerrain_Act2;
+			m_pTerrain_Act2 = new CTerrain_Act;
 			m_pTerrain_Act2->Initialize();
 			m_pTerrain_Act2->Create_Terrian(m_iTileX, m_iTileY);
 			m_pMainView->m_pTerrain_Act2_View = m_pTerrain_Act2;
@@ -705,7 +711,7 @@ void CMapTool_Tab2::OnButton_CreateMap()
 	{
 		if (m_pTerrain_Act3 == nullptr)
 		{
-			m_pTerrain_Act3 = new CTerrain_Act3;
+			m_pTerrain_Act3 = new CTerrain_Act;
 			m_pTerrain_Act3->Initialize();
 			m_pTerrain_Act3->Create_Terrian(m_iTileX, m_iTileY);
 			m_pMainView->m_pTerrain_Act3_View = m_pTerrain_Act3;
@@ -715,7 +721,7 @@ void CMapTool_Tab2::OnButton_CreateMap()
 		else
 		{
 			Safe_Delete(m_pTerrain_Act3);
-			m_pTerrain_Act3 = new CTerrain_Act3;
+			m_pTerrain_Act3 = new CTerrain_Act;
 			m_pTerrain_Act3->Initialize();
 			m_pTerrain_Act3->Create_Terrian(m_iTileX, m_iTileY);
 			m_pMainView->m_pTerrain_Act3_View = m_pTerrain_Act3;
@@ -772,8 +778,11 @@ void CMapTool_Tab2::OnButton_SaveMap()
 
 			DWORD	dwByte = 0;
 
-			for (auto& iter : m_pTerrain_Act1->m_vecAct1Tile)
+			WriteFile(hFile, &m_iTileX, sizeof(UINT), &dwByte, nullptr);
+			WriteFile(hFile, &m_iTileY, sizeof(UINT), &dwByte, nullptr);
+			for (auto& iter : m_pTerrain_Act1->m_vecActTile)
 				WriteFile(hFile, iter, sizeof(TILE), &dwByte, nullptr);
+		
 
 			CloseHandle(hFile);
 		}
@@ -811,7 +820,9 @@ void CMapTool_Tab2::OnButton_SaveMap()
 
 			DWORD	dwByte = 0;
 
-			for (auto& iter : m_pTerrain_Act2->m_vecAct2Tile)
+			WriteFile(hFile, &m_iTileX, sizeof(UINT), &dwByte, nullptr);
+			WriteFile(hFile, &m_iTileY, sizeof(UINT), &dwByte, nullptr);
+			for (auto& iter : m_pTerrain_Act2->m_vecActTile)
 				WriteFile(hFile, iter, sizeof(TILE), &dwByte, nullptr);
 
 			CloseHandle(hFile);
@@ -850,7 +861,9 @@ void CMapTool_Tab2::OnButton_SaveMap()
 
 			DWORD	dwByte = 0;
 
-			for (auto& iter : m_pTerrain_Act3->m_vecAct3Tile)
+			WriteFile(hFile, &m_iTileX, sizeof(UINT), &dwByte, nullptr);
+			WriteFile(hFile, &m_iTileY, sizeof(UINT), &dwByte, nullptr);
+			for (auto& iter : m_pTerrain_Act3->m_vecActTile)
 				WriteFile(hFile, iter, sizeof(TILE), &dwByte, nullptr);
 
 			CloseHandle(hFile);
@@ -876,14 +889,14 @@ void CMapTool_Tab2::OnButton_LoadMap()
 	{
 		if (m_pTerrain_Act1 == nullptr)
 		{
-			m_pTerrain_Act1 = new CTerrain_Act1;
+			m_pTerrain_Act1 = new CTerrain_Act;
 			m_pTerrain_Act1->Initialize();
 		}
 		else
 		{
 			m_pMainView->m_pTerrain_Act1_View = nullptr;
 			Safe_Delete(m_pTerrain_Act1);
-			m_pTerrain_Act1 = new CTerrain_Act1;
+			m_pTerrain_Act1 = new CTerrain_Act;
 			m_pTerrain_Act1->Initialize();
 		}
 		{
@@ -914,26 +927,47 @@ void CMapTool_Tab2::OnButton_LoadMap()
 				if (INVALID_HANDLE_VALUE == hFile)
 					return;
 
+				int		iCount = 0;
+				UINT	iTileX = 0;
+				UINT	iTileY = 0;
 				DWORD	dwByte = 0;
 
 				while (true)
 				{
-					TILE* pTile = new TILE;
-
-					ReadFile(hFile, pTile, sizeof(TILE), &dwByte, nullptr);
-
-					if (0 == dwByte)
+					if (iCount == 0)
 					{
-						Safe_Delete(pTile);
-						break;
+						ReadFile(hFile, &iTileX, sizeof(UINT), &dwByte, nullptr);
+					}
+					else if (iCount == 1)
+					{
+						ReadFile(hFile, &iTileY, sizeof(UINT), &dwByte, nullptr);
+					}
+					else if (iCount >= 2)
+					{
+						TILE* pTile = new TILE;
+
+						ReadFile(hFile, pTile, sizeof(TILE), &dwByte, nullptr);
+
+
+						if (0 == dwByte)
+						{
+							Safe_Delete(pTile);
+							break;
+						}
+
+						m_pTerrain_Act1->m_vecActTile.push_back(pTile);
 					}
 
-					m_pTerrain_Act1->m_vecAct1Tile.push_back(pTile);
+					iCount++;
 				}
+
+				m_iTileX = iTileX;
+				m_iTileY = iTileY;
 
 				CloseHandle(hFile);
 			}
-
+			m_pTerrain_Act1->m_ActTileX = m_iTileX;
+			m_pTerrain_Act1->m_ActTileY = m_iTileY;
 			m_pMainView->m_pTerrain_Act1_View = m_pTerrain_Act1;
 		}
 	}
@@ -942,14 +976,14 @@ void CMapTool_Tab2::OnButton_LoadMap()
 	{
 		if (m_pTerrain_Act2 == nullptr)
 		{
-			m_pTerrain_Act2 = new CTerrain_Act2;
+			m_pTerrain_Act2 = new CTerrain_Act;
 			m_pTerrain_Act2->Initialize();
 		}
 		else
 		{
 			m_pMainView->m_pTerrain_Act2_View = nullptr;
 			Safe_Delete(m_pTerrain_Act2);
-			m_pTerrain_Act2 = new CTerrain_Act2;
+			m_pTerrain_Act2 = new CTerrain_Act;
 			m_pTerrain_Act2->Initialize();
 		}
 		{
@@ -980,26 +1014,47 @@ void CMapTool_Tab2::OnButton_LoadMap()
 				if (INVALID_HANDLE_VALUE == hFile)
 					return;
 
+				int		iCount = 0;
+				UINT	iTileX = 0;
+				UINT	iTileY = 0;
 				DWORD	dwByte = 0;
 
 				while (true)
 				{
-					TILE* pTile = new TILE;
-
-					ReadFile(hFile, pTile, sizeof(TILE), &dwByte, nullptr);
-
-					if (0 == dwByte)
+					if (iCount == 0)
 					{
-						Safe_Delete(pTile);
-						break;
+						ReadFile(hFile, &iTileX, sizeof(UINT), &dwByte, nullptr);
+					}
+					else if (iCount == 1)
+					{
+						ReadFile(hFile, &iTileY, sizeof(UINT), &dwByte, nullptr);
+					}
+					else if (iCount >= 2)
+					{
+						TILE* pTile = new TILE;
+
+						ReadFile(hFile, pTile, sizeof(TILE), &dwByte, nullptr);
+
+
+						if (0 == dwByte)
+						{
+							Safe_Delete(pTile);
+							break;
+						}
+
+						m_pTerrain_Act2->m_vecActTile.push_back(pTile);
 					}
 
-					m_pTerrain_Act2->m_vecAct2Tile.push_back(pTile);
+					iCount++;
 				}
+
+				m_iTileX = iTileX;
+				m_iTileY = iTileY;
 
 				CloseHandle(hFile);
 			}
-
+			m_pTerrain_Act2->m_ActTileX = m_iTileX;
+			m_pTerrain_Act2->m_ActTileY = m_iTileY;
 			m_pMainView->m_pTerrain_Act2_View = m_pTerrain_Act2;
 		}
 	}
@@ -1008,14 +1063,14 @@ void CMapTool_Tab2::OnButton_LoadMap()
 	{
 		if (m_pTerrain_Act3 == nullptr)
 		{
-			m_pTerrain_Act3 = new CTerrain_Act3;
+			m_pTerrain_Act3 = new CTerrain_Act;
 			m_pTerrain_Act3->Initialize();
 		}
 		else
 		{
 			m_pMainView->m_pTerrain_Act3_View = nullptr;
 			Safe_Delete(m_pTerrain_Act3);
-			m_pTerrain_Act3 = new CTerrain_Act3;
+			m_pTerrain_Act3 = new CTerrain_Act;
 			m_pTerrain_Act3->Initialize();
 		}
 		{
@@ -1046,27 +1101,49 @@ void CMapTool_Tab2::OnButton_LoadMap()
 				if (INVALID_HANDLE_VALUE == hFile)
 					return;
 
+				int		iCount = 0;
+				UINT	iTileX = 0;
+				UINT	iTileY = 0;
 				DWORD	dwByte = 0;
 
 				while (true)
 				{
-					TILE* pTile = new TILE;
-
-					ReadFile(hFile, pTile, sizeof(TILE), &dwByte, nullptr);
-
-					if (0 == dwByte)
+					if (iCount == 0)
 					{
-						Safe_Delete(pTile);
-						break;
+						ReadFile(hFile, &iTileX, sizeof(UINT), &dwByte, nullptr);
+					}
+					else if (iCount == 1)
+					{
+						ReadFile(hFile, &iTileY, sizeof(UINT), &dwByte, nullptr);
+					}
+					else if (iCount >= 2)
+					{
+						TILE* pTile = new TILE;
+
+						ReadFile(hFile, pTile, sizeof(TILE), &dwByte, nullptr);
+
+
+						if (0 == dwByte)
+						{
+							Safe_Delete(pTile);
+							break;
+						}
+
+						m_pTerrain_Act3->m_vecActTile.push_back(pTile);
 					}
 
-					m_pTerrain_Act3->m_vecAct3Tile.push_back(pTile);
+					iCount++;
 				}
+
+				m_iTileX = iTileX;
+				m_iTileY = iTileY;
 
 				CloseHandle(hFile);
 			}
 		}
 
+		m_pTerrain_Act3->m_ActTileX = m_iTileX;
+		m_pTerrain_Act3->m_ActTileY = m_iTileY;
 		m_pMainView->m_pTerrain_Act3_View = m_pTerrain_Act3;
 	}
 		break;
@@ -1083,6 +1160,8 @@ void CMapTool_Tab2::OnButton_LoadMap()
 #pragma region Chan
 
 #pragma endregion
+
+
 
 
 
