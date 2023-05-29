@@ -4,9 +4,9 @@
 #include "afxwin.h"
 // CMapTool_Tab2 dialog
 class CToolView;
-class CTerrain_Act1;
-class CTerrain_Act2;
-class CTerrain_Act3;
+class CTerrain_Act;
+class CTerrain_Act;
+class CTerrain_Act;
 class CMapTool_Tab2 : public CDialogEx
 {
 	DECLARE_DYNAMIC(CMapTool_Tab2)
@@ -47,9 +47,9 @@ public:
 
 public:
 	CToolView* m_pMainView = nullptr;
-	CTerrain_Act1* m_pTerrain_Act1 = nullptr;
-	CTerrain_Act2* m_pTerrain_Act2 = nullptr;
-	CTerrain_Act3* m_pTerrain_Act3 = nullptr;
+	CTerrain_Act* m_pTerrain_Act1 = nullptr;
+	CTerrain_Act* m_pTerrain_Act2 = nullptr;
+	CTerrain_Act* m_pTerrain_Act3 = nullptr;
 
 	UINT		m_iTileX;
 	UINT		m_iTileY;
@@ -85,4 +85,5 @@ public:
 	afx_msg void OnButton_SaveMap();
 	afx_msg void OnButton_LoadMap();
 	afx_msg void OnCombo_ChangeActMap();
+	afx_msg void OnList_TileReset();
 };

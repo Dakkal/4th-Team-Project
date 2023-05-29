@@ -2,12 +2,12 @@
 #include "Obj.h"
 
 class CToolView;
-class CTerrain_Act1 :
+class CTerrain_Act :
 	public CObj
 {
 public:
-	CTerrain_Act1();
-	virtual ~CTerrain_Act1();
+	CTerrain_Act();
+	virtual ~CTerrain_Act();
 
 	// Inherited via CObj
 	virtual HRESULT Initialize() override;
@@ -28,11 +28,11 @@ public:
 
 
 public:
-	vector<TILE*>		m_vecAct1Tile;
+	vector<TILE*>		m_vecActTile;
 	CToolView*			m_pMainView = nullptr;
 
-	UINT				m_Act1TileX;
-	UINT				m_Act1TileY;
+	UINT				m_ActTileX;
+	UINT				m_ActTileY;
 
 };
 
