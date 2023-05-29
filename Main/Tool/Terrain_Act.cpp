@@ -52,8 +52,8 @@ void CTerrain_Act::Render()
 
 	D3DXMATRIX	matWorld, matScale, matTrans;
 
-	int		iCullX = int(-m_pMainView->GetScrollPos(0) / TILECX);
-	int		iCullY = int(-m_pMainView->GetScrollPos(1)) / (TILECY / 2);
+	int		iCullX = int(m_pMainView->GetScrollPos(0) / TILECX);
+	int		iCullY = int(m_pMainView->GetScrollPos(1)) / (TILECY / 2);
 
 	RECT	rc{};
 	GetClientRect(m_pMainView->m_hWnd, &rc);
@@ -61,8 +61,8 @@ void CTerrain_Act::Render()
 	float	fRatioX = WINCX / float(rc.right - rc.left);
 	float	fRatioY = WINCY / float(rc.bottom - rc.top);
 
-	int	iCullEndX = rc.right / TILECX;
-	int	iCullEndY = rc.bottom / (TILECY / 2);
+	int	iCullEndX = rc.right / TILECX + 3;
+	int	iCullEndY = rc.bottom / (TILECY / 2) + 3;
 
 	for (int i = iCullY; i < iCullY + iCullEndY; ++i)
 	{
@@ -76,8 +76,8 @@ void CTerrain_Act::Render()
 			D3DXMatrixIdentity(&matWorld);
 			D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
 			D3DXMatrixTranslation(&matTrans,
-				m_vecActTile[iIndex]->vPos.x + m_pMainView->GetScrollPos(0),
-				m_vecActTile[iIndex]->vPos.y + m_pMainView->GetScrollPos(1),
+				m_vecActTile[iIndex]->vPos.x - m_pMainView->GetScrollPos(0),
+				m_vecActTile[iIndex]->vPos.y - m_pMainView->GetScrollPos(1),
 				m_vecActTile[iIndex]->vPos.z);
 
 			matWorld = matScale * matTrans;

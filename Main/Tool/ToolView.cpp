@@ -245,19 +245,46 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 			case TERRIAN_TYPE::ACT1:
 			{
 				if (m_pTerrain_Act1_View != nullptr)
+				{
+					CMainFrame*		pMainFrm = static_cast<CMainFrame*>(AfxGetMainWnd());
+					CMyForm*		pFormView = static_cast<CMyForm*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
+					int iTileX = pFormView->m_pMapTool_Tab2->m_iTileX;
+					int iTileY = pFormView->m_pMapTool_Tab2->m_iTileY;
+					SetScrollSizes(MM_TEXT, CSize(iTileX * TILECX, iTileY * TILECY / 2));
+
 					m_pTerrain_Act1_View->Render();
+				}
+					
 			}
 				break;
 			case TERRIAN_TYPE::ACT2:
 			{
 				if (m_pTerrain_Act2_View != nullptr)
+				{
+					CMainFrame*		pMainFrm = static_cast<CMainFrame*>(AfxGetMainWnd());
+					CMyForm*		pFormView = static_cast<CMyForm*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
+					int iTileX = pFormView->m_pMapTool_Tab2->m_iTileX;
+					int iTileY = pFormView->m_pMapTool_Tab2->m_iTileY;
+					SetScrollSizes(MM_TEXT, CSize(iTileX * TILECX, iTileY * TILECY / 2));
+
 					m_pTerrain_Act2_View->Render();
+				}
+					
 			}
 				break;
 			case TERRIAN_TYPE::ACT3:
 			{
 				if (m_pTerrain_Act3_View != nullptr)
+				{
+					CMainFrame*		pMainFrm = static_cast<CMainFrame*>(AfxGetMainWnd());
+					CMyForm*		pFormView = static_cast<CMyForm*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
+					int iTileX = pFormView->m_pMapTool_Tab2->m_iTileX;
+					int iTileY = pFormView->m_pMapTool_Tab2->m_iTileY;
+					SetScrollSizes(MM_TEXT, CSize(iTileX * TILECX, iTileY * TILECY / 2));
+
 					m_pTerrain_Act3_View->Render();
+				}
+					
 			}
 				break;
 			default:
