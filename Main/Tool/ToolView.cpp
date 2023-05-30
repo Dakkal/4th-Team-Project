@@ -20,6 +20,10 @@
 #include "TimeMgr.h"
 #include "Terrain_Act.h"
 
+
+#include "UnitTool_Monster.h"
+
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -38,6 +42,7 @@ BEGIN_MESSAGE_MAP(CToolView, CScrollView)
 	ON_WM_DESTROY()
 	ON_WM_LBUTTONDOWN()
 	ON_WM_MOUSEMOVE()
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 // CToolView 생성/소멸
@@ -93,7 +98,6 @@ void CToolView::OnInitialUpdate()
 							int(WINCY + fColFrm), 
 							SWP_NOZORDER);	// 현재 순서를 유지하겠다는 옵션
 
-	//// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 
 	if (FAILED(CDevice::Get_Instance()->Initialize()))
 	{
@@ -102,30 +106,13 @@ void CToolView::OnInitialUpdate()
 	}
 
 
-	// 이걸로 사이즈 조절했는데 맞는 걸까?
-
-	/*GetParentSplitter(this, FALSE)->SetColumnInfo(0, 400, 10);
-	GetParentSplitter(this, FALSE)->RecalcLayout();*/
-
+	// 시간 관련
+	CTimeMgr::Get_Instance()->Initialize();
+	SetTimer(ID_TIMER, 0.001, NULL);
 
 	m_eCurTopTab = TOP_TAB_TYPE::UNIT;
 	m_eCurMidTab = MID_TAB_TYPE::PLAYER;
 
-	//if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/Cube.png", TEX_SINGLE, L"Cube")))
-	//{
-	//	AfxMessageBox(L"CubeTexture Create Failed");
-	//	return;
-	//}
-
-	//m_pTerrain = new CTerrain;
-
-	//if (FAILED(m_pTerrain->Initialize()))
-	//{
-	//	AfxMessageBox(L"Terrain Init Failed");
-	//	return;
-	//}
-
-	//m_pTerrain->Set_MainView(this);
 
 }
 
@@ -160,8 +147,9 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 				};
 				D3DXVECTOR2 vList2[] =
 				{
-					D3DXVECTOR2(0, CY * 0.5f),
-					D3DXVECTOR2(float(CX), CY * 0.5f),
+
+					D3DXVECTOR2(0, int(CY * 0.5f)),
+					D3DXVECTOR2(CX, int(CY * 0.5f)),
 				};
 
 				CDevice::Get_Instance()->Get_Line()->Begin(); // 라인 그리기 시작 (Render_Begin()처럼)
@@ -223,7 +211,7 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 				CDevice::Get_Instance()->Get_Line()->Draw(vList1, 2, D3DCOLOR_XRGB(255, 0, 0));
 				CDevice::Get_Instance()->Get_Line()->Draw(vList2, 2, D3DCOLOR_XRGB(255, 0, 0));
 
-				CDevice::Get_Instance()->Get_Line()->End();// 라인 그리기 종료 (Render_End()처럼)
+				CDevice::Get_Instance()->Get_Line()->End(); // 라인 그리기 종료 (Render_End()처럼)
 			}
 			{
 				CMainFrame*		pMainFrm = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
@@ -615,4 +603,18 @@ HRESULT CToolView::Change_Tab(const TOP_TAB_TYPE & _eTopTab, const MID_TAB_TYPE 
 	}
 
 	return S_OK;
+}
+
+
+void CToolView::OnTimer(UINT_PTR nIDEvent)
+{
+	CTimeMgr::Get_Instance()->Update();
+
+	if (m_pDlgUnit->m_bPreviewAniPlay)
+		m_pDlgUnit->Update_Ani_Preview();
+
+	if (m_pDlgUnit->m_bAniPlay)
+		m_pDlgUnit->Update_Ani();
+
+	CScrollView::OnTimer(nIDEvent);
 }
