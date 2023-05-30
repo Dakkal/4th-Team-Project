@@ -35,6 +35,10 @@ public:
 	afx_msg void OnCombo_ChangeAct();
 	afx_msg void OnButton_ReloadTile();
 	afx_msg void OnButton_CreateMap();
+	afx_msg void OnButton_SaveMap();
+	afx_msg void OnButton_LoadMap();
+	afx_msg void OnCombo_ChangeActMap();
+	afx_msg void OnList_TileReset();
 private:
 	void	Load_TileList();
 	void	Sort_TileList(TERRIAN_TYPE _eType);
@@ -82,8 +86,5 @@ public:
 	
 	
 	
-	afx_msg void OnButton_SaveMap();
-	afx_msg void OnButton_LoadMap();
-	afx_msg void OnCombo_ChangeActMap();
-	afx_msg void OnList_TileReset();
+	
 };

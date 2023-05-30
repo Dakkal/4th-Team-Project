@@ -379,66 +379,74 @@ void CToolView::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	CScrollView::OnLButtonDown(nFlags, point);
 
-	switch (m_eCurTopTab)
+	CRect rc;
+	GetClientRect(&rc);
+
+	if (rc.PtInRect(point))
 	{
-	case TOP_TAB_TYPE::UNIT:
-		switch (m_eCurMidTab)
+		switch (m_eCurTopTab)
 		{
-		case MID_TAB_TYPE::PLAYER:
-		{
+		case TOP_TAB_TYPE::UNIT:
+			switch (m_eCurMidTab)
+			{
+			case MID_TAB_TYPE::PLAYER:
+			{
 
+			}
+			break;
+			case MID_TAB_TYPE::MONSTER:
+			{
+
+			}
+			break;
+			case MID_TAB_TYPE::ITEM:
+			{
+
+			}
+			break;
+			default:
+				break;
+			}
+			break;
+		case TOP_TAB_TYPE::TILE:
+		{
+			// HEEJUNE
 		}
 		break;
-		case MID_TAB_TYPE::MONSTER:
+		case TOP_TAB_TYPE::MAP:
 		{
+			CMainFrame*		pMainFrm = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
+			CMyForm*		pFormView = dynamic_cast<CMyForm*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
+			TILE* pChangeTile = pFormView->m_pMapTool_Tab2->m_tSelectTile;
 
-		}
-		break;
-		case MID_TAB_TYPE::ITEM:
-		{
-
+			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+			{
+				if (m_pTerrain_Act1_View != nullptr)
+				{
+					m_pTerrain_Act1_View->Tile_Change({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, pChangeTile);
+				}
+				else if (m_pTerrain_Act2_View != nullptr)
+				{
+					m_pTerrain_Act2_View->Tile_Change({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, pChangeTile);
+				}
+				else if (m_pTerrain_Act3_View != nullptr)
+				{
+					m_pTerrain_Act3_View->Tile_Change({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, pChangeTile);
+				}
+				Invalidate(FALSE);
+			}
 		}
 		break;
 		default:
 			break;
 		}
-		break;
-	case TOP_TAB_TYPE::TILE:
-	{
-		// HEEJUNE
-	}
-	break;
-	case TOP_TAB_TYPE::MAP:
-	{
-		CMainFrame*		pMainFrm = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
-		CMyForm*		pFormView = dynamic_cast<CMyForm*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
-		TILE* pChangeTile = pFormView->m_pMapTool_Tab2->m_tSelectTile;
 
-		if (GetAsyncKeyState(VK_LBUTTON))
-		{
-			if (m_pTerrain_Act1_View != nullptr)
-			{
-				m_pTerrain_Act1_View->Tile_Change({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, pChangeTile);
-			}
-			else if (m_pTerrain_Act2_View != nullptr)
-			{
-				m_pTerrain_Act2_View->Tile_Change({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, pChangeTile);
-			}
-			else if (m_pTerrain_Act3_View != nullptr)
-			{
-				m_pTerrain_Act3_View->Tile_Change({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, pChangeTile);
-			}
-			Invalidate(FALSE);
-		}
-	}
-	break;
-	default:
-		break;
+
+
+		return;
 	}
 
-
-
-	return;
+	
 
 
 
@@ -476,66 +484,74 @@ void CToolView::OnLButtonDown(UINT nFlags, CPoint point)
 void CToolView::OnMouseMove(UINT nFlags, CPoint point)
 {
 	CScrollView::OnMouseMove(nFlags, point);
-	switch (m_eCurTopTab)
+
+	CRect rc;
+	GetClientRect(&rc);
+
+	if (rc.PtInRect(point))
 	{
-	case TOP_TAB_TYPE::UNIT:
-		switch (m_eCurMidTab)
+		switch (m_eCurTopTab)
 		{
-		case MID_TAB_TYPE::PLAYER:
-		{
+		case TOP_TAB_TYPE::UNIT:
+			switch (m_eCurMidTab)
+			{
+			case MID_TAB_TYPE::PLAYER:
+			{
 
+			}
+			break;
+			case MID_TAB_TYPE::MONSTER:
+			{
+
+			}
+			break;
+			case MID_TAB_TYPE::ITEM:
+			{
+
+			}
+			break;
+			default:
+				break;
+			}
+			break;
+		case TOP_TAB_TYPE::TILE:
+		{
+			// HEEJUNE
 		}
 		break;
-		case MID_TAB_TYPE::MONSTER:
+		case TOP_TAB_TYPE::MAP:
 		{
+			CMainFrame*		pMainFrm = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
+			CMyForm*		pFormView = dynamic_cast<CMyForm*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
+			TILE* pChangeTile = pFormView->m_pMapTool_Tab2->m_tSelectTile;
 
-		}
-		break;
-		case MID_TAB_TYPE::ITEM:
-		{
-
+			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+			{
+				if (m_pTerrain_Act1_View != nullptr)
+				{
+					m_pTerrain_Act1_View->Tile_Change({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, pChangeTile);
+				}
+				else if (m_pTerrain_Act2_View != nullptr)
+				{
+					m_pTerrain_Act2_View->Tile_Change({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, pChangeTile);
+				}
+				else if (m_pTerrain_Act3_View != nullptr)
+				{
+					m_pTerrain_Act3_View->Tile_Change({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, pChangeTile);
+				}
+				Invalidate(FALSE);
+			}
 		}
 		break;
 		default:
 			break;
 		}
-		break;
-	case TOP_TAB_TYPE::TILE:
-	{
-		// HEEJUNE
-	}
-	break;
-	case TOP_TAB_TYPE::MAP:
-	{
-		CMainFrame*		pMainFrm = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
-		CMyForm*		pFormView = dynamic_cast<CMyForm*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
-		TILE* pChangeTile = pFormView->m_pMapTool_Tab2->m_tSelectTile;
 
-		if (GetAsyncKeyState(VK_LBUTTON))
-		{
-			if (m_pTerrain_Act1_View != nullptr)
-			{
-				m_pTerrain_Act1_View->Tile_Change({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, pChangeTile);
-			}
-			else if (m_pTerrain_Act2_View != nullptr)
-			{
-				m_pTerrain_Act2_View->Tile_Change({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, pChangeTile);
-			}
-			else if (m_pTerrain_Act3_View != nullptr)
-			{
-				m_pTerrain_Act3_View->Tile_Change({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, pChangeTile);
-			}
-			Invalidate(FALSE);
-		}
-	}
-	break;
-	default:
-		break;
+
+
+		return;
 	}
 
-
-
-	return;
 	
 	if (GetAsyncKeyState(VK_LBUTTON))
 	{

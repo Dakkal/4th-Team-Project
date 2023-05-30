@@ -65,6 +65,8 @@ BOOL CMapTool_Tab2::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
+	//DoModal();
+
 	CMainFrame*		pMainFrm = static_cast<CMainFrame*>(AfxGetMainWnd());
 	m_pMainView = static_cast<CToolView*>(pMainFrm->m_MainSplitter.GetPane(0, 0));
 

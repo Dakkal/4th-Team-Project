@@ -61,8 +61,8 @@ void CTerrain_Act::Render()
 	float	fRatioX = WINCX / float(rc.right - rc.left);
 	float	fRatioY = WINCY / float(rc.bottom - rc.top);
 
-	int	iCullEndX = rc.right / TILECX + 3;
-	int	iCullEndY = rc.bottom / (TILECY / 2) + 3;
+	int	iCullEndX = rc.right / TILECX + 2;
+	int	iCullEndY = rc.bottom / (TILECY / 2) + 2;
 
 	for (int i = iCullY; i < iCullY + iCullEndY; ++i)
 	{
@@ -92,6 +92,14 @@ void CTerrain_Act::Render()
 			else if (m_vecActTile[iIndex]->eType == TERRIAN_TYPE::ACT1)
 			{
 				pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Act1Terrain", L"Tile", m_vecActTile[iIndex]->byDrawID);
+			}
+			else if (m_vecActTile[iIndex]->eType == TERRIAN_TYPE::ACT2)
+			{
+				pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Act2Terrain", L"Tile", m_vecActTile[iIndex]->byDrawID);
+			}
+			else if (m_vecActTile[iIndex]->eType == TERRIAN_TYPE::ACT3)
+			{
+				pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Act3Terrain", L"Tile", m_vecActTile[iIndex]->byDrawID);
 			}
 			if (nullptr == pTexInfo)
 				return;
