@@ -922,7 +922,8 @@ void CTileTool_Tab3::Sort_File(TERRIAN_TYPE _eTerrainType)
 					pTile->byOption = NONETILE;
 					pTile->fDamage = 0;
 					pTile->byDrawID = iDrawIdCount;
-					
+					pTile->bCheckUnit = false;
+
 					m_vecTile.push_back(pTile);
 
 					++iDrawIdCount;
@@ -978,6 +979,7 @@ void CTileTool_Tab3::Sort_File(TERRIAN_TYPE _eTerrainType)
 					pTile->byOption = NONETILE;
 					pTile->fDamage = 0;
 					pTile->byDrawID = iDrawIdCount;
+					pTile->bCheckUnit = false;
 
 					m_vecTile.push_back(pTile);
 
@@ -1034,6 +1036,7 @@ void CTileTool_Tab3::Sort_File(TERRIAN_TYPE _eTerrainType)
 					pTile->byOption = NONETILE;
 					pTile->fDamage = 0;
 					pTile->byDrawID = iDrawIdCount;
+					pTile->bCheckUnit = false;
 					
 					m_vecTile.push_back(pTile);
 

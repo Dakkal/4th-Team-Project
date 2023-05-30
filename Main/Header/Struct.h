@@ -73,6 +73,8 @@ typedef struct tagTile
 
 	UINT		byDrawID;
 
+	bool		bCheckUnit;
+
 }TILE;
 
 

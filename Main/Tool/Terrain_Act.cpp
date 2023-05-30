@@ -159,6 +159,7 @@ void CTerrain_Act::Create_Terrian(int _TileX, int _TileY)
 			pTile->vSize = { 1.f, 1.f, 1.f };
 			pTile->byOption = NONETILE;
 			pTile->byDrawID = 0;
+			pTile->bCheckUnit = false;
 
 			m_vecActTile.push_back(pTile);
 		}
