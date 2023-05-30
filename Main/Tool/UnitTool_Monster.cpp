@@ -122,6 +122,7 @@ BOOL UnitTool_Monster::OnInitDialog()
 
 	
 
+	m_pToolView->Invalidate(FALSE);
 
 	return TRUE;  
 }

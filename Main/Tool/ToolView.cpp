@@ -111,7 +111,7 @@ void CToolView::OnInitialUpdate()
 	SetTimer(ID_TIMER, 0.001, NULL);
 
 	m_eCurTopTab = TOP_TAB_TYPE::UNIT;
-	m_eCurMidTab = MID_TAB_TYPE::PLAYER;
+	m_eCurMidTab = MID_TAB_TYPE::MONSTER;
 
 
 }
@@ -158,28 +158,10 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 				CDevice::Get_Instance()->Get_Line()->Draw(vList2, 2, D3DCOLOR_XRGB(255, 0, 0));
 
 				CDevice::Get_Instance()->Get_Line()->End();// 라인 그리기 종료 (Render_End()처럼)
-			}
-			switch (m_eCurMidTab)
-			{
-			case MID_TAB_TYPE::PLAYER:
-			{
 
-			}
-			break;
-			case MID_TAB_TYPE::MONSTER:
-			{
 				if (nullptr == m_pRenderUnit) break;
 				D3DXVECTOR3 vCenter{ CX * 0.5f, CY * 0.5f, 0.f };
 				m_pRenderUnit->Tool_Render(vCenter);
-			}
-			break;
-			case MID_TAB_TYPE::ITEM:
-			{
-
-			}
-			break;
-			default:
-				break;
 			}
 			break;
 		case TOP_TAB_TYPE::TILE:
@@ -557,8 +539,6 @@ HRESULT CToolView::Change_Tab(const TOP_TAB_TYPE & _eTopTab, const MID_TAB_TYPE 
 	if(TOP_TAB_TYPE::TYPEEND == _eTopTab || MID_TAB_TYPE::TYPEEND == _eMidTab)
 		return E_FAIL;
 
-	Invalidate(FALSE);
-
 	m_eCurTopTab = _eTopTab;
 	m_eCurMidTab = _eMidTab;
 
@@ -601,7 +581,7 @@ HRESULT CToolView::Change_Tab(const TOP_TAB_TYPE & _eTopTab, const MID_TAB_TYPE 
 	default:
 		break;
 	}
-
+	Invalidate(FALSE);
 	return S_OK;
 }
 
