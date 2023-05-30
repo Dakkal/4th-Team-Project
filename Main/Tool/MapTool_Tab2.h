@@ -2,11 +2,13 @@
 
 #include "Include.h"
 #include "afxwin.h"
+#include "afxcmn.h"
 // CMapTool_Tab2 dialog
 class CToolView;
 class CTerrain_Act;
 class CTerrain_Act;
 class CTerrain_Act;
+class CObj;
 class CMapTool_Tab2 : public CDialogEx
 {
 	DECLARE_DYNAMIC(CMapTool_Tab2)
@@ -31,38 +33,38 @@ public:
 
 #pragma region Jun
 public:
-	afx_msg void OnList_Tile();
-	afx_msg void OnCombo_ChangeAct();
-	afx_msg void OnButton_ReloadTile();
-	afx_msg void OnButton_CreateMap();
-	afx_msg void OnButton_SaveMap();
-	afx_msg void OnButton_LoadMap();
-	afx_msg void OnCombo_ChangeActMap();
-	afx_msg void OnList_TileReset();
+	afx_msg void			OnList_Tile();
+	afx_msg void			OnCombo_ChangeAct();
+	afx_msg void			OnButton_ReloadTile();
+	afx_msg void			OnButton_CreateMap();
+	afx_msg void			OnButton_SaveMap();
+	afx_msg void			OnButton_LoadMap();
+	afx_msg void			OnCombo_ChangeActMap();
+	afx_msg void			OnList_TileReset();
 private:
-	void	Load_TileList();
-	void	Sort_TileList(TERRIAN_TYPE _eType);
+	void					Load_TileList();
+	void					Sort_TileList(TERRIAN_TYPE _eType);
 
 public:
-	CListBox	m_ListTile;
-	CStatic		m_Texture_Tile;
-	CComboBox	m_ComboTile;
-	CComboBox	m_Combo_SelecMap;
+	CListBox				m_ListTile;
+	CStatic					m_Texture_Tile;
+	CComboBox				m_ComboTile;
+	CComboBox				m_Combo_SelecMap;
 
 public:
-	CToolView* m_pMainView = nullptr;
-	CTerrain_Act* m_pTerrain_Act1 = nullptr;
-	CTerrain_Act* m_pTerrain_Act2 = nullptr;
-	CTerrain_Act* m_pTerrain_Act3 = nullptr;
+	CToolView*				m_pMainView = nullptr;
+	CTerrain_Act*			m_pTerrain_Act1 = nullptr;
+	CTerrain_Act*			m_pTerrain_Act2 = nullptr;
+	CTerrain_Act*			m_pTerrain_Act3 = nullptr;
 
-	UINT		m_iTileX;
-	UINT		m_iTileY;
+	UINT					m_iTileX;
+	UINT					m_iTileY;
 	
-	vector<TILE*>	m_vecTile;
-	TILE*			m_tSelectTile = nullptr;
-	UINT			m_iTileDrawID;
-	CString			m_strTileType;
-	float			m_fTileDmg;
+	vector<TILE*>			m_vecTile;
+	TILE*					m_tSelectTile = nullptr;
+	UINT					m_iTileDrawID;
+	CString					m_strTileType;
+	float					m_fTileDmg;
 	
 	map<CString, CImage*>	m_TilePngImg;
 
@@ -70,21 +72,28 @@ public:
 
 #pragma region Chan
 
+
+public:						
+	// Field - Control
+	CComboBox				m_cComboBox_Obj;
+	CListCtrl				m_cListCtrl_Obj;
+	CImageList				m_cImgLIst_Obj;
+
+public:						
+	// Field - General
+	list<CObj*>				m_listObj[(UINT)OBJ_TYPE::TYPEEND];
+
+public:						
+	// Methods - Control
+
+public:	
+	// Methods - General
+	HRESULT					Load_UnitData(const CString& _strPath); // 데이터 파일에 저장되어 있는 유닛 프리팹을 가져온다.
+
+
+
+
+
 #pragma endregion
 
-
-
-
-	
-	
-	
-	
-	
-	
-
-	
-	
-	
-	
-	
 };

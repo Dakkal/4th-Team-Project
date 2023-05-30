@@ -10,7 +10,7 @@
 #include "FileInfo.h"
 #include "TimeMgr.h"
 
-CString OBJ_TYPE_STRING[(UINT)OBJ_TYPE::TYPEEND]	{ L"Player", L"Monster", L"Npc", L"Item", L"Terrain", L"UI" };
+CString OBJ_TYPE_STRING[(UINT)OBJ_TYPE::TYPEEND]	{ L"Player", L"Monster", L"Npc", L"Item", L"Terrain", L"Enviornment", L"UI" };
 CString OBJ_STATE_STRING[(UINT)OBJ_STATE::TYPEEND]	{ L"stand", L"walk", L"dash", L"attack", L"damage", L"skill", L"die" };
 CString OBJ_DIR_STRING[(UINT)OBJ_DIR::TYPEEND]		{ L"UP", L"RIGHT_UP", L"RIGHT", L"RIGHT_DOWN", L"DOWN", L"LEFT_DONN", L"LEFT", L"LEFT_UP" };
 
@@ -580,8 +580,8 @@ void UnitTool_Monster::OnBnClickedButtonMonsterSave()
 
 HRESULT UnitTool_Monster::Load_DB()
 {
-	HANDLE	hFile = CreateFile(L"../Data/01.Object/Player_Monster_Pivot_Origin.dat", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-
+	HANDLE	hFile = CreateFile(L"../Data/01.Object/Player_Monster_Pivot_Origin_Recent.dat", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	//Player_Monster_Pivot_Origin_Recent.dat
 	if (INVALID_HANDLE_VALUE == hFile)
 		return E_FAIL;
 
@@ -611,10 +611,23 @@ HRESULT UnitTool_Monster::Load_DB()
 			pName = nullptr;
 		}
 
+		// 애니메이션 관련 세팅
+		{
+			// Animation Set
+			ANIMATION* pAni = new ANIMATION;
+
+			pAni->bLoop = false;
+			pAni->iCurFrame = 0;
+			pUnit->m_mapAni.insert({ OBJ_STATE_STRING[(UINT)OBJ_STATE::STAND], pAni });
+			pUnit->m_pCurAni = pAni;
+		}
+
 		ReadFile(hFile, &(pUnit->m_tInfo)				, sizeof(INFO)		, &dwByte, nullptr);
 		ReadFile(hFile, &(pUnit->m_tStat)				, sizeof(STAT)		, &dwByte, nullptr);
 		ReadFile(hFile, &(pUnit->m_eType)				, sizeof(OBJ_TYPE)	, &dwByte, nullptr);
 		ReadFile(hFile, &(pUnit->m_eState)				, sizeof(OBJ_STATE)	, &dwByte, nullptr);
+		ReadFile(hFile, &(pUnit->m_pCurAni->fSecondPerFrame), sizeof(float), &dwByte, nullptr);
+		ReadFile(hFile, &(pUnit->m_pCurAni->iMaxFrame), sizeof(int), &dwByte, nullptr);
 		/*ReadFile(hFile, &(pUnit->m_strObjKey)			, sizeof(CString)	, &dwByte, nullptr);
 		ReadFile(hFile, &(pUnit->m_strStateKey)			, sizeof(CString)	, &dwByte, nullptr);*/
 
@@ -645,15 +658,7 @@ HRESULT UnitTool_Monster::Load_DB()
 			return E_FAIL;
 		}
 
-		// Animation Set
-		ANIMATION* pAni = new ANIMATION;
-
-		pAni->bLoop = false;
-		pAni->fSecondPerFrame = EDIT_ANI_TIME;
-		pAni->iCurFrame = 0;
-		pAni->iMaxFrame = iFileNum;
-		pUnit->m_mapAni.insert({ OBJ_STATE_STRING[(UINT)OBJ_STATE::STAND], pAni });
-		pUnit->m_pCurAni = pAni;
+	
 		
 
 		m_vecUnit.push_back(pUnit);
@@ -735,6 +740,9 @@ void UnitTool_Monster::OnBnClickedButtonMonsterSaveDb()
 			WriteFile(hFile, &(iter->m_tStat), sizeof(STAT), &dwByte, nullptr);
 			WriteFile(hFile, &(iter->m_eType), sizeof(OBJ_TYPE), &dwByte, nullptr);
 			WriteFile(hFile, &(iter->m_eState), sizeof(OBJ_STATE), &dwByte, nullptr);
+			WriteFile(hFile, &(iter->m_pCurAni->fSecondPerFrame), sizeof(float), &dwByte, nullptr);
+			WriteFile(hFile, &(iter->m_pCurAni->iMaxFrame), sizeof(int), &dwByte, nullptr);
+
 		/*	WriteFile(hFile, &(iter->m_strObjKey), sizeof(CString), &dwByte, nullptr);
 			WriteFile(hFile, &(iter->m_strStateKey), sizeof(CString), &dwByte, nullptr);*/
 		}

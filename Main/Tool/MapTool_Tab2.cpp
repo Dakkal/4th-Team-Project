@@ -12,6 +12,9 @@
 
 // CMapTool_Tab2 dialog
 
+
+
+
 IMPLEMENT_DYNAMIC(CMapTool_Tab2, CDialogEx)
 
 CMapTool_Tab2::CMapTool_Tab2(CWnd* pParent /*=NULL*/)
@@ -22,7 +25,7 @@ CMapTool_Tab2::CMapTool_Tab2(CWnd* pParent /*=NULL*/)
 	, m_iTileX(0)
 	, m_iTileY(0)
 {
-
+	       
 }
 
 CMapTool_Tab2::~CMapTool_Tab2()
@@ -42,6 +45,8 @@ void CMapTool_Tab2::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT4_MAP, m_iTileX);
 	DDX_Text(pDX, IDC_EDIT5_MAP, m_iTileY);
 	DDX_Control(pDX, IDC_COMBO2_MAP, m_Combo_SelecMap);
+	DDX_Control(pDX, IDC_MAP_OBJ_COMBO_TYPE, m_cComboBox_Obj);
+	DDX_Control(pDX, IDC_MAP_OBJ_LISTBOX_UNIT, m_cListCtrl_Obj);
 }
 
 
@@ -147,6 +152,36 @@ BOOL CMapTool_Tab2::OnInitDialog()
 
 #pragma region Chan
 
+	// 1. Load Unit Data
+	if (FAILED(Load_UnitData(L"../Data/01.Object/Player_Monster_Pivot_Origin_Recent.dat")))
+	{
+		AfxMessageBox(L"Failed Load Unit Data");
+		return E_FAIL;
+	}
+
+	// 2. Set ComboBox
+	{
+		CString OBJ_TYPE_STRING[(UINT)OBJ_TYPE::TYPEEND]{ L"Player", L"Monster", L"Npc", L"Item", L"Terrain", L"Enviornment", L"UI" };
+
+		m_cComboBox_Obj.AddString(_T("Entire"));
+		for (int i = 0; i < (UINT)OBJ_TYPE::TYPEEND; ++i)
+			m_cComboBox_Obj.AddString(OBJ_TYPE_STRING[i]);
+		
+		m_cComboBox_Obj.SetCurSel(0);
+	}
+
+	// 3. Set ListControl
+	{
+		const int iIcoSize = 48;
+		m_cImgLIst_Obj.Create(iIcoSize, iIcoSize, ILC_COLOR32, 0, 0);
+		m_cImgLIst_Obj.Add(AfxGetApp()->LoadIconW(IDR_MAINFRAME));
+
+		m_cListCtrl_Obj.SetImageList(&m_cImgLIst_Obj, LVSIL_NORMAL); // 이유는 모르겠지만 LVSIL_NORMAL 이외에 다른 옵션은 렌더가 안됨
+		
+		for (int i = 0; i < 10; ++i)
+			m_cListCtrl_Obj.InsertItem(0, L"IDR_MAINFRAME", 0);
+	}
+
 #pragma endregion
 
 
@@ -182,6 +217,13 @@ void CMapTool_Tab2::OnDestroy()
 
 #pragma region Chan
 
+	for (int i = 0; i < (UINT)OBJ_TYPE::TYPEEND; ++i)
+	{
+		for (auto& pObject : m_listObj[i])
+			Safe_Delete(pObject);
+
+		m_listObj[i].clear();
+	}
 #pragma endregion
 
 }
@@ -558,6 +600,74 @@ void CMapTool_Tab2::Sort_TileList(TERRIAN_TYPE _eType)
 	}
 
 	UpdateData(FALSE);
+}
+
+HRESULT CMapTool_Tab2::Load_UnitData(const CString & _strPath)
+{
+	HANDLE	hFile = CreateFile(_strPath, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+		return E_FAIL;
+
+	DWORD	dwByte = 0;
+	DWORD	dwStrByte = 0;
+	CUnit*	pUnit = nullptr;
+	CString OBJ_STATE_STRING[(UINT)OBJ_STATE::TYPEEND]{ L"stand", L"walk", L"dash", L"attack", L"damage", L"skill", L"die" };
+
+	while (true)
+	{
+		pUnit = new CUnit;
+
+		// 이름 문자열 세팅
+		{
+			ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+			TCHAR*	pName = new TCHAR[dwStrByte];
+			ReadFile(hFile, pName, dwStrByte, &dwByte, nullptr);
+
+			if (0 == dwByte)
+			{
+				delete[]pName;
+				pName = nullptr;
+				Safe_Delete(pUnit);
+				break;
+			}
+
+			pUnit->m_strName = pName;
+			delete[]pName;
+			pName = nullptr;
+		}
+
+		// 애니메이션 세팅
+		{
+			// Animation Set
+			ANIMATION* pAni = new ANIMATION;
+
+			pAni->bLoop = false;
+			pAni->iCurFrame = 0;
+			pUnit->m_mapAni.insert({ OBJ_STATE_STRING[(UINT)OBJ_STATE::STAND], pAni });
+			pUnit->m_pCurAni = pAni;
+		}
+
+		// 나머지 멤버 변수 세팅
+		{
+			ReadFile(hFile, &(pUnit->m_tInfo), sizeof(INFO), &dwByte, nullptr);
+			ReadFile(hFile, &(pUnit->m_tStat), sizeof(STAT), &dwByte, nullptr);
+			ReadFile(hFile, &(pUnit->m_eType), sizeof(OBJ_TYPE), &dwByte, nullptr);
+			ReadFile(hFile, &(pUnit->m_eState), sizeof(OBJ_STATE), &dwByte, nullptr);
+			ReadFile(hFile, &(pUnit->m_pCurAni->fSecondPerFrame), sizeof(float), &dwByte, nullptr);
+			ReadFile(hFile, &(pUnit->m_pCurAni->iMaxFrame), sizeof(int), &dwByte, nullptr);
+	
+			pUnit->m_strObjKey = pUnit->m_strName;
+			pUnit->m_strStateKey = OBJ_STATE_STRING[(UINT)OBJ_STATE::STAND] + L"_8";
+		}
+
+		// 푸시백
+		m_listObj[(UINT)pUnit->m_eType].push_back(pUnit);
+	}
+
+	CloseHandle(hFile);
+
+	return S_OK;
 }
 
 void CMapTool_Tab2::OnButton_ReloadTile()
