@@ -19,6 +19,10 @@
 #include "UnitTool_Tab1.h"
 #include "TimeMgr.h"
 
+
+#include "UnitTool_Monster.h"
+
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -496,7 +500,11 @@ void CToolView::OnTimer(UINT_PTR nIDEvent)
 {
 	CTimeMgr::Get_Instance()->Update();
 
-	float fTime = CTimeMgr::Get_Instance()->Get_TimeDelta();
+	if (m_pDlgUnit->m_bPreviewAniPlay)
+		m_pDlgUnit->Update_Ani_Preview();
+
+	if (m_pDlgUnit->m_bAniPlay)
+		m_pDlgUnit->Update_Ani();
 
 	CScrollView::OnTimer(nIDEvent);
 }

@@ -8,7 +8,7 @@
 #include "afxcmn.h"
 #include <atlimage.h>
 #include "afxwin.h"
-
+#include "shellapi.h"
 class UnitTool_Monster : public CDialogEx
 {
 	DECLARE_DYNAMIC(UnitTool_Monster)
@@ -34,6 +34,7 @@ public:
 
 	void						Set_Editability(const bool& _bAlility); // 에딧 컨트롤 편집 가능 여부
 	HRESULT						Load_DB(); // 파일에 저장되어있는 유닛들을 가져와 벡터와 리스트 박스에 푸시한다.
+	const int					Get_FileNum(const CString& _strPath);
 
 	CToolView*					m_pToolView = nullptr;
 	CUnit*						m_pOriginUnit = nullptr;
@@ -46,10 +47,6 @@ public:
 	int							m_iCurUnitListIndex = 0; // 현재 유닛 리스트 인덱스
 
 	// Texture List
-	map<CString, CImage*>		m_mapPngImg;	// 텍스처 이미지를 저장한다
-	CString						m_FilePath = L""; // 파일명을 지운 순수 상대 경로
-	CListBox					m_TextureListBox;
-	CStatic						m_Picture;
 
 
 	// Control Field
@@ -110,10 +107,44 @@ public:
 
 	// List 
 	afx_msg void				OnLbnSelchangeListMonster();		// 유닛 리스트 항목 변경
-	afx_msg void				OnLbnSelchangeListMonsterTexture(); // 텍스처 리스트 항목 변경
 	
 	// Combo Box
 	afx_msg void				OnCbnSelchangeComboMonsterType();
 	
+#pragma region Animation 
+public:
+	// Methods
 	afx_msg void				OnDropFiles(HDROP hDropInfo);
+	afx_msg void				OnLbnSelchangeListMonsterTexture(); // 텍스처 리스트 항목 변경
+	afx_msg void				OnBnClickedButtonMonsterAniStop();
+	afx_msg void				OnBnClickedButtonMonsterAniPush();
+	afx_msg void				OnBnClickedButtonMonsterAniPlay(); // 미리보기
+	afx_msg void				OnBnClickedButtonMonsterAniPlaybtn(); // 툴 뷰 
+	afx_msg void				OnBnClickedButtonMonsterAniStop2();
+	
+	afx_msg void				OnEnChangeEditMonsterAniTime();
+	afx_msg void				OnCbnSelchangeComboMonsterState();
+	afx_msg void				OnCbnSelchangeComboMonsterDir();
+
+	void						Update_Ani_Preview();
+	void						Update_Ani();
+	void						Empty_MapImg();
+	// Fields
+
+	map<CString, CImage*>			m_mapPngImg;	// 텍스처 이미지를 저장한다
+	map<CString, CImage*>::iterator m_mapImgIter;
+	CString							m_FilePath = L""; // 파일명을 지운 순수 상대 경로
+	CListBox						m_TextureListBox;
+	CListBox						m_AniListBox;
+	CStatic							m_Picture;
+	bool							m_bPreviewAniPlay = false;
+
+	float							EDIT_ANI_TIME;
+	CComboBox						ANI_COMBO_OBJ_STATE;
+	CComboBox						ANI_COMBO_OBJ_DIR;
+	bool							m_bAniPlay = false;
+
+	float							m_fAcc = 0.f;
+
+#pragma endregion
 };

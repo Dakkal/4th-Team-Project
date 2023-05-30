@@ -48,7 +48,6 @@ typedef struct tagInfo
 
 typedef struct tagStat
 {
-	CString strName;
 	int	iHP;
 	int	iAD;
 	int iSpeed;

@@ -17,6 +17,7 @@ class CToolDoc;
 
 /* CHAN */
 #include "Unit.h"
+class UnitTool_Monster;
 
 
 class CToolView : public CScrollView
@@ -93,7 +94,8 @@ public:
 
 #pragma region UnitTool
 
-	CUnit* m_pRenderUnit = nullptr;  
+	CUnit*				m_pRenderUnit = nullptr;  
+	UnitTool_Monster*	m_pDlgUnit;
 
 
 #pragma endregion

@@ -29,25 +29,26 @@ public:
 	OBJ_TYPE			Get_Type() const		{ return m_eType; }
 	OBJ_STATE			Get_State() const		{ return m_eState; }*/
 
-protected:
+
 	void				Move_Frame(void); // 애니메이션 관련
 
 public:
+	CString				m_strName;
 	INFO				m_tInfo; 
 	STAT				m_tStat;
-	FRAME				m_tFrame;
-	OBJ_TYPE			m_eType		= OBJ_TYPE::TYPEEND;
-	OBJ_STATE			m_eState	= OBJ_STATE::TYPEEND;
-	OBJ_DIR				m_eDir		= OBJ_DIR::TYPEEND;
+	//FRAME				m_tFrame;
+	OBJ_TYPE			m_eType			= OBJ_TYPE::TYPEEND;
+	OBJ_STATE			m_eState		= OBJ_STATE::TYPEEND;
+	OBJ_DIR				m_eDir			= OBJ_DIR::TYPEEND;
 
+	CString				m_strObjKey		= L""; 
+	CString				m_strStateKey	= L""; 
 
-	/* 원래 이렇게 사용하는 변수들이 아니지만 지금만 이렇게 사용하도록 한다. */
+	bool				m_bPlay = true;
 
-	CString				m_strRelativePath			= L""; // 폴더 경로
-	CString				m_strObjKey					= L""; 
-	CString				m_strStateKey				= L""; 
-
-	ANIMATION			m_tAnimator;
+	map<CString, ANIMATION*>	m_mapAni;
+	ANIMATION*			m_pCurAni = nullptr;
+	float				m_fAcc;
 
 };
 

@@ -27,8 +27,13 @@
 #define IDC_RADIO1                      1008
 #define IDC_RADIO2                      1009
 #define IDC_RADIO3                      1010
+#define IDC_BUTTON_MONSTER_ANI_NEW      1010
+#define IDC_BUTTON_MONSTER_ANI_DEL      1011
 #define IDC_CHECK1                      1012
+#define IDC_BUTTON_MONSTER_ANI_PLAYBTN  1012
 #define IDC_CHECK2                      1013
+#define IDC_BUTTON_MONSTER_ANI_DEL2     1013
+#define IDC_BUTTON_MONSTER_ANI_STOP_2   1013
 #define IDC_CHECK3                      1014
 #define IDC_BUTTON3                     1015
 #define IDC_BUTTON4                     1019
@@ -98,17 +103,25 @@
 #define IDC_LIST1                       1076
 #define IDC_LIST1_MONSTER_ANI_DB        1076
 #define IDC_EDIT_TILE                   1077
+#define IDC_STATIC_MONSTER_ANI_TEXTURE_LIST 1077
 #define IDC_STATIC3_TILE                1078
+#define IDC_STATIC_MONSTER_ANIMATION_LIST 1078
 #define IDC_EDIT1_TILE                  1079
 #define IDC_EDIT1_TILE2                 1080
 #define IDC_BUTTON2_TILE2               1080
+#define IDC_COMBO_MONSTER_STATE         1080
 #define IDC_EDIT2_TILE                  1081
+#define IDC_COMBO_MONSTER_DIR           1081
 #define IDC_STATIC_MONSTER_TEXTURE      1082
 #define IDC_STATIC_MOSTER_LIST_DRAG     1083
+#define IDC_BUTTON_MONSTER_ANI_PUSH     1083
 #define IDC_BUTTON_MONSTER_SAVE_DB      1084
-
-
-#define ID_TIMER						1100
+#define IDC_STATIC_MONSTER_ANIMATOR     1086
+#define IDC_BUTTON_MONSTER_ANI_PLAY     1087
+#define IDC_BUTTON_MONSTER_ANI_STOP     1088
+#define IDC_RADIO_MONSTER_LOOP          1089
+#define IDC_EDIT_MONSTER_ANI_TIME       1090
+#define ID_TIMER                        1100
 
 // Next default values for new objects
 // 
@@ -116,7 +129,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        325
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1078
+#define _APS_NEXT_CONTROL_VALUE         1091
 #define _APS_NEXT_SYMED_VALUE           313
 #endif
 #endif

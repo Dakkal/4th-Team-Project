@@ -12,15 +12,16 @@ CUnit::CUnit()
 
 CUnit::~CUnit()
 {
+	Release();
 }
 
 HRESULT CUnit::Initialize()
 {
 	m_tInfo.vPos		= { 0.f, 0.f, 0.f };
 	m_tInfo.vRot		= { 0.f, 0.f, 0.f };
-	m_tInfo.vSize		= { 1.f, 1.f, 1.f };
+	m_tInfo.vSize		= { 3.f, 3.f, 1.f };
 
-	m_tStat.strName		= L"New Unit";
+	m_strName = L"New_Unit";
 	m_tStat.iHP			= int(UNIT_MAX_HP * 0.5f);
 	m_tStat.iAD			= int(UNIT_MAX_AD * 0.5f);
 	m_tStat.iSpeed		= int(UNIT_MAX_SPEED * 0.5f);
@@ -31,6 +32,8 @@ HRESULT CUnit::Initialize()
 	
 	m_strObjKey			= L"";
 	m_strStateKey		= L"";
+
+	m_bPlay				= true;
 
 	return E_NOTIMPL;
 }
@@ -50,6 +53,13 @@ void CUnit::Render()
 
 void CUnit::Release()
 {
+	for_each(m_mapAni.begin(), m_mapAni.end(),
+		[](auto& MyPair)
+	{
+		Safe_Delete(MyPair.second);
+	});
+
+	m_mapAni.clear();
 }
 
 void CUnit::Tool_Render(const D3DXVECTOR3& _vWorld)
@@ -66,7 +76,7 @@ void CUnit::Tool_Render(const D3DXVECTOR3& _vWorld)
 	m_tInfo.matWorld = matScale * matRotZ * matTrans;
 
 	//const TEXINFO*	pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Player", L"Stand", 0);
-	const TEXINFO*	pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(m_strObjKey, m_strStateKey);
+	const TEXINFO*	pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(m_strObjKey, m_strStateKey, m_pCurAni->iCurFrame);
 
 	if (nullptr == pTexInfo) return;
 
