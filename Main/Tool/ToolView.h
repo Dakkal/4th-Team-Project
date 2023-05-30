@@ -80,7 +80,6 @@ public:
 	MID_TAB_TYPE m_eCurMidTab;
 
 	afx_msg void OnTimer(UINT_PTR nIDEvent);	// 애니메이션 시간 컨트롤을 위한 타임매니저 호출 함수
-<<<<<<< HEAD
 #pragma region MapTool
 
 #pragma region Jun
@@ -100,9 +99,6 @@ public:
 
 #pragma endregion
 
-
-=======
->>>>>>> feature/Chan
 
 /* HEEJUNE */
 #pragma region TileTool
