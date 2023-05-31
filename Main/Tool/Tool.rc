@@ -73,6 +73,26 @@ IDR_MAINFRAME           ICON                    "res\\Tool.ico"
 
 IDR_ToolTYPE            ICON                    "res\\ToolDoc.ico"
 
+ICO_MONSTER_DIABLO      ICON                    "res\\ICO_MONSTER_DIABLO.ico"
+
+ICO_MONSTER_GOLEM       ICON                    "res\\ICO_MONSTER_GOLEM.ico"
+
+ICO_MONSTER_PATMONSTER  ICON                    "res\\ICO_MONSTER_PATMONSTER.ico"
+
+ICO_MONSTER_VIPER       ICON                    "res\\ICO_MONSTER_VIPER.ico"
+
+ICO_PLAYER_AMAZON       ICON                    "res\\ICO_PLAYER_AMAZON.ico"
+
+ICO_PLAYER_ASSASSIN     ICON                    "res\\ICO_PLAYER_ASSASSIN.ico"
+
+ICO_PLAYER_BAVARIAN     ICON                    "res\\ICO_PLAYER_BAVARIAN.ico"
+
+ICO_PLAYER_NECROMANCER  ICON                    "res\\ICO_PLAYER_NECROMANCER.ico"
+
+ICO_PLAYER_PALADIN      ICON                    "res\\ICO_PLAYER_PALADIN.ico"
+
+ICO_PLAYER_SORCERESS    ICON                    "res\\ICO_PLAYER_SORCERESS.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -261,7 +281,7 @@ BEGIN
     LTEXT           "Select Act",IDC_STATIC8_MAP,24,19,33,11
     LTEXT           "Map Size",IDC_STATIC9_MAP,24,54,32,10
     CTEXT           "-",IDC_STATIC,94,55,10,10
-    CTEXT           "s",IDC_STATIC10_MAP,65,41,23,10
+    CTEXT           "Row",IDC_STATIC10_MAP,65,41,23,10
     CTEXT           "Col",IDC_STATIC11_MAP,108,41,23,10
     COMBOBOX        IDC_MAP_OBJ_COMBO_TYPE,94,222,95,30,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
     CONTROL         "",IDC_MAP_OBJ_LISTBOX_UNIT,"SysListView32",LVS_SORTASCENDING | WS_BORDER | WS_TABSTOP,23,256,166,140

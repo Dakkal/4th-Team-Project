@@ -2,26 +2,9 @@
 // Microsoft Visual C++ generated include file.
 // Used by Tool.rc
 //
-
-
-
-#pragma region OBJ_ICON
-
-
-
-
-
-
-
-
-#pragma endregion
-
-
-
-
 #define IDD_ABOUTBOX                    100
 #define IDP_OLE_INIT_FAILED             100
-#define IDR_MAINFRAME                   128 
+#define IDR_MAINFRAME                   128
 #define IDR_ToolTYPE                    130
 #define IDD_MYFORM                      310
 #define IDD_UNITTOOL                    311
@@ -35,6 +18,7 @@
 #define IDD_UNIT_ITEM                   319
 #define IDD_DIALOG2                     323
 #define IDD_TILETOOL                    323
+#define IDI_ICON6                       330
 #define IDC_EDIT1                       1001
 #define IDC_EDIT2                       1002
 #define IDC_EDIT3                       1003
@@ -169,26 +153,22 @@
 #define IDC_STATIC_MONSTER_TEXTURE      9082
 #define IDC_STATIC_MOSTER_LIST_DRAG     9083
 #define IDC_EDIT3_MAP                   9084
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#define ICO_PLAYER_AMAZON               24464
+#define ICO_PLAYER_ASSASSIN             24465
+#define ICO_PLAYER_BAVARIAN             24466
+#define ICO_PLAYER_NECROMANCER          24467
+#define ICO_PLAYER_PALADIN              24468
+#define ICO_PLAYER_SORCERESS            24469
+#define ICO_MONSTER_DIABLO              25466
+#define ICO_MONSTER_GOLEM               25467
+#define ICO_MONSTER_PATMONSTER          25468
+#define ICO_MONSTER_VIPER               25469
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        325
+#define _APS_NEXT_RESOURCE_VALUE        335
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1099
 #define _APS_NEXT_SYMED_VALUE           313

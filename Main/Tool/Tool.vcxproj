@@ -264,6 +264,16 @@
     <None Include="res\Tool.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\ICO_MONSTER_DIABLO.ico" />
+    <Image Include="res\ICO_MONSTER_GOLEM.ico" />
+    <Image Include="res\ICO_MONSTER_PATMONSTER.ico" />
+    <Image Include="res\ICO_MONSTER_VIPER.ico" />
+    <Image Include="res\ICO_PLAYER_AMAZON.ico" />
+    <Image Include="res\ICO_PLAYER_ASSASSIN.ico" />
+    <Image Include="res\ICO_PLAYER_BAVARIAN.ico" />
+    <Image Include="res\ICO_PLAYER_NECROMANCER.ico" />
+    <Image Include="res\ICO_PLAYER_PALADIN.ico" />
+    <Image Include="res\ICO_PLAYER_SORCERESS.ico" />
     <Image Include="res\Tool.ico" />
     <Image Include="res\Toolbar.bmp" />
     <Image Include="res\ToolDoc.ico" />

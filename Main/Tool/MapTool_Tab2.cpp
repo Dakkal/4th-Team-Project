@@ -177,16 +177,17 @@ BOOL CMapTool_Tab2::OnInitDialog()
 	{
 		const int iIcoSize = 48;
 
+		// 아이콘 이미지로 이미지 리스트를 세팅한다.
 		for (int i = 0; i < (UINT)OBJ_TYPE::TYPEEND; ++i) // 오브젝트 타입 수만큼의 이미지 리스트를 세팅한다.
 		{
-			m_cImgList_Obj[i].Create(iIcoSize, iIcoSize, ILC_COLOR32, 0, 0);
+			m_cImgList_Obj[i].Create(iIcoSize, iIcoSize, ILC_COLOR32, m_vecObj[i].size(), 5);
 
 			for (size_t j = 0; j < m_vecObj[i].size(); ++j) // 오브젝트 타입별로 하나씩 꺼내와 아이콘 아이디를 생성한 뒤, 이미지 리스트에 저장한다.
 			{
 				UINT iIconID = Get_IconID(m_vecObj[i][j]); // 이 아이디를 밑에 Add 함수의 매개변수로 사용한다.
 
-				// m_cImgList_Obj[i].Add(AfxGetApp()->LoadIconW(iIconID)); // 실제 이미지 삽입
-				m_cImgList_Obj[i].Add(AfxGetApp()->LoadIconW(IDR_MAINFRAME)); // 테스트 이미지 삽입
+				m_cImgList_Obj[i].Add(AfxGetApp()->LoadIconW(iIconID)); // 실제 이미지 삽입
+						
 			}
 		}
 
@@ -1379,7 +1380,7 @@ HRESULT CMapTool_Tab2::Set_ListCtrl(const OBJ_TYPE& _eType)
 
 	// 리스트 컨트롤에 오브젝트 이름을 추가한다.
 	for (size_t i = 0; i < m_vecObj[(UINT)_eType].size(); ++i)
-		m_cListCtrl_Obj.InsertItem(0, m_vecObj[(UINT)_eType][i]->m_strObjKey, 0);
+		m_cListCtrl_Obj.InsertItem(i, m_vecObj[(UINT)_eType][i]->m_strObjKey, i);
 
 	return S_OK;
 }
