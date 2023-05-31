@@ -50,6 +50,10 @@ public:
 	afx_msg void			OnButton_CreateMap(); // 버튼 : Row, Col에 따라 타일맵 생성:
 	afx_msg void			OnRadio_MiniView_Hide(); // 라디오 : 미니뷰 끄기
 	afx_msg void			OnRadio_MiniView_Show(); // 라디오 : 미니뷰 켜기
+	afx_msg void			OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar); // 스크롤컨트롤로 Row, Col 조절
+	afx_msg void			OnEdit_ChangeRow(); // 에딧창으로 Row 스크롤컨트롤 조절
+	afx_msg void			OnEdit_ChangeCol(); // 에딧창으로 Col 스크롤컨트롤 조절
+
 
 	//타일
 	afx_msg void			OnList_Tile(); // 리스트박스 : 리스트 클릭시 해당 리스트의 타일정보를 m_tSelectTile에 저장
@@ -119,7 +123,5 @@ public:
 	
 	
 
-	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
-	afx_msg void OnEdit_ChangeRow();
-	afx_msg void OnEdit_ChangeCol();
+	
 };
