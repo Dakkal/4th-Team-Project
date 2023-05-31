@@ -186,8 +186,7 @@ BOOL CMapTool_Tab2::OnInitDialog()
 			{
 				UINT iIconID = Get_IconID(m_vecObj[i][j]); // 이 아이디를 밑에 Add 함수의 매개변수로 사용한다.
 
-				m_cImgList_Obj[i].Add(AfxGetApp()->LoadIconW(iIconID)); // 실제 이미지 삽입
-						
+				m_cImgList_Obj[i].Add(AfxGetApp()->LoadIconW(iIconID)); // 실제 이미지 삽입			
 			}
 		}
 

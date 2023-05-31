@@ -153,16 +153,18 @@
 #define IDC_STATIC_MONSTER_TEXTURE      9082
 #define IDC_STATIC_MOSTER_LIST_DRAG     9083
 #define IDC_EDIT3_MAP                   9084
-#define ICO_PLAYER_AMAZON               24464
-#define ICO_PLAYER_ASSASSIN             24465
-#define ICO_PLAYER_BAVARIAN             24466
-#define ICO_PLAYER_NECROMANCER          24467
-#define ICO_PLAYER_PALADIN              24468
-#define ICO_PLAYER_SORCERESS            24469
-#define ICO_MONSTER_DIABLO              25466
-#define ICO_MONSTER_GOLEM               25467
-#define ICO_MONSTER_PATMONSTER          25468
-#define ICO_MONSTER_VIPER               25469
+
+#define ICO_PLAYER_AMAZON               90000
+#define ICO_PLAYER_ASSASSIN             90001
+#define ICO_PLAYER_BAVARIAN             90002
+#define ICO_PLAYER_NECROMANCER          90003
+#define ICO_PLAYER_PALADIN              90004
+#define ICO_PLAYER_SORCERESS            90005
+
+#define ICO_MONSTER_DIABLO              91002
+#define ICO_MONSTER_GOLEM               91003
+#define ICO_MONSTER_PATMONSTER          91004
+#define ICO_MONSTER_VIPER               91005
 
 // Next default values for new objects
 // 
