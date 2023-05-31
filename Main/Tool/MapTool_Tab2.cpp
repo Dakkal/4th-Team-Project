@@ -51,6 +51,10 @@ void CMapTool_Tab2::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_COMBO2_MAP, m_Combo_SelecMap);
 	DDX_Control(pDX, IDC_MAP_OBJ_COMBO_TYPE, m_cComboBox_Obj);
 	DDX_Control(pDX, IDC_MAP_OBJ_LISTBOX_UNIT, m_cListCtrl_Obj);
+	DDX_Control(pDX, IDC_RADIO1_MAP, m_Radio_Mini[0]);
+	DDX_Control(pDX, IDC_RADIO2_MAP, m_Radio_Mini[1]);
+	DDX_Control(pDX, IDC_SLIDER1_MAP, m_Slide_Row);
+	DDX_Control(pDX, IDC_SLIDER2_MAP, m_Slide_Col);
 }
 
 
@@ -65,6 +69,11 @@ BEGIN_MESSAGE_MAP(CMapTool_Tab2, CDialogEx)
 	ON_CBN_SELCHANGE(IDC_COMBO2_MAP, &CMapTool_Tab2::OnCombo_ChangeActMap)
 	ON_LBN_DBLCLK(IDC_LIST1_MAP, &CMapTool_Tab2::OnList_TileReset)
 	ON_CBN_SELCHANGE(IDC_MAP_OBJ_COMBO_TYPE, &CMapTool_Tab2::OnCbnSelchangeMapObjComboType)
+	ON_BN_CLICKED(IDC_RADIO2_MAP, &CMapTool_Tab2::OnRadio_MiniView_Hide)
+	ON_BN_CLICKED(IDC_RADIO1_MAP, &CMapTool_Tab2::OnRadio_MiniView_Show)
+	ON_WM_HSCROLL()
+	ON_EN_CHANGE(IDC_EDIT4_MAP, &CMapTool_Tab2::OnEdit_ChangeRow)
+	ON_EN_CHANGE(IDC_EDIT5_MAP, &CMapTool_Tab2::OnEdit_ChangeCol)
 END_MESSAGE_MAP()
 
 
@@ -159,6 +168,20 @@ BOOL CMapTool_Tab2::OnInitDialog()
 
 		Sort_TileList(TERRIAN_TYPE::ACT1);
 	}
+
+	m_Radio_Mini[0].SetCheck(TRUE);
+
+	m_Slide_Row.SetRange(0, 200);
+	m_Slide_Row.SetPos(0);
+	m_Slide_Row.SetLineSize(5);
+	m_Slide_Row.SetPageSize(10);
+
+	m_Slide_Col.SetRange(0, 200);
+	m_Slide_Col.SetPos(0);
+	m_Slide_Col.SetLineSize(5);
+	m_Slide_Col.SetPageSize(10);
+
+
 #pragma endregion
 
 #pragma region Chan
@@ -250,6 +273,62 @@ void CMapTool_Tab2::OnDestroy()
 }
 
 #pragma region Jun
+
+void CMapTool_Tab2::OnRadio_MiniView_Hide()
+{
+	m_pMapTool_SubMap.ShowWindow(SW_HIDE);
+}
+
+
+void CMapTool_Tab2::OnRadio_MiniView_Show()
+{
+	m_pMapTool_SubMap.ShowWindow(SW_SHOW);
+}
+
+void CMapTool_Tab2::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+{
+	CDialogEx::OnHScroll(nSBCode, nPos, pScrollBar);
+
+	UpdateData(TRUE);
+
+	if (IDC_SLIDER1_MAP == pScrollBar->GetDlgCtrlID())
+	{
+		int iPos = m_Slide_Row.GetPos();
+
+		m_iTileX = iPos;
+	}
+	if (IDC_SLIDER2_MAP == pScrollBar->GetDlgCtrlID())
+	{
+		int iPos = m_Slide_Col.GetPos();
+
+		m_iTileY = iPos;
+	}
+
+	
+
+	UpdateData(FALSE);
+}
+
+void CMapTool_Tab2::OnEdit_ChangeRow()
+{
+	UpdateData(TRUE);
+
+	m_Slide_Row.SetPos(m_iTileX);
+
+	UpdateData(FALSE);
+}
+
+
+void CMapTool_Tab2::OnEdit_ChangeCol()
+{
+	UpdateData(TRUE);
+
+	m_Slide_Col.SetPos(m_iTileY);
+
+	UpdateData(FALSE);
+}
+
+
 
 void CMapTool_Tab2::OnList_Tile()
 {
@@ -773,6 +852,10 @@ void CMapTool_Tab2::OnCombo_ChangeActMap()
 			m_pMainView->m_pTerrain_Act1_View = m_pTerrain_Act1;
 			m_pMainView->m_pTerrain_Act2_View = nullptr;
 			m_pMainView->m_pTerrain_Act3_View = nullptr;
+			m_iTileX = m_pTerrain_Act1->m_ActTileX;
+			m_iTileY = m_pTerrain_Act1->m_ActTileY;
+			m_Slide_Row.SetPos(m_iTileX);
+			m_Slide_Col.SetPos(m_iTileY);
 		}
 		break;
 	case TERRIAN_TYPE::ACT2:
@@ -781,6 +864,10 @@ void CMapTool_Tab2::OnCombo_ChangeActMap()
 			m_pMainView->m_pTerrain_Act1_View = nullptr;
 			m_pMainView->m_pTerrain_Act2_View = m_pTerrain_Act2;
 			m_pMainView->m_pTerrain_Act3_View = nullptr;
+			m_iTileX = m_pTerrain_Act2->m_ActTileX;
+			m_iTileY = m_pTerrain_Act2->m_ActTileY;
+			m_Slide_Row.SetPos(m_iTileX);
+			m_Slide_Col.SetPos(m_iTileY);
 		}
 		break;
 	case TERRIAN_TYPE::ACT3:
@@ -789,6 +876,10 @@ void CMapTool_Tab2::OnCombo_ChangeActMap()
 			m_pMainView->m_pTerrain_Act1_View = nullptr;
 			m_pMainView->m_pTerrain_Act2_View = nullptr;
 			m_pMainView->m_pTerrain_Act3_View = m_pTerrain_Act3;
+			m_iTileX = m_pTerrain_Act3->m_ActTileX;
+			m_iTileY = m_pTerrain_Act3->m_ActTileY;
+			m_Slide_Row.SetPos(m_iTileX);
+			m_Slide_Col.SetPos(m_iTileY);
 		}
 		break;
 	default:
@@ -1116,6 +1207,8 @@ void CMapTool_Tab2::OnButton_LoadMap()
 
 				m_iTileX = iTileX;
 				m_iTileY = iTileY;
+				m_Slide_Row.SetPos(m_iTileX);
+				m_Slide_Col.SetPos(m_iTileY);
 
 				CloseHandle(hFile);
 			}
@@ -1203,6 +1296,8 @@ void CMapTool_Tab2::OnButton_LoadMap()
 
 				m_iTileX = iTileX;
 				m_iTileY = iTileY;
+				m_Slide_Row.SetPos(m_iTileX);
+				m_Slide_Col.SetPos(m_iTileY);
 
 				CloseHandle(hFile);
 			}
@@ -1290,6 +1385,8 @@ void CMapTool_Tab2::OnButton_LoadMap()
 
 				m_iTileX = iTileX;
 				m_iTileY = iTileY;
+				m_Slide_Row.SetPos(m_iTileX);
+				m_Slide_Col.SetPos(m_iTileY);
 
 				CloseHandle(hFile);
 			}
@@ -1395,6 +1492,15 @@ HRESULT CMapTool_Tab2::Set_ListCtrl(const OBJ_TYPE& _eType)
 	return S_OK;
 }
 #pragma endregion
+
+
+
+
+
+
+
+
+
 
 
 

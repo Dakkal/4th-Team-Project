@@ -44,7 +44,9 @@
 #define IDC_BUTTON6                     1022
 #define IDC_TAB1                        1022
 #define IDC_SLIDER1                     1024
+#define IDC_SLIDER1_MAP                 1024
 #define IDC_TAB_UNIT                    1025
+#define IDC_SLIDER2_MAP                 1025
 #define IDC_LIST_MONSTER                1026
 #define IDC_BUTTON_MONSTER_NEW          1027
 #define IDC_BUTTON_MONSTER_DELETE       1028
@@ -99,8 +101,9 @@
 #define IDC_STATIC_MAP_UNT_TYPE         1096
 #define IDC_STATIC_MAP_UNIT_NAME_SEARCH 1097
 #define IDC_EDIT_MAP_UNIT_NAME_SEARCH_EDIT 1098
-#define IDC_STATIC_MAPSUB               1591
-#define IDC_STATIC2_MAPSUB              1592
+#define IDC_RADIO1_MAP                  1099
+#define IDC_RADIO2_MAP                  1100
+#define IDC_STATIC20_MAP                1101
 #define IDC_STATIC5_MAP                 1183
 #define IDC_STATIC6_MAP                 1184
 #define IDC_STATIC7_MAP                 1185
@@ -114,7 +117,9 @@
 #define IDC_BUTTON4_MAP                 1193
 #define IDC_STATIC10_MAP                1194
 #define IDC_STATIC9_MAP3                1195
+#define IDC_STATIC10_MAP2               1195
 #define IDC_STATIC11_MAP                1196
+#define IDC_STATIC10_MAP3               1197
 #define IDC_BUTTON_MONSTER_ANI_PUSH     1283
 #define IDC_BUTTON_MONSTER_SAVE_DB      1284
 #define IDC_STATIC_MONSTER_ANIMATOR     1286
@@ -123,6 +128,8 @@
 #define IDC_RADIO_MONSTER_LOOP          1289
 #define IDC_EDIT_MONSTER_ANI_TIME       1290
 #define ID_TIMER                        1300
+#define IDC_STATIC_MAPSUB               1591
+#define IDC_STATIC2_MAPSUB              1592
 #define IDC_STATIC1_MAP                 2072
 #define IDC_STATIC2_TILE                2073
 #define IDC_STATIC2_MAP                 2073
@@ -156,16 +163,16 @@
 #define IDC_STATIC_MONSTER_TEXTURE      9082
 #define IDC_STATIC_MOSTER_LIST_DRAG     9083
 #define IDC_EDIT3_MAP                   9084
-#define ICO_PLAYER_AMAZON               90000
-#define ICO_PLAYER_ASSASSIN             90001
-#define ICO_PLAYER_BAVARIAN             90002
-#define ICO_PLAYER_NECROMANCER          90003
-#define ICO_PLAYER_PALADIN              90004
-#define ICO_PLAYER_SORCERESS            90005
-#define ICO_MONSTER_DIABLO              91002
-#define ICO_MONSTER_GOLEM               91003
-#define ICO_MONSTER_PATMONSTER          91004
-#define ICO_MONSTER_VIPER               91005
+#define ICO_PLAYER_AMAZON               24464
+#define ICO_PLAYER_ASSASSIN             24465
+#define ICO_PLAYER_BAVARIAN             24466
+#define ICO_PLAYER_NECROMANCER          24467
+#define ICO_PLAYER_PALADIN              24468
+#define ICO_PLAYER_SORCERESS            24469
+#define ICO_MONSTER_DIABLO              25466
+#define ICO_MONSTER_GOLEM               25467
+#define ICO_MONSTER_PATMONSTER          25468
+#define ICO_MONSTER_VIPER               25469
 
 // Next default values for new objects
 // 
@@ -173,7 +180,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        335
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1099
+#define _APS_NEXT_CONTROL_VALUE         1102
 #define _APS_NEXT_SYMED_VALUE           313
 #endif
 #endif
