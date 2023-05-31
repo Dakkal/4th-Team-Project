@@ -8,6 +8,8 @@
 /* Together */
 #include "Include.h"
 #include "Terrain.h"
+#include "MapTool_Tab2.h"
+
 class CToolDoc;
 
 
@@ -97,7 +99,7 @@ public:
 #pragma endregion
 
 #pragma region Chan
-
+	CMapTool_Tab2*	m_pMapToolTab = nullptr;
 #pragma endregion
 
 

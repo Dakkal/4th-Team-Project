@@ -11,6 +11,8 @@
 #include "ToolView.h"
 #include "FileInfo.h"
 #include "MyForm.h"
+#include "Obj.h"
+#include "Unit.h"
 
 // CMapTool_Tab2 dialog
 
@@ -26,7 +28,7 @@ CMapTool_Tab2::CMapTool_Tab2(CWnd* pParent /*=NULL*/)
 	, m_fTileDmg(0)
 	, m_iTileX(0)
 	, m_iTileY(0)
-	, m_pCurObj(nullptr)
+	, m_pCurPrefabObj(nullptr)
 	, m_eToolMode(MAPTOOL_MODE::MAP)
 {
 	       
@@ -74,6 +76,7 @@ BEGIN_MESSAGE_MAP(CMapTool_Tab2, CDialogEx)
 	ON_WM_HSCROLL()
 	ON_EN_CHANGE(IDC_EDIT4_MAP, &CMapTool_Tab2::OnEdit_ChangeRow)
 	ON_EN_CHANGE(IDC_EDIT5_MAP, &CMapTool_Tab2::OnEdit_ChangeCol)
+	ON_NOTIFY(NM_CLICK, IDC_MAP_OBJ_LISTBOX_UNIT, &CMapTool_Tab2::OnNMClickMapObjListboxUnit)
 END_MESSAGE_MAP()
 
 
@@ -93,7 +96,6 @@ BOOL CMapTool_Tab2::OnInitDialog()
 	if (nullptr == m_pMapTool_SubMap.GetSafeHwnd())
 		m_pMapTool_SubMap.Create(IDD_MAPTOOL_SUBDLG);
 
-	
 
 
 #pragma region Jun
@@ -186,6 +188,11 @@ BOOL CMapTool_Tab2::OnInitDialog()
 
 #pragma region Chan
 
+	// 0. Tool View Set
+
+	if (nullptr != m_pMainView)
+		m_pMainView->m_pMapToolTab = this;
+
 	// 1. Load Unit Data
 	if (FAILED(Load_UnitData(L"../Data/01.Object/Player_Monster_Pivot_Origin_Recent.dat")))
 	{
@@ -211,11 +218,11 @@ BOOL CMapTool_Tab2::OnInitDialog()
 		// 아이콘 이미지로 이미지 리스트를 세팅한다.
 		for (int i = 0; i < (UINT)OBJ_TYPE::TYPEEND; ++i) // 오브젝트 타입 수만큼의 이미지 리스트를 세팅한다.
 		{
-			m_cImgList_Obj[i].Create(iIcoSize, iIcoSize, ILC_COLOR32, m_vecObj[i].size(), 5);
+			m_cImgList_Obj[i].Create(iIcoSize, iIcoSize, ILC_COLOR32, m_vecObjPrefabs[i].size(), 5);
 
-			for (size_t j = 0; j < m_vecObj[i].size(); ++j) // 오브젝트 타입별로 하나씩 꺼내와 아이콘 아이디를 생성한 뒤, 이미지 리스트에 저장한다.
+			for (size_t j = 0; j < m_vecObjPrefabs[i].size(); ++j) // 오브젝트 타입별로 하나씩 꺼내와 아이콘 아이디를 생성한 뒤, 이미지 리스트에 저장한다.
 			{
-				UINT iIconID = Get_IconID(m_vecObj[i][j]); // 이 아이디를 밑에 Add 함수의 매개변수로 사용한다.
+				UINT iIconID = Get_IconID(m_vecObjPrefabs[i][j]); // 이 아이디를 밑에 Add 함수의 매개변수로 사용한다.
 
 				m_cImgList_Obj[i].Add(AfxGetApp()->LoadIconW(iIconID)); // 실제 이미지 삽입			
 			}
@@ -234,7 +241,6 @@ BOOL CMapTool_Tab2::OnInitDialog()
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // EXCEPTION: OCX Property Pages should return FALSE
 }
-
 
 void CMapTool_Tab2::OnDestroy()
 {
@@ -263,10 +269,10 @@ void CMapTool_Tab2::OnDestroy()
 
 	for (int i = 0; i < (UINT)OBJ_TYPE::TYPEEND; ++i)
 	{
-		for (auto& pObject : m_vecObj[i])
+		for (auto& pObject : m_vecObjPrefabs[i])
 			Safe_Delete(pObject);
 
-		m_vecObj[i].clear();
+		m_vecObjPrefabs[i].clear();
 	}
 #pragma endregion
 
@@ -276,17 +282,23 @@ void CMapTool_Tab2::OnDestroy()
 
 void CMapTool_Tab2::OnRadio_MiniView_Hide()
 {
+	Change_Mode(MAPTOOL_MODE::MAP);
+
 	m_pMapTool_SubMap.ShowWindow(SW_HIDE);
 }
 
 
 void CMapTool_Tab2::OnRadio_MiniView_Show()
 {
+	Change_Mode(MAPTOOL_MODE::MAP);
+
 	m_pMapTool_SubMap.ShowWindow(SW_SHOW);
 }
 
 void CMapTool_Tab2::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 {
+	Change_Mode(MAPTOOL_MODE::MAP);
+
 	CDialogEx::OnHScroll(nSBCode, nPos, pScrollBar);
 
 	UpdateData(TRUE);
@@ -311,6 +323,8 @@ void CMapTool_Tab2::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 
 void CMapTool_Tab2::OnEdit_ChangeRow()
 {
+	Change_Mode(MAPTOOL_MODE::MAP);
+
 	UpdateData(TRUE);
 
 	m_Slide_Row.SetPos(m_iTileX);
@@ -321,6 +335,8 @@ void CMapTool_Tab2::OnEdit_ChangeRow()
 
 void CMapTool_Tab2::OnEdit_ChangeCol()
 {
+	Change_Mode(MAPTOOL_MODE::MAP);
+
 	UpdateData(TRUE);
 
 	m_Slide_Col.SetPos(m_iTileY);
@@ -332,7 +348,8 @@ void CMapTool_Tab2::OnEdit_ChangeCol()
 
 void CMapTool_Tab2::OnList_Tile()
 {
-	m_eToolMode = MAPTOOL_MODE::TILE;
+	Change_Mode(MAPTOOL_MODE::TILE);
+
 
 	UpdateData(TRUE);
 
@@ -458,7 +475,8 @@ void CMapTool_Tab2::OnList_Tile()
 
 void CMapTool_Tab2::Load_TileList()
 {
-	m_eToolMode = MAPTOOL_MODE::TILE;
+	Change_Mode(MAPTOOL_MODE::TILE);
+
 
 	UpdateData(TRUE);
 
@@ -499,7 +517,8 @@ void CMapTool_Tab2::Load_TileList()
 
 void CMapTool_Tab2::OnCombo_ChangeAct()
 {
-	m_eToolMode = MAPTOOL_MODE::TILE;
+	Change_Mode(MAPTOOL_MODE::TILE);
+
 
 	UpdateData(TRUE);
 
@@ -615,7 +634,8 @@ void CMapTool_Tab2::OnCombo_ChangeAct()
 
 void CMapTool_Tab2::Sort_TileList(TERRIAN_TYPE _eType)
 {
-	m_eToolMode = MAPTOOL_MODE::TILE;
+	Change_Mode(MAPTOOL_MODE::TILE);
+
 
 	UpdateData(TRUE);
 
@@ -710,77 +730,11 @@ void CMapTool_Tab2::Sort_TileList(TERRIAN_TYPE _eType)
 	UpdateData(FALSE);
 }
 
-HRESULT CMapTool_Tab2::Load_UnitData(const CString & _strPath)
-{
-	HANDLE	hFile = CreateFile(_strPath, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-
-	if (INVALID_HANDLE_VALUE == hFile)
-		return E_FAIL;
-
-	DWORD	dwByte = 0;
-	DWORD	dwStrByte = 0;
-	CUnit*	pUnit = nullptr;
-	CString OBJ_STATE_STRING[(UINT)OBJ_STATE::TYPEEND]{ L"stand", L"walk", L"dash", L"attack", L"damage", L"skill", L"die" };
-
-	while (true)
-	{
-		pUnit = new CUnit;
-
-		// 이름 문자열 세팅
-		{
-			ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
-			TCHAR*	pName = new TCHAR[dwStrByte];
-			ReadFile(hFile, pName, dwStrByte, &dwByte, nullptr);
-
-			if (0 == dwByte)
-			{
-				delete[]pName;
-				pName = nullptr;
-				Safe_Delete(pUnit);
-				break;
-			}
-
-			pUnit->m_strName = pName;
-			delete[]pName;
-			pName = nullptr;
-		}
-
-		// 애니메이션 세팅
-		{
-			// Animation Set
-			ANIMATION* pAni = new ANIMATION;
-
-			pAni->bLoop = false;
-			pAni->iCurFrame = 0;
-			pUnit->m_mapAni.insert({ OBJ_STATE_STRING[(UINT)OBJ_STATE::STAND], pAni });
-			pUnit->m_pCurAni = pAni;
-		}
-
-		// 나머지 멤버 변수 세팅
-		{
-			ReadFile(hFile, &(pUnit->m_tInfo), sizeof(INFO), &dwByte, nullptr);
-			ReadFile(hFile, &(pUnit->m_tStat), sizeof(STAT), &dwByte, nullptr);
-			ReadFile(hFile, &(pUnit->m_eType), sizeof(OBJ_TYPE), &dwByte, nullptr);
-			ReadFile(hFile, &(pUnit->m_eState), sizeof(OBJ_STATE), &dwByte, nullptr);
-			ReadFile(hFile, &(pUnit->m_pCurAni->fSecondPerFrame), sizeof(float), &dwByte, nullptr);
-			ReadFile(hFile, &(pUnit->m_pCurAni->iMaxFrame), sizeof(int), &dwByte, nullptr);
-	
-			pUnit->m_strObjKey = pUnit->m_strName;
-			pUnit->m_strStateKey = OBJ_STATE_STRING[(UINT)OBJ_STATE::STAND] + L"_8";
-		}
-
-		// 푸시백
-		m_vecObj[(UINT)pUnit->m_eType].push_back(pUnit);
-	}
-
-	CloseHandle(hFile);
-
-	return S_OK;
-}
 
 void CMapTool_Tab2::OnButton_ReloadTile()
 {
-	m_eToolMode = MAPTOOL_MODE::TILE;
+	Change_Mode(MAPTOOL_MODE::TILE);
+
 
 	UpdateData(TRUE);
 
@@ -828,7 +782,8 @@ void CMapTool_Tab2::OnButton_ReloadTile()
 
 void CMapTool_Tab2::OnList_TileReset()
 {
-	m_eToolMode = MAPTOOL_MODE::TILE;
+	Change_Mode(MAPTOOL_MODE::TILE);
+
 
 	m_ListTile.SetCurSel(-1);
 	m_tSelectTile = nullptr;
@@ -838,7 +793,7 @@ void CMapTool_Tab2::OnList_TileReset()
 // Map
 void CMapTool_Tab2::OnCombo_ChangeActMap()
 {
-	m_eToolMode = MAPTOOL_MODE::MAP;
+	Change_Mode(MAPTOOL_MODE::MAP);
 
 	UpdateData(TRUE);
 
@@ -894,6 +849,8 @@ void CMapTool_Tab2::OnCombo_ChangeActMap()
 
 void CMapTool_Tab2::OnButton_CreateMap()
 {
+	Change_Mode(MAPTOOL_MODE::MAP);
+
 	UpdateData(TRUE);
 
 	TERRIAN_TYPE eTerrianType = static_cast<TERRIAN_TYPE>(m_Combo_SelecMap.GetCurSel());
@@ -980,7 +937,8 @@ void CMapTool_Tab2::OnButton_CreateMap()
 
 void CMapTool_Tab2::OnButton_SaveMap()
 {
-	m_eToolMode = MAPTOOL_MODE::MAP;
+	Change_Mode(MAPTOOL_MODE::MAP);
+
 
 	UpdateData(TRUE);
 
@@ -1121,7 +1079,8 @@ void CMapTool_Tab2::OnButton_SaveMap()
 
 void CMapTool_Tab2::OnButton_LoadMap()
 {
-	m_eToolMode = MAPTOOL_MODE::MAP;
+	Change_Mode(MAPTOOL_MODE::MAP);
+
 
 	UpdateData(TRUE);
 
@@ -1410,10 +1369,83 @@ void CMapTool_Tab2::OnButton_LoadMap()
 
 #pragma region Chan
 
+HRESULT CMapTool_Tab2::Load_UnitData(const CString & _strPath)
+{
+	HANDLE	hFile = CreateFile(_strPath, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+		return E_FAIL;
+
+	DWORD	dwByte = 0;
+	DWORD	dwStrByte = 0;
+	CUnit*	pUnit = nullptr;
+	CString OBJ_STATE_STRING[(UINT)OBJ_STATE::TYPEEND]{ L"stand", L"walk", L"dash", L"attack", L"damage", L"skill", L"die" };
+
+	while (true)
+	{
+		pUnit = new CUnit;
+
+		// 이름 문자열 세팅
+		{
+			ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+			TCHAR*	pName = new TCHAR[dwStrByte];
+			ReadFile(hFile, pName, dwStrByte, &dwByte, nullptr);
+
+			if (0 == dwByte)
+			{
+				delete[]pName;
+				pName = nullptr;
+				Safe_Delete(pUnit);
+				break;
+			}
+
+			pUnit->m_strName = pName;
+			delete[]pName;
+			pName = nullptr;
+		}
+
+		// 애니메이션 세팅
+		{
+			// Animation Set
+			ANIMATION* pAni = new ANIMATION;
+
+			pAni->bLoop = false;
+			pAni->iCurFrame = 0;
+			pUnit->m_mapAni.insert({ OBJ_STATE_STRING[(UINT)OBJ_STATE::STAND], pAni });
+			pUnit->m_pCurAni = pAni;
+		}
+
+		// 나머지 멤버 변수 세팅
+		{
+			ReadFile(hFile, &(pUnit->m_tInfo), sizeof(INFO), &dwByte, nullptr);
+			ReadFile(hFile, &(pUnit->m_tStat), sizeof(STAT), &dwByte, nullptr);
+			ReadFile(hFile, &(pUnit->m_eType), sizeof(OBJ_TYPE), &dwByte, nullptr);
+			ReadFile(hFile, &(pUnit->m_eState), sizeof(OBJ_STATE), &dwByte, nullptr);
+			ReadFile(hFile, &(pUnit->m_pCurAni->fSecondPerFrame), sizeof(float), &dwByte, nullptr);
+			ReadFile(hFile, &(pUnit->m_pCurAni->iMaxFrame), sizeof(int), &dwByte, nullptr);
+	
+			pUnit->m_strObjKey = pUnit->m_strName;
+			pUnit->m_strStateKey = OBJ_STATE_STRING[(UINT)OBJ_STATE::STAND] + L"_8";
+
+			pUnit->m_tInfo.vSize = D3DXVECTOR3(1.f, 1.f, 1.f);
+		}
+
+		// 푸시백
+		m_vecObjPrefabs[(UINT)pUnit->m_eType].push_back(pUnit);
+	}
+
+	CloseHandle(hFile);
+
+	return S_OK;
+}
+
 void CMapTool_Tab2::OnCbnSelchangeMapObjComboType()
 {
-	m_eToolMode = MAPTOOL_MODE::OBJ;
+	Change_Mode(MAPTOOL_MODE::OBJ);
 
+	
+	m_pCurPrefabObj = nullptr;
+	
 	UpdateData(TRUE);
 
 	Set_ListCtrl((OBJ_TYPE)m_cComboBox_Obj.GetCurSel());
@@ -1467,13 +1499,6 @@ const UINT CMapTool_Tab2::Get_IconID(const CObj * const _pUnit) const
 			}
 		}
 	}
-
-
-
-	// 2. 1에서
-	// 9 + (UINT)_pUnit->m_eType + 해당 파일에서의 순서
-	
-
 	return iID;
 }
 
@@ -1486,12 +1511,92 @@ HRESULT CMapTool_Tab2::Set_ListCtrl(const OBJ_TYPE& _eType)
 	m_cListCtrl_Obj.SetImageList(&m_cImgList_Obj[(UINT)_eType], LVSIL_NORMAL); // 이유는 모르겠지만 LVSIL_NORMAL 이외에 다른 옵션은 렌더가 안됨
 
 	// 리스트 컨트롤에 오브젝트 이름을 추가한다.
-	for (size_t i = 0; i < m_vecObj[(UINT)_eType].size(); ++i)
-		m_cListCtrl_Obj.InsertItem(i, m_vecObj[(UINT)_eType][i]->m_strObjKey, i);
+	for (size_t i = 0; i < m_vecObjPrefabs[(UINT)_eType].size(); ++i)
+		m_cListCtrl_Obj.InsertItem(i, m_vecObjPrefabs[(UINT)_eType][i]->m_strObjKey, i);
 
 	return S_OK;
 }
+
+CObj * const CMapTool_Tab2::Instantiate(const CUnit * const _pPrefab)
+{
+	if (nullptr == _pPrefab) return nullptr;
+
+	// 애초에 복사생성자 만들어 뒀으면 굳이 이거 만들 필요 없었지 화상아
+	CObj* pInstance = new CUnit(*_pPrefab);
+
+	if (nullptr != pInstance->m_pCurAni)
+	{
+		ANIMATION* pAni = new ANIMATION(*(pInstance->m_pCurAni)); // 포인터 변수는 깊은 복사
+		pInstance->m_pCurAni = pAni;
+		pInstance->m_bPlay = false;
+
+		return pInstance;
+	}
+	return nullptr;
+}
+
+void CMapTool_Tab2::Mouse_Move()
+{
+	//if (MAPTOOL_MODE::OBJ == m_eToolMode && m_pCurPrefabObj != nullptr)
+	//{
+	//	//m_pCurPrefabObj->Tool_Render(Get_Mouse());
+	//	m_pMainView->Invalidate(FALSE);
+	//}
+}
+
+void CMapTool_Tab2::Change_Mode(const MAPTOOL_MODE & _eMode)
+{
+	m_eToolMode = _eMode;
+	m_pMainView->Invalidate(FALSE);
+}
+
+void CMapTool_Tab2::OnNMClickMapObjListboxUnit(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	// List Ctrl에서 클릭 이벤트가 발생한 경우 클릭된 아이템의 인덱스를 받아온다.
+	// 항목이 아닌 빈 공간을 클릭했다면 -1을 반환한다.
+	
+	Change_Mode(MAPTOOL_MODE::OBJ);
+
+	int iIndex = 0, iObjType = 0;
+
+	// 1. 리스트 컨트롤에서 선택된 인덱스를 가져온다.
+	{
+		LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+
+		NM_LISTVIEW* pNMListView = (NM_LISTVIEW*)pNMHDR;
+
+		iIndex = pNMListView->iItem;
+
+		if (0 > iIndex)
+		{
+			m_pCurPrefabObj = nullptr; // 해당 프리팹은 원본이므로 메모리를 해제해서는 안된다.
+			return;
+		}
+	}
+
+	// 2. 선택된 인덱스의 프리팹을 가져온다.
+	{
+		iObjType = m_cComboBox_Obj.GetCurSel();
+
+		if ((UINT)OBJ_TYPE::TYPEEND < iObjType || int(m_vecObjPrefabs[iObjType].size() - 1) < iIndex)
+		{
+			AfxMessageBox(L"Index Range Error");
+			return;
+		}
+
+		if (nullptr != m_vecObjPrefabs[iObjType][iIndex])
+		{
+			m_pCurPrefabObj = m_vecObjPrefabs[iObjType][iIndex];
+			m_pCurPrefabObj->m_bPlay = false;
+		}
+	}
+
+	*pResult = 0;
+}
+
 #pragma endregion
+
+
 
 
 

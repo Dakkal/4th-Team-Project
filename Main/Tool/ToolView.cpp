@@ -205,7 +205,15 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 		break;
 		case TOP_TAB_TYPE::MAP:
 		{
-		
+			if (MAPTOOL_MODE::OBJ == m_pMapToolTab->m_eToolMode && m_pMapToolTab->m_pCurPrefabObj != nullptr)
+			{
+				CObj* pObj = m_pMapToolTab->m_pCurPrefabObj;
+
+				D3DXVECTOR3 vLocalPos{ (pObj->m_tInfo.vPos.x * -0.5f), (pObj->m_tInfo.vPos.y * -0.5f),  pObj->m_tInfo.vPos.z };
+				D3DXVECTOR3 vWorldPos = Get_Mouse() + vLocalPos;
+				m_pMapToolTab->m_pCurPrefabObj->Tool_Render(vWorldPos);
+			}
+
 			TERRIAN_TYPE eTerrian_Type = static_cast<TERRIAN_TYPE>(m_pFormView->m_pMapTool_Tab2->m_Combo_SelecMap.GetCurSel());
 			switch (eTerrian_Type)
 			{
@@ -248,6 +256,7 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 					
 			}
 				break;
+
 			default:
 				break;
 			}
@@ -448,6 +457,9 @@ void CToolView::OnMouseMove(UINT nFlags, CPoint point)
 		break;
 		case TOP_TAB_TYPE::MAP:
 		{
+			
+			Invalidate(FALSE);
+
 			TILE* pChangeTile = m_pFormView->m_pMapTool_Tab2->m_tSelectTile;
 
 			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
