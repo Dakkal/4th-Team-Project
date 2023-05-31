@@ -122,7 +122,11 @@ BOOL UnitTool_Monster::OnInitDialog()
 
 	
 
+	if (!m_vecUnit.empty())
+		m_UnitListBox.SetCurSel(0);
+
 	m_pToolView->Invalidate(FALSE);
+
 
 	return TRUE;  
 }
@@ -472,6 +476,7 @@ void UnitTool_Monster::Init_Dlg(const CUnit* _pUnit)
 	m_bPreviewAniPlay = false;
 
 	//m_bAniPlay = false;
+
 	UpdateData(FALSE);
 }
 
@@ -669,7 +674,7 @@ HRESULT UnitTool_Monster::Load_DB()
 	if (!m_vecUnit.empty())
 	{
 		m_pCopyUnit = *(m_vecUnit.begin());
-		m_bAniPlay = false;
+		m_bAniPlay = true;
 		m_pToolView->m_pRenderUnit = m_pCopyUnit;
 		Init_Dlg(m_pCopyUnit);
 	}

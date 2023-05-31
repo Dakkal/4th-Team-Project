@@ -10,5 +10,7 @@ public:
 
 public:
 	static CString		ConvertRelativePath(CString strFullPath);
+
+
 };
 

@@ -112,8 +112,6 @@ void CToolView::OnInitialUpdate()
 
 	m_eCurTopTab = TOP_TAB_TYPE::UNIT;
 	m_eCurMidTab = MID_TAB_TYPE::MONSTER;
-
-
 }
 
 void CToolView::OnDraw(CDC* /*pDC*/)
@@ -148,8 +146,8 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 				D3DXVECTOR2 vList2[] =
 				{
 
-					D3DXVECTOR2(0, int(CY * 0.5f)),
-					D3DXVECTOR2(CX, int(CY * 0.5f)),
+					D3DXVECTOR2(0, CY * 0.5f),
+					D3DXVECTOR2((float)CX, CY * 0.5f),
 				};
 
 				CDevice::Get_Instance()->Get_Line()->Begin(); // 라인 그리기 시작 (Render_Begin()처럼)

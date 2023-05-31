@@ -142,7 +142,7 @@ public:
 	float							EDIT_ANI_TIME;
 	CComboBox						ANI_COMBO_OBJ_STATE;
 	CComboBox						ANI_COMBO_OBJ_DIR;
-	bool							m_bAniPlay = false;
+	bool							m_bAniPlay = true;
 
 	float							m_fAcc = 0.f;
 

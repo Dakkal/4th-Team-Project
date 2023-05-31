@@ -2,9 +2,26 @@
 // Microsoft Visual C++ generated include file.
 // Used by Tool.rc
 //
+
+
+
+#pragma region OBJ_ICON
+
+
+
+
+
+
+
+
+#pragma endregion
+
+
+
+
 #define IDD_ABOUTBOX                    100
 #define IDP_OLE_INIT_FAILED             100
-#define IDR_MAINFRAME                   128
+#define IDR_MAINFRAME                   128 
 #define IDR_ToolTYPE                    130
 #define IDD_MYFORM                      310
 #define IDD_UNITTOOL                    311
@@ -152,6 +169,20 @@
 #define IDC_STATIC_MONSTER_TEXTURE      9082
 #define IDC_STATIC_MOSTER_LIST_DRAG     9083
 #define IDC_EDIT3_MAP                   9084
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Next default values for new objects
 // 

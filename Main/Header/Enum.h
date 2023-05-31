@@ -1,5 +1,11 @@
 #pragma once
 
+#pragma region °ø¿ë
+
+enum class MAPTOOL_MODE { MAP, TILE, OBJ, TYPEEND };
+
+#pragma endregion
+
 #pragma region HEEJUNE
 
 enum class TERRIAN_TYPE { ACT1, ACT2, ACT3, TYPEEND };

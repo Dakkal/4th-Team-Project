@@ -9,6 +9,7 @@
 #include "Terrain_Act.h"
 #include "MainFrm.h"
 #include "ToolView.h"
+#include "FileInfo.h"
 
 // CMapTool_Tab2 dialog
 
@@ -24,6 +25,8 @@ CMapTool_Tab2::CMapTool_Tab2(CWnd* pParent /*=NULL*/)
 	, m_fTileDmg(0)
 	, m_iTileX(0)
 	, m_iTileY(0)
+	, m_pCurObj(nullptr)
+	, m_eToolMode(MAPTOOL_MODE::MAP)
 {
 	       
 }
@@ -60,6 +63,7 @@ BEGIN_MESSAGE_MAP(CMapTool_Tab2, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON4_MAP, &CMapTool_Tab2::OnButton_LoadMap)
 	ON_CBN_SELCHANGE(IDC_COMBO2_MAP, &CMapTool_Tab2::OnCombo_ChangeActMap)
 	ON_LBN_DBLCLK(IDC_LIST1_MAP, &CMapTool_Tab2::OnList_TileReset)
+	ON_CBN_SELCHANGE(IDC_MAP_OBJ_COMBO_TYPE, &CMapTool_Tab2::OnCbnSelchangeMapObjComboType)
 END_MESSAGE_MAP()
 
 
@@ -149,7 +153,6 @@ BOOL CMapTool_Tab2::OnInitDialog()
 	}
 #pragma endregion
 
-
 #pragma region Chan
 
 	// 1. Load Unit Data
@@ -163,7 +166,7 @@ BOOL CMapTool_Tab2::OnInitDialog()
 	{
 		CString OBJ_TYPE_STRING[(UINT)OBJ_TYPE::TYPEEND]{ L"Player", L"Monster", L"Npc", L"Item", L"Terrain", L"Enviornment", L"UI" };
 
-		m_cComboBox_Obj.AddString(_T("Entire"));
+		//m_cComboBox_Obj.AddString(_T("Entire"));
 		for (int i = 0; i < (UINT)OBJ_TYPE::TYPEEND; ++i)
 			m_cComboBox_Obj.AddString(OBJ_TYPE_STRING[i]);
 		
@@ -173,19 +176,29 @@ BOOL CMapTool_Tab2::OnInitDialog()
 	// 3. Set ListControl
 	{
 		const int iIcoSize = 48;
-		m_cImgLIst_Obj.Create(iIcoSize, iIcoSize, ILC_COLOR32, 0, 0);
-		m_cImgLIst_Obj.Add(AfxGetApp()->LoadIconW(IDR_MAINFRAME));
 
-		m_cListCtrl_Obj.SetImageList(&m_cImgLIst_Obj, LVSIL_NORMAL); // 이유는 모르겠지만 LVSIL_NORMAL 이외에 다른 옵션은 렌더가 안됨
-		
-		for (int i = 0; i < 10; ++i)
-			m_cListCtrl_Obj.InsertItem(0, L"IDR_MAINFRAME", 0);
+		for (int i = 0; i < (UINT)OBJ_TYPE::TYPEEND; ++i) // 오브젝트 타입 수만큼의 이미지 리스트를 세팅한다.
+		{
+			m_cImgList_Obj[i].Create(iIcoSize, iIcoSize, ILC_COLOR32, 0, 0);
+
+			for (size_t j = 0; j < m_vecObj[i].size(); ++j) // 오브젝트 타입별로 하나씩 꺼내와 아이콘 아이디를 생성한 뒤, 이미지 리스트에 저장한다.
+			{
+				UINT iIconID = Get_IconID(m_vecObj[i][j]); // 이 아이디를 밑에 Add 함수의 매개변수로 사용한다.
+
+				// m_cImgList_Obj[i].Add(AfxGetApp()->LoadIconW(iIconID)); // 실제 이미지 삽입
+				m_cImgList_Obj[i].Add(AfxGetApp()->LoadIconW(IDR_MAINFRAME)); // 테스트 이미지 삽입
+			}
+		}
+
+		// 초기 리스트 컨트롤을 세팅한다.
+		if (FAILED(Set_ListCtrl((OBJ_TYPE)m_cComboBox_Obj.GetCurSel())))
+		{
+			AfxMessageBox(L"Fail the Setting List Ctrl");
+			return E_FAIL;
+		}
 	}
 
 #pragma endregion
-
-
-
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // EXCEPTION: OCX Property Pages should return FALSE
@@ -219,10 +232,10 @@ void CMapTool_Tab2::OnDestroy()
 
 	for (int i = 0; i < (UINT)OBJ_TYPE::TYPEEND; ++i)
 	{
-		for (auto& pObject : m_listObj[i])
+		for (auto& pObject : m_vecObj[i])
 			Safe_Delete(pObject);
 
-		m_listObj[i].clear();
+		m_vecObj[i].clear();
 	}
 #pragma endregion
 
@@ -232,6 +245,8 @@ void CMapTool_Tab2::OnDestroy()
 
 void CMapTool_Tab2::OnList_Tile()
 {
+	m_eToolMode = MAPTOOL_MODE::TILE;
+
 	UpdateData(TRUE);
 
 	int	iSelect = m_ListTile.GetCurSel();
@@ -356,6 +371,8 @@ void CMapTool_Tab2::OnList_Tile()
 
 void CMapTool_Tab2::Load_TileList()
 {
+	m_eToolMode = MAPTOOL_MODE::TILE;
+
 	UpdateData(TRUE);
 
 	if (m_vecTile.empty())
@@ -395,6 +412,8 @@ void CMapTool_Tab2::Load_TileList()
 
 void CMapTool_Tab2::OnCombo_ChangeAct()
 {
+	m_eToolMode = MAPTOOL_MODE::TILE;
+
 	UpdateData(TRUE);
 
 	m_ListTile.ResetContent();
@@ -509,6 +528,8 @@ void CMapTool_Tab2::OnCombo_ChangeAct()
 
 void CMapTool_Tab2::Sort_TileList(TERRIAN_TYPE _eType)
 {
+	m_eToolMode = MAPTOOL_MODE::TILE;
+
 	UpdateData(TRUE);
 
 	switch (_eType)
@@ -662,7 +683,7 @@ HRESULT CMapTool_Tab2::Load_UnitData(const CString & _strPath)
 		}
 
 		// 푸시백
-		m_listObj[(UINT)pUnit->m_eType].push_back(pUnit);
+		m_vecObj[(UINT)pUnit->m_eType].push_back(pUnit);
 	}
 
 	CloseHandle(hFile);
@@ -672,6 +693,8 @@ HRESULT CMapTool_Tab2::Load_UnitData(const CString & _strPath)
 
 void CMapTool_Tab2::OnButton_ReloadTile()
 {
+	m_eToolMode = MAPTOOL_MODE::TILE;
+
 	UpdateData(TRUE);
 
 	if (!m_vecTile.empty())
@@ -718,6 +741,8 @@ void CMapTool_Tab2::OnButton_ReloadTile()
 
 void CMapTool_Tab2::OnList_TileReset()
 {
+	m_eToolMode = MAPTOOL_MODE::TILE;
+
 	m_ListTile.SetCurSel(-1);
 	m_tSelectTile = nullptr;
 }
@@ -726,6 +751,8 @@ void CMapTool_Tab2::OnList_TileReset()
 // Map
 void CMapTool_Tab2::OnCombo_ChangeActMap()
 {
+	m_eToolMode = MAPTOOL_MODE::MAP;
+
 	UpdateData(TRUE);
 
 	TERRIAN_TYPE eTerrianType = static_cast<TERRIAN_TYPE>(m_Combo_SelecMap.GetCurSel());
@@ -852,6 +879,8 @@ void CMapTool_Tab2::OnButton_CreateMap()
 
 void CMapTool_Tab2::OnButton_SaveMap()
 {
+	m_eToolMode = MAPTOOL_MODE::MAP;
+
 	UpdateData(TRUE);
 
 	TERRIAN_TYPE eTerrianType = static_cast<TERRIAN_TYPE>(m_Combo_SelecMap.GetCurSel());
@@ -991,6 +1020,8 @@ void CMapTool_Tab2::OnButton_SaveMap()
 
 void CMapTool_Tab2::OnButton_LoadMap()
 {
+	m_eToolMode = MAPTOOL_MODE::MAP;
+
 	UpdateData(TRUE);
 
 	TERRIAN_TYPE eTerrianType = static_cast<TERRIAN_TYPE>(m_Combo_SelecMap.GetCurSel());
@@ -1271,6 +1302,87 @@ void CMapTool_Tab2::OnButton_LoadMap()
 
 #pragma region Chan
 
+void CMapTool_Tab2::OnCbnSelchangeMapObjComboType()
+{
+	m_eToolMode = MAPTOOL_MODE::OBJ;
+
+	UpdateData(TRUE);
+
+	Set_ListCtrl((OBJ_TYPE)m_cComboBox_Obj.GetCurSel());
+}
+
+const UINT CMapTool_Tab2::Get_IconID(const CObj * const _pUnit) const
+{
+	UINT iID			= 0;
+	CFileFind			Find;
+	UINT				iCount = 0;
+
+	// 1. m_strObjKey로 파일 경로 지정
+
+	CString OBJ_TYPE_STRING[(UINT)OBJ_TYPE::TYPEEND]{ L"Player", L"Monster", L"Npc", L"Item", L"Terrain", L"Enviornment", L"UI" };
+
+	CString strFilePath = L"../Texture/Object/";
+
+	strFilePath += OBJ_TYPE_STRING[(UINT)_pUnit->m_eType] + L"/*.*";
+	//L"../Texture/Object/Player/*.*"
+
+	BOOL	bContinue = Find.FindFile(strFilePath);
+
+	while (bContinue)
+	{
+		bContinue = Find.FindNextFile();
+
+		if (Find.IsDots())
+			continue;
+		else
+		{
+			if (Find.IsSystem())
+				continue;
+
+			const CString strObjKey = Find.GetFileName();
+			if (_pUnit->m_strObjKey == strObjKey)
+			{
+				// 아이디 조합해서 리턴
+				// 고유번호(아이콘 ID 디파인) : 9 / 오브젝트 타입(0~9) / 오브젝트 번호(000 ~ 009)
+				
+				CString strID = L"";
+				strID.Format(L"%d%d00%d", 9, (UINT)_pUnit->m_eType, iCount);
+
+				iID = _ttoi(strID);
+				return iID;
+
+			}
+			else
+			{
+				++iCount;
+				continue;
+			}
+		}
+	}
+
+
+
+	// 2. 1에서
+	// 9 + (UINT)_pUnit->m_eType + 해당 파일에서의 순서
+	
+
+	return iID;
+}
+
+HRESULT CMapTool_Tab2::Set_ListCtrl(const OBJ_TYPE& _eType)
+{
+	// 리스트 컨트롤에 있는 기존 아이템을 모두 삭제한다.
+	m_cListCtrl_Obj.DeleteAllItems();
+
+	// 리스트 컨트롤에 이미지 리스트를 타입에 맞게 교체한다.
+	m_cListCtrl_Obj.SetImageList(&m_cImgList_Obj[(UINT)_eType], LVSIL_NORMAL); // 이유는 모르겠지만 LVSIL_NORMAL 이외에 다른 옵션은 렌더가 안됨
+
+	// 리스트 컨트롤에 오브젝트 이름을 추가한다.
+	for (size_t i = 0; i < m_vecObj[(UINT)_eType].size(); ++i)
+		m_cListCtrl_Obj.InsertItem(0, m_vecObj[(UINT)_eType][i]->m_strObjKey, 0);
+
+	return S_OK;
+}
 #pragma endregion
 
 
