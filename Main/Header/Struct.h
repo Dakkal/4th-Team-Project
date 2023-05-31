@@ -81,6 +81,7 @@ typedef struct tagTile
 	UINT		byDrawID;
 
 	bool		bCheckUnit;
+	bool		bCheckTile;
 
 }TILE;
 

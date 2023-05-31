@@ -7,6 +7,8 @@
 #include "Device.h"
 #include "MainFrm.h"
 #include "ToolView.h"
+#include "Terrain_Act.h"
+#include "MyForm.h"
 
 // CMiniView
 
@@ -33,18 +35,24 @@ void CMiniView::OnDraw(CDC* pDC)
 	// TODO: 여기에 그리기 코드를 추가합니다.
 
 	CMainFrame*		pMainFrm = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
-	CToolView*		pMainView = dynamic_cast<CToolView*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
+	CMyForm*		pMainView = dynamic_cast<CMyForm*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
 
-	CTerrain*		pTerrain = pMainView->m_pTerrain;
+	CTerrain_Act*	pTerrain = nullptr;
 
-	if (nullptr == pTerrain)
-		return;
-
+	if (pMainView->m_pMapTool_Tab2->m_Combo_SelecMap.GetCurSel() == (int)TERRIAN_TYPE::ACT1)
+		pTerrain = pMainView->m_pMapTool_Tab2->m_pTerrain_Act1;
+	else if (pMainView->m_pMapTool_Tab2->m_Combo_SelecMap.GetCurSel() == (int)TERRIAN_TYPE::ACT2)
+		pTerrain = pMainView->m_pMapTool_Tab2->m_pTerrain_Act2;
+	else if (pMainView->m_pMapTool_Tab2->m_Combo_SelecMap.GetCurSel() == (int)TERRIAN_TYPE::ACT3)
+		pTerrain = pMainView->m_pMapTool_Tab2->m_pTerrain_Act3;
 
 	CDevice::Get_Instance()->Render_Begin();
 
-	pTerrain->Mini_Render();
-
+	if (pTerrain != nullptr)
+	{
+		pTerrain->Mini_Render();
+	}
+	
 	CDevice::Get_Instance()->Render_End(m_hWnd);
 
 }

@@ -4,6 +4,7 @@
 #include "Device.h"
 #include "ToolView.h"
 #include "MainFrm.h"
+#include "MyForm.h"
 
 CTerrain_Act::CTerrain_Act()
 {
@@ -21,6 +22,7 @@ HRESULT CTerrain_Act::Initialize()
 
 	CMainFrame*		pMainFrm = static_cast<CMainFrame*>(AfxGetMainWnd());
 	m_pMainView =	static_cast<CToolView*>(pMainFrm->m_MainSplitter.GetPane(0, 0));
+	m_pFormView = static_cast<CMyForm*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
 
 	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/00.Tile/Tool/Tile_%d.png", TEX_MULTI, L"Terrain_Tool", L"Tile", 3)))
 	{
@@ -125,10 +127,6 @@ void CTerrain_Act::Release()
 	m_vecActTile.shrink_to_fit();
 }
 
-void CTerrain_Act::Tool_Render(const D3DXVECTOR3 & _vWorld)
-{
-}
-
 
 void CTerrain_Act::Set_Ratio(D3DXMATRIX * pOut, float fRatioX, float fRatioY)
 {
@@ -160,6 +158,7 @@ void CTerrain_Act::Create_Terrian(int _TileX, int _TileY)
 			pTile->byOption = NONETILE;
 			pTile->byDrawID = 0;
 			pTile->bCheckUnit = false;
+			pTile->bCheckTile = false;
 
 			m_vecActTile.push_back(pTile);
 		}
@@ -167,6 +166,63 @@ void CTerrain_Act::Create_Terrian(int _TileX, int _TileY)
 	m_ActTileX = _TileX;
 	m_ActTileY = _TileY;
 
+}
+
+void CTerrain_Act::Mini_Render()
+{
+	if (m_vecActTile.empty())
+		return;
+
+	D3DXMATRIX	matWorld, matScale, matTrans;
+
+	float	fRatioX = WINCX / float(TILECX * m_ActTileX);
+	float	fRatioY = WINCY / float((TILECY / 2) * m_ActTileY);
+
+	for (auto iter : m_vecActTile)
+	{
+		D3DXMatrixIdentity(&matWorld);
+		D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
+		D3DXMatrixTranslation(&matTrans,
+			iter->vPos.x,
+			iter->vPos.y,
+			0.f);
+
+		matWorld = matScale * matTrans;
+
+		Set_Ratio(&matWorld, fRatioX, fRatioY);
+
+		const TEXINFO*		pTexInfo = nullptr;
+		if (iter->eType == TERRIAN_TYPE::TYPEEND)
+		{
+			pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Terrain_Tool", L"Tile", iter->byDrawID);
+		}
+		else if (iter->eType == TERRIAN_TYPE::ACT1)
+		{
+			pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Act1Terrain", L"Tile", iter->byDrawID);
+		}
+		else if (iter->eType == TERRIAN_TYPE::ACT2)
+		{
+			pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Act2Terrain", L"Tile", iter->byDrawID);
+		}
+		else if (iter->eType == TERRIAN_TYPE::ACT3)
+		{
+			pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Act3Terrain", L"Tile", iter->byDrawID);
+		}
+		if (nullptr == pTexInfo)
+			return;
+
+		float	fX = pTexInfo->tImgInfo.Width / 2.f;
+		float	fY = pTexInfo->tImgInfo.Height / 2.f;
+
+		// 이미지에 행렬을 반영
+		CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
+
+		CDevice::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture,
+			nullptr,
+			&D3DXVECTOR3(fX, fY, 0.f),
+			nullptr,
+			D3DCOLOR_ARGB(255, 255, 255, 255));
+	}
 }
 
 int CTerrain_Act::Get_TileIndex(const D3DXVECTOR3 & vPos)
@@ -196,6 +252,68 @@ void CTerrain_Act::Tile_Change(const D3DXVECTOR3 & vPos, TILE* _Tile)
 	m_vecActTile[iIndex]->byDrawID = _Tile->byDrawID;
 	m_vecActTile[iIndex]->byOption = _Tile->byOption;
 	m_vecActTile[iIndex]->fDamage = _Tile->fDamage;
+
+	m_vecActTile[iIndex]->bCheckTile = true;
+	m_PreType = _Tile->eType;
+	m_PreID = _Tile->byDrawID;
+
+}
+
+void CTerrain_Act::Tile_LookChange(const D3DXVECTOR3 & vPos, TILE * _Tile)
+{
+	if (!_Tile)
+		return;
+
+	if (m_CurIndex == -1)
+	{
+		m_CurIndex = Get_TileIndex(vPos);
+		m_PreIndex = m_CurIndex;
+		m_PreType = m_vecActTile[m_CurIndex]->eType;
+		m_PreID = m_vecActTile[m_CurIndex]->byDrawID;
+		m_vecActTile[m_CurIndex]->eType = _Tile->eType;
+		m_vecActTile[m_CurIndex]->byDrawID = _Tile->byDrawID;
+		return;
+	}
+	else
+	{
+		m_CurIndex = Get_TileIndex(vPos);
+	}
+	
+	if (m_CurIndex != m_PreIndex)
+	{
+		if (-1 == m_CurIndex)
+			return;
+
+		if (m_vecActTile[m_PreIndex]->bCheckTile)
+		{
+			m_vecActTile[m_PreIndex]->eType = m_PreType;
+			m_vecActTile[m_PreIndex]->byDrawID = m_PreID;
+
+			m_PreType = m_vecActTile[m_CurIndex]->eType;
+			m_PreID = m_vecActTile[m_CurIndex]->byDrawID;
+
+			m_vecActTile[m_CurIndex]->eType = _Tile->eType;
+			m_vecActTile[m_CurIndex]->byDrawID = _Tile->byDrawID;
+
+		}
+		if (!m_vecActTile[m_PreIndex]->bCheckTile)
+		{
+			m_vecActTile[m_PreIndex]->eType = TERRIAN_TYPE::TYPEEND;
+			m_vecActTile[m_PreIndex]->byDrawID = 0;
+
+			m_PreType = m_vecActTile[m_CurIndex]->eType;
+			m_PreID = m_vecActTile[m_CurIndex]->byDrawID;
+
+			m_vecActTile[m_CurIndex]->eType = _Tile->eType;
+			m_vecActTile[m_CurIndex]->byDrawID = _Tile->byDrawID;
+		}
+		
+
+		m_PreIndex = m_CurIndex;
+	}
+	
+
+
 }
 
 bool CTerrain_Act::Picking_Dot(const D3DXVECTOR3 & vPos, const int & iIndex)
