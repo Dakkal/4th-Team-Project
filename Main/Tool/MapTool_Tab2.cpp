@@ -10,6 +10,7 @@
 #include "MainFrm.h"
 #include "ToolView.h"
 #include "FileInfo.h"
+#include "MyForm.h"
 
 // CMapTool_Tab2 dialog
 
@@ -78,6 +79,13 @@ BOOL CMapTool_Tab2::OnInitDialog()
 
 	CMainFrame*		pMainFrm = static_cast<CMainFrame*>(AfxGetMainWnd());
 	m_pMainView = static_cast<CToolView*>(pMainFrm->m_MainSplitter.GetPane(0, 0));
+	m_pFormView = static_cast<CMyForm*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
+
+	if (nullptr == m_pMapTool_SubMap.GetSafeHwnd())
+		m_pMapTool_SubMap.Create(IDD_MAPTOOL_SUBDLG);
+
+	
+
 
 #pragma region Jun
 	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/00.Tile/Act1/Tile_%d.png", TEX_MULTI, L"Act1Terrain", L"Tile", 326)))
@@ -789,6 +797,7 @@ void CMapTool_Tab2::OnCombo_ChangeActMap()
 
 
 	m_pMainView->Invalidate(FALSE);
+	m_pFormView->m_pMapTool_Tab2->m_pMapTool_SubMap.m_pMiniView->Invalidate(FALSE);
 	UpdateData(FALSE);
 }
 
@@ -874,6 +883,7 @@ void CMapTool_Tab2::OnButton_CreateMap()
 	}
 
 	m_pMainView->Invalidate(FALSE);
+	m_pFormView->m_pMapTool_Tab2->m_pMapTool_SubMap.m_pMiniView->Invalidate(FALSE);
 	UpdateData(FALSE);
 }
 
@@ -1295,6 +1305,7 @@ void CMapTool_Tab2::OnButton_LoadMap()
 	}
 
 	m_pMainView->Invalidate(FALSE);
+	m_pFormView->m_pMapTool_Tab2->m_pMapTool_SubMap.m_pMiniView->Invalidate(FALSE);
 	UpdateData(FALSE);
 }
 

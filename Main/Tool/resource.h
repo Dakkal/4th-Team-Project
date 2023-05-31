@@ -11,6 +11,7 @@
 #define IDD_MAPTOOL                     312
 #define IDD_DIALOG1                     313
 #define IDD_DIALOG_TAB1                 313
+#define IDD_MAPTOOL_SUBDLG              314
 #define IDD_DIALOG_TAB2                 315
 #define IDD_UNIT_PLAYER                 317
 #define IDD_UNIT_MONSTER                318
@@ -98,6 +99,8 @@
 #define IDC_STATIC_MAP_UNT_TYPE         1096
 #define IDC_STATIC_MAP_UNIT_NAME_SEARCH 1097
 #define IDC_EDIT_MAP_UNIT_NAME_SEARCH_EDIT 1098
+#define IDC_STATIC_MAPSUB               1591
+#define IDC_STATIC2_MAPSUB              1592
 #define IDC_STATIC5_MAP                 1183
 #define IDC_STATIC6_MAP                 1184
 #define IDC_STATIC7_MAP                 1185
@@ -153,14 +156,12 @@
 #define IDC_STATIC_MONSTER_TEXTURE      9082
 #define IDC_STATIC_MOSTER_LIST_DRAG     9083
 #define IDC_EDIT3_MAP                   9084
-
 #define ICO_PLAYER_AMAZON               90000
 #define ICO_PLAYER_ASSASSIN             90001
 #define ICO_PLAYER_BAVARIAN             90002
 #define ICO_PLAYER_NECROMANCER          90003
 #define ICO_PLAYER_PALADIN              90004
 #define ICO_PLAYER_SORCERESS            90005
-
 #define ICO_MONSTER_DIABLO              91002
 #define ICO_MONSTER_GOLEM               91003
 #define ICO_MONSTER_PATMONSTER          91004

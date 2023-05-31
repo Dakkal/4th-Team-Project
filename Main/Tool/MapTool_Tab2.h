@@ -1,11 +1,12 @@
 #pragma once
 
+#include "MapTool_SubDlg.h"
 #include "Include.h"
 #include "afxwin.h"
 #include "afxcmn.h"
 
 // CMapTool_Tab2 dialog
-
+class CMyForm;
 class CToolView;
 class CTerrain_Act;
 class CTerrain_Act;
@@ -63,10 +64,14 @@ public:
 	CComboBox				m_Combo_SelecMap;
 
 public:
-	CToolView*				m_pMainView		= nullptr;
-	CTerrain_Act*			m_pTerrain_Act1 = nullptr;
-	CTerrain_Act*			m_pTerrain_Act2 = nullptr;
-	CTerrain_Act*			m_pTerrain_Act3 = nullptr;
+	CMapTool_SubDlg	m_pMapTool_SubMap;
+
+	CToolView* m_pMainView = nullptr;
+	CMyForm*   m_pFormView = nullptr;
+
+	CTerrain_Act* m_pTerrain_Act1 = nullptr;
+	CTerrain_Act* m_pTerrain_Act2 = nullptr;
+	CTerrain_Act* m_pTerrain_Act3 = nullptr;
 
 	UINT					m_iTileX;
 	UINT					m_iTileY;

@@ -12,14 +12,17 @@ class CToolDoc;
 
 
 /* HEEJUNE */
-
+class CTerrain_Act;
+class CMyForm;
 
 
 /* CHAN */
 #include "Unit.h"
+
 class UnitTool_Monster;
 
-class CTerrain_Act;
+
+
 class CToolView : public CScrollView
 {
 protected: // serialization에서만 만들어집니다.
@@ -80,6 +83,9 @@ public:
 	MID_TAB_TYPE m_eCurMidTab;
 
 	afx_msg void OnTimer(UINT_PTR nIDEvent);	// 애니메이션 시간 컨트롤을 위한 타임매니저 호출 함수
+
+	CMyForm*		m_pFormView;
+
 #pragma region MapTool
 
 #pragma region Jun

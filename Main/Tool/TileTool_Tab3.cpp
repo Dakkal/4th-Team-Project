@@ -370,6 +370,7 @@ void CTileTool_Tab3::OnListTile()
 				iter->byDrawID == m_iDrawId_First)
 			{
 				m_fTileDamage = iter->fDamage;
+				m_Spin_Tile.SetPos((int)m_fTileDamage);
 				for (int i = 0; i < 3; ++i)
 				{
 					m_Check_Tile[i].SetCheck(FALSE);
@@ -392,6 +393,7 @@ void CTileTool_Tab3::OnListTile()
 				iter->byDrawID == m_iDrawId_First)
 			{
 				m_fTileDamage = iter->fDamage;
+				m_Spin_Tile.SetPos((int)m_fTileDamage);
 				for (int i = 0; i < 3; ++i)
 				{
 					m_Check_Tile[i].SetCheck(FALSE);
@@ -414,6 +416,7 @@ void CTileTool_Tab3::OnListTile()
 				iter->byDrawID == m_iDrawId_First)
 			{
 				m_fTileDamage = iter->fDamage;
+				m_Spin_Tile.SetPos((int)m_fTileDamage);
 				for (int i = 0; i < 3; ++i)
 				{
 					m_Check_Tile[i].SetCheck(FALSE);
@@ -445,8 +448,6 @@ void CTileTool_Tab3::OnSet_TileDamage(NMHDR *pNMHDR, LRESULT *pResult)
 	// TODO: Add your control notification handler code here
 	
 	UpdateData(TRUE);
-
-	m_Spin_Tile.SetPos((int)m_fTileDamage);
 
 	int iValue = pNMUpDown->iPos + pNMUpDown->iDelta;
 
@@ -867,7 +868,6 @@ void CTileTool_Tab3::OnLoadDB_Tile()
 	UpdateData(FALSE);
 }
 
-
 void CTileTool_Tab3::Sort_File(TERRIAN_TYPE _eTerrainType)
 {
 	UpdateData(TRUE);
@@ -923,7 +923,7 @@ void CTileTool_Tab3::Sort_File(TERRIAN_TYPE _eTerrainType)
 					pTile->fDamage = 0;
 					pTile->byDrawID = iDrawIdCount;
 					pTile->bCheckUnit = false;
-
+					pTile->bCheckTile = false;
 					m_vecTile.push_back(pTile);
 
 					++iDrawIdCount;
@@ -980,7 +980,7 @@ void CTileTool_Tab3::Sort_File(TERRIAN_TYPE _eTerrainType)
 					pTile->fDamage = 0;
 					pTile->byDrawID = iDrawIdCount;
 					pTile->bCheckUnit = false;
-
+					pTile->bCheckTile = false;
 					m_vecTile.push_back(pTile);
 
 					++iDrawIdCount;
@@ -1037,6 +1037,7 @@ void CTileTool_Tab3::Sort_File(TERRIAN_TYPE _eTerrainType)
 					pTile->fDamage = 0;
 					pTile->byDrawID = iDrawIdCount;
 					pTile->bCheckUnit = false;
+					pTile->bCheckTile = false;
 					
 					m_vecTile.push_back(pTile);
 

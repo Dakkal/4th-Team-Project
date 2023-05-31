@@ -112,6 +112,9 @@ void CToolView::OnInitialUpdate()
 
 	m_eCurTopTab = TOP_TAB_TYPE::UNIT;
 	m_eCurMidTab = MID_TAB_TYPE::MONSTER;
+
+	// 폼뷰 가져오기
+	m_pFormView = dynamic_cast<CMyForm*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
 }
 
 void CToolView::OnDraw(CDC* /*pDC*/)
@@ -194,30 +197,24 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 				CDevice::Get_Instance()->Get_Line()->End(); // 라인 그리기 종료 (Render_End()처럼)
 			}
 			{
-				CMainFrame*		pMainFrm = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
-				CMyForm*		pFormView = dynamic_cast<CMyForm*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
 				D3DXVECTOR3		vCenter{ CX * 0.5f, CY * 0.5f, 0.f };
-				pFormView->m_pTileTool_Tab3->Tool_Render(vCenter);
+				m_pFormView->m_pTileTool_Tab3->Tool_Render(vCenter);
 			}
 			
 		}
 		break;
 		case TOP_TAB_TYPE::MAP:
 		{
-			CMainFrame*		pMainFrm = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
-			CMyForm*		pFormView = dynamic_cast<CMyForm*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
-
-			TERRIAN_TYPE eTerrian_Type = static_cast<TERRIAN_TYPE>(pFormView->m_pMapTool_Tab2->m_Combo_SelecMap.GetCurSel());
+		
+			TERRIAN_TYPE eTerrian_Type = static_cast<TERRIAN_TYPE>(m_pFormView->m_pMapTool_Tab2->m_Combo_SelecMap.GetCurSel());
 			switch (eTerrian_Type)
 			{
 			case TERRIAN_TYPE::ACT1:
 			{
 				if (m_pTerrain_Act1_View != nullptr)
 				{
-					CMainFrame*		pMainFrm = static_cast<CMainFrame*>(AfxGetMainWnd());
-					CMyForm*		pFormView = static_cast<CMyForm*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
-					int iTileX = pFormView->m_pMapTool_Tab2->m_iTileX;
-					int iTileY = pFormView->m_pMapTool_Tab2->m_iTileY;
+					int iTileX = m_pFormView->m_pMapTool_Tab2->m_iTileX;
+					int iTileY = m_pFormView->m_pMapTool_Tab2->m_iTileY;
 					SetScrollSizes(MM_TEXT, CSize(iTileX * TILECX, iTileY * TILECY / 2));
 
 					m_pTerrain_Act1_View->Render();
@@ -229,10 +226,8 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 			{
 				if (m_pTerrain_Act2_View != nullptr)
 				{
-					CMainFrame*		pMainFrm = static_cast<CMainFrame*>(AfxGetMainWnd());
-					CMyForm*		pFormView = static_cast<CMyForm*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
-					int iTileX = pFormView->m_pMapTool_Tab2->m_iTileX;
-					int iTileY = pFormView->m_pMapTool_Tab2->m_iTileY;
+					int iTileX = m_pFormView->m_pMapTool_Tab2->m_iTileX;
+					int iTileY = m_pFormView->m_pMapTool_Tab2->m_iTileY;
 					SetScrollSizes(MM_TEXT, CSize(iTileX * TILECX, iTileY * TILECY / 2));
 
 					m_pTerrain_Act2_View->Render();
@@ -244,10 +239,8 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 			{
 				if (m_pTerrain_Act3_View != nullptr)
 				{
-					CMainFrame*		pMainFrm = static_cast<CMainFrame*>(AfxGetMainWnd());
-					CMyForm*		pFormView = static_cast<CMyForm*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
-					int iTileX = pFormView->m_pMapTool_Tab2->m_iTileX;
-					int iTileY = pFormView->m_pMapTool_Tab2->m_iTileY;
+					int iTileX = m_pFormView->m_pMapTool_Tab2->m_iTileX;
+					int iTileY = m_pFormView->m_pMapTool_Tab2->m_iTileY;
 					SetScrollSizes(MM_TEXT, CSize(iTileX * TILECX, iTileY * TILECY / 2));
 
 					m_pTerrain_Act3_View->Render();
@@ -383,9 +376,7 @@ void CToolView::OnLButtonDown(UINT nFlags, CPoint point)
 		break;
 		case TOP_TAB_TYPE::MAP:
 		{
-			CMainFrame*		pMainFrm = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
-			CMyForm*		pFormView = dynamic_cast<CMyForm*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
-			TILE* pChangeTile = pFormView->m_pMapTool_Tab2->m_tSelectTile;
+			TILE* pChangeTile = m_pFormView->m_pMapTool_Tab2->m_tSelectTile;
 
 			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 			{
@@ -402,6 +393,8 @@ void CToolView::OnLButtonDown(UINT nFlags, CPoint point)
 					m_pTerrain_Act3_View->Tile_Change({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, pChangeTile);
 				}
 				Invalidate(FALSE);
+				
+				m_pFormView->m_pMapTool_Tab2->m_pMapTool_SubMap.m_pMiniView->Invalidate(FALSE);
 			}
 		}
 		break;
@@ -413,40 +406,6 @@ void CToolView::OnLButtonDown(UINT nFlags, CPoint point)
 
 		return;
 	}
-
-	
-
-
-
-
-
-
-
-	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-
-
-	// point : 마우스 좌표를 갖고 있음.
-
-	m_pTerrain->Tile_Change({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, 0);
-
-	// Invalidate : 호출 시 윈도우에 WM_PAINT와 WM_ERASEBKGND 메세지를 발생 시킴, 이때 OnDraw함수를 다시 한번 호출
-	// 인자가 FALSE : WM_PAINT만 발생
-	// 인자가 TRUE : WM_PAINT와 WM_ERASEBKGND 메세지를 발생
-	
-	Invalidate(FALSE);
-
-
-	// AfxGetMainWnd : 현재 쓰레드로부터 WND를 반환하는 함수
-	//CMainFrame*		pMainFrm = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
-
-	// AfxGetApp : 메인 쓰레드를 갖고 있는 현재 메인 APP을 반환
-	CMainFrame*		pMainFrm = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
-
-	// GetParentFrame : 현재 VIEW를 둘러싸고 있는 상위 FrameWnd를 반환
-	//CMainFrame*		pMainFrm = dynamic_cast<CMainFrame*>(GetParentFrame());
-
-	CMiniView*		pMiniView = dynamic_cast<CMiniView*>(pMainFrm->m_SecondSplitter.GetPane(0, 0));
-	pMiniView->Invalidate(FALSE);
 }
 
 void CToolView::OnMouseMove(UINT nFlags, CPoint point)
@@ -489,9 +448,7 @@ void CToolView::OnMouseMove(UINT nFlags, CPoint point)
 		break;
 		case TOP_TAB_TYPE::MAP:
 		{
-			CMainFrame*		pMainFrm = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
-			CMyForm*		pFormView = dynamic_cast<CMyForm*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
-			TILE* pChangeTile = pFormView->m_pMapTool_Tab2->m_tSelectTile;
+			TILE* pChangeTile = m_pFormView->m_pMapTool_Tab2->m_tSelectTile;
 
 			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 			{
@@ -508,6 +465,23 @@ void CToolView::OnMouseMove(UINT nFlags, CPoint point)
 					m_pTerrain_Act3_View->Tile_Change({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, pChangeTile);
 				}
 				Invalidate(FALSE);
+				m_pFormView->m_pMapTool_Tab2->m_pMapTool_SubMap.m_pMiniView->Invalidate(FALSE);
+			}
+			else
+			{
+				if (m_pTerrain_Act1_View != nullptr)
+				{
+					m_pTerrain_Act1_View->Tile_LookChange({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, pChangeTile);
+				}
+				else if (m_pTerrain_Act2_View != nullptr)
+				{
+					m_pTerrain_Act2_View->Tile_LookChange({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, pChangeTile);
+				}
+				else if (m_pTerrain_Act3_View != nullptr)
+				{
+					m_pTerrain_Act3_View->Tile_LookChange({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, pChangeTile);
+				}
+				Invalidate(FALSE);
 			}
 		}
 		break;
@@ -519,17 +493,6 @@ void CToolView::OnMouseMove(UINT nFlags, CPoint point)
 
 		return;
 	}
-
-	
-	if (GetAsyncKeyState(VK_LBUTTON))
-	{
-		m_pTerrain->Tile_Change({ float(point.x + GetScrollPos(0)), float(point.y + GetScrollPos(1)), 0.f }, 0);
-		Invalidate(FALSE);
-		CMainFrame*		pMainFrm = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
-		CMiniView*		pMiniView = dynamic_cast<CMiniView*>(pMainFrm->m_SecondSplitter.GetPane(0, 0));
-		pMiniView->Invalidate(FALSE);
-	}
-
 }
 
 HRESULT CToolView::Change_Tab(const TOP_TAB_TYPE & _eTopTab, const MID_TAB_TYPE & _eMidTab)

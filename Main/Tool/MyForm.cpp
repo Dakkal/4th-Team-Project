@@ -116,16 +116,19 @@ void CMyForm::OnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 		case 0:
 			m_pUnitTool_Tab1->ShowWindow(SW_SHOW);
 			m_pMapTool_Tab2->ShowWindow(SW_HIDE);
+			m_pMapTool_Tab2->m_pMapTool_SubMap.ShowWindow(SW_HIDE);
 			m_pTileTool_Tab3->ShowWindow(SW_HIDE);
 			break;
 		case 1:
 			m_pUnitTool_Tab1->ShowWindow(SW_HIDE);
 			m_pMapTool_Tab2->ShowWindow(SW_SHOW);
+			m_pMapTool_Tab2->m_pMapTool_SubMap.ShowWindow(SW_SHOW);
 			m_pTileTool_Tab3->ShowWindow(SW_HIDE);
 			break;
 		case 2:
 			m_pUnitTool_Tab1->ShowWindow(SW_HIDE);
 			m_pMapTool_Tab2->ShowWindow(SW_HIDE);
+			m_pMapTool_Tab2->m_pMapTool_SubMap.ShowWindow(SW_HIDE);
 			m_pTileTool_Tab3->ShowWindow(SW_SHOW);
 			break;
 		}

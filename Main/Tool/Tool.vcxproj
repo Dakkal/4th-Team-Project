@@ -199,6 +199,7 @@
     <ClInclude Include="FileInfo.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="MapTool.h" />
+    <ClInclude Include="MapTool_SubDlg.h" />
     <ClInclude Include="MapTool_Tab2.h" />
     <ClInclude Include="MiniView.h" />
     <ClInclude Include="MultiTexture.h" />
@@ -229,6 +230,7 @@
     <ClCompile Include="FileInfo.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="MapTool.cpp" />
+    <ClCompile Include="MapTool_SubDlg.cpp" />
     <ClCompile Include="MapTool_Tab2.cpp" />
     <ClCompile Include="MiniView.cpp" />
     <ClCompile Include="MultiTexture.cpp" />
