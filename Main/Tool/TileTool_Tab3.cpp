@@ -190,6 +190,8 @@ BOOL CTileTool_Tab3::OnInitDialog()
 		Sort_File(TERRIAN_TYPE::ACT1);
 	}
 
+	m_vecTile;
+
 	// 초기 스파인 컨트롤
 	m_Spin_Tile.SetRange(0, 10);
 	m_Spin_Tile.SetPos(0);
@@ -639,12 +641,15 @@ void CTileTool_Tab3::OnPush_Tile()
 					(*iter)->byDrawID == m_iDrawId_First)
 					pFirstTile = iter;
 				if ((*iter)->eType == TERRIAN_TYPE::ACT1 &&
-					(*iter)->byDrawID == m_iDrawId_Last + 1)
+					(*iter)->byDrawID == m_iDrawId_Last)
 					pLastTile = iter;
 			}
 
-			for (vector<TILE*>::iterator iter = pFirstTile; iter != pLastTile; ++iter)
+			for (vector<TILE*>::iterator iter = pFirstTile; iter != (pLastTile+1); ++iter)
 			{
+				if (iter == m_vecTile.end())
+					return;
+
 				(*iter)->fDamage = m_fTileDamage;
 				if (m_Check_Tile[0].GetCheck())
 					(*iter)->byOption = NONETILE;
@@ -666,12 +671,15 @@ void CTileTool_Tab3::OnPush_Tile()
 					(*iter)->byDrawID == m_iDrawId_First)
 					pFirstTile = iter;
 				if ((*iter)->eType == TERRIAN_TYPE::ACT2 &&
-					(*iter)->byDrawID == m_iDrawId_Last + 1)
+					(*iter)->byDrawID == m_iDrawId_Last)
 					pLastTile = iter;
 			}
 
-			for (vector<TILE*>::iterator iter = pFirstTile; iter != pLastTile; ++iter)
+			for (vector<TILE*>::iterator iter = pFirstTile; iter != (pLastTile + 1); ++iter)
 			{
+				if (iter == m_vecTile.end())
+					return;
+
 				(*iter)->fDamage = m_fTileDamage;
 				if (m_Check_Tile[0].GetCheck())
 					(*iter)->byOption = NONETILE;
@@ -693,12 +701,15 @@ void CTileTool_Tab3::OnPush_Tile()
 					(*iter)->byDrawID == m_iDrawId_First)
 					pFirstTile = iter;
 				if ((*iter)->eType == TERRIAN_TYPE::ACT3 &&
-					(*iter)->byDrawID == m_iDrawId_Last + 1)
+					(*iter)->byDrawID == m_iDrawId_Last)
 					pLastTile = iter;
 			}
 
-			for (vector<TILE*>::iterator iter = pFirstTile; iter !=pLastTile; ++iter)
+			for (vector<TILE*>::iterator iter = pFirstTile; iter != (pLastTile + 1); ++iter)
 			{
+				if (iter == m_vecTile.end())
+					return;
+
 				(*iter)->fDamage = m_fTileDamage;
 				if (m_Check_Tile[0].GetCheck())
 					(*iter)->byOption = NONETILE;
