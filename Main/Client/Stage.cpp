@@ -17,6 +17,12 @@ CStage::~CStage()
 HRESULT CStage::Ready_Scene()
 {
 
+#pragma region PUBLIC
+
+#pragma endregion
+
+#pragma region HEEJUN
+
 	CObj*	pTerrian = new CMyTerrain;
 
 	if (nullptr == pTerrian)
@@ -25,6 +31,17 @@ HRESULT CStage::Ready_Scene()
 	static_cast<CMyTerrain*>(pTerrian)->Set_Act(TERRIAN_TYPE::ACT1);
 	
 	CObjMgr::Get_Instance()->Add_Object(CObjMgr::TERRAIN, pTerrian);
+
+#pragma endregion
+
+#pragma region CHAN
+	
+	if (false == CObjMgr::Get_Instance()->Load_Unit_Instances(L"../Data/01.Object/map/Map_Instances.dat"))
+		return E_FAIL;
+
+#pragma endregion
+
+
 	
 	return S_OK;
 }

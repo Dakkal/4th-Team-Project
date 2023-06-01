@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ObjMgr.h"
 #include "Obj.h"
+#include "Unit.h"
 
 IMPLEMENT_SINGLETON(CObjMgr)
 
@@ -70,4 +71,74 @@ void CObjMgr::Release()
 
 		m_listObject[i].clear();
 	}
+}
+
+HRESULT CObjMgr::Load_Unit_Instances(const TCHAR*  _strPath)
+{
+	HANDLE	hFile = CreateFile(_strPath, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+		return E_FAIL;
+
+	DWORD	dwByte = 0;
+	DWORD	dwStrByte = 0;
+	CObj*	pUnit = nullptr;
+	wstring OBJ_STATE_STRING[(UINT)OBJ_STATE::TYPEEND]{ L"stand", L"walk", L"dash", L"attack", L"damage", L"skill", L"die" };
+
+	while (true)
+	{
+		pUnit = new CUnit;
+
+		// 이름 문자열 세팅
+		{
+			ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+			TCHAR*	pName = new TCHAR[dwStrByte];
+			ReadFile(hFile, pName, dwStrByte, &dwByte, nullptr);
+
+			if (0 == dwByte)
+			{
+				delete[]pName;
+				pName = nullptr;
+				Safe_Delete(pUnit);
+				break;
+			}
+
+			pUnit->m_wstrName = pName;
+			delete[]pName;
+			pName = nullptr;
+		}
+
+		// 애니메이션 세팅
+		{
+			// Animation Set
+			ANIMATION* pAni = new ANIMATION;
+
+			pAni->bLoop = false;
+			pAni->iCurFrame = 0;
+			//pUnit->m_mapAni.insert({ OBJ_STATE_STRING[(UINT)OBJ_STATE::STAND], pAni });
+			pUnit->m_pCurAni = pAni;
+		}
+
+		// 나머지 멤버 변수 세팅
+		{
+			ReadFile(hFile, &(pUnit->m_tInfo), sizeof(INFO), &dwByte, nullptr);
+			ReadFile(hFile, &(pUnit->m_tStat), sizeof(STAT), &dwByte, nullptr);
+			ReadFile(hFile, &(pUnit->m_eType), sizeof(OBJ_TYPE), &dwByte, nullptr);
+			ReadFile(hFile, &(pUnit->m_eState), sizeof(OBJ_STATE), &dwByte, nullptr);
+			ReadFile(hFile, &(pUnit->m_pCurAni->fSecondPerFrame), sizeof(float), &dwByte, nullptr);
+			ReadFile(hFile, &(pUnit->m_pCurAni->iMaxFrame), sizeof(int), &dwByte, nullptr);
+			ReadFile(hFile, &(pUnit->m_vWorldPos), sizeof(D3DXVECTOR3), &dwByte, nullptr);
+
+			pUnit->m_wstrObjKey = pUnit->m_wstrName;
+			pUnit->m_wstrStateKey = OBJ_STATE_STRING[(UINT)OBJ_STATE::STAND] + L"_8";
+			pUnit->m_mapAni.insert({ OBJ_STATE_STRING[(UINT)OBJ_STATE::STAND] , pUnit->m_pCurAni });
+		}
+
+		// 푸시백
+		m_listObject[MONSTER].push_back(pUnit);
+	}
+
+	CloseHandle(hFile);
+
+	return S_OK;
 }

@@ -22,22 +22,42 @@ public:
 	}
 
 public:
-	virtual HRESULT		Initialize(void)PURE;
-	virtual int			Update(void)PURE;
-	virtual void		Late_Update(void)PURE;
-	virtual void		Render(void)PURE;
-	virtual void		Release(void)PURE;
+	virtual HRESULT				Initialize(void)PURE;
+	virtual int					Update(void)PURE;
+	virtual void				Late_Update(void)PURE;
+	virtual void				Render(void)PURE;
+	virtual void				Release(void)PURE;
 
 protected:
-	void		Move_Frame(void);
+	void						Move_Frame(void);
 
-protected:
+public:
+
 	static D3DXVECTOR3			m_vScroll;
+	
+	// Origin
+	INFO						m_tInfo;
+	wstring						m_wstrObjKey = L"";
+	wstring						m_wstrStateKey = L"";
+	FRAME						m_tFrame;
 
-	INFO					m_tInfo;
-	FRAME					m_tFrame;
-	wstring					m_wstrObjKey = L"";
-	wstring					m_wstrStateKey = L"";
+
+	// Add
+	wstring						m_wstrName;
+	STAT						m_tStat;
+	OBJ_TYPE					m_eType = OBJ_TYPE::TYPEEND;
+	OBJ_STATE					m_eState = OBJ_STATE::TYPEEND;
+	OBJ_DIR						m_eDir = OBJ_DIR::TYPEEND;
+
+
+	D3DXVECTOR3					m_vWorldPos = D3DXVECTOR3{};
+	bool						m_bPlay = true;
+
+	ANIMATION*					m_pCurAni = nullptr;
+	float						m_fAcc;
+	map<wstring, ANIMATION*>	m_mapAni;
+
+
 
 };
 

@@ -25,7 +25,7 @@ HRESULT CMyTerrain::Set_Act(TERRIAN_TYPE _eType)
 	{
 	case TERRIAN_TYPE::ACT1:
 	{
-		if (FAILED(LoadTile(L"../Data/Save_Act1_Map.dat")))
+		if (FAILED(LoadTile(L"../Data/Map_Scene1.dat")))
 			return E_FAIL;
 
 		m_wstrObjKey = L"Tile";
@@ -34,7 +34,7 @@ HRESULT CMyTerrain::Set_Act(TERRIAN_TYPE _eType)
 	break;
 	case TERRIAN_TYPE::ACT2:
 	{
-		if (FAILED(LoadTile(L"../Data/Save_Act2_Map.dat")))
+		if (FAILED(LoadTile(L"../Data/Map_Scene1.dat")))
 			return E_FAIL;
 
 		m_wstrObjKey = L"Tile";
@@ -43,7 +43,7 @@ HRESULT CMyTerrain::Set_Act(TERRIAN_TYPE _eType)
 	break;
 	case TERRIAN_TYPE::ACT3:
 	{
-		if (FAILED(LoadTile(L"../Data/Save_Act3_Map.dat")))
+		if (FAILED(LoadTile(L"../Data/Map_Scene1.dat")))
 			return E_FAIL;
 
 		m_wstrObjKey = L"Tile";
@@ -53,6 +53,8 @@ HRESULT CMyTerrain::Set_Act(TERRIAN_TYPE _eType)
 	default:
 		break;
 	}
+
+	return S_OK;
 }
 
 int CMyTerrain::Update(void)
@@ -82,7 +84,7 @@ void CMyTerrain::Render(void)
 {
 	D3DXMATRIX		matWorld,matTrans;
 
-	int iScrollX = __super::m_vScroll.x;
+	int iScrollX = (int)__super::m_vScroll.x;
 
 
 	int		iCullX = int(-m_vScroll.x) / TILECX;

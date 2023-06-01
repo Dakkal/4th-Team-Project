@@ -171,6 +171,7 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureMgr.h" />
     <ClInclude Include="TimeMgr.h" />
+    <ClInclude Include="Unit.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp" />
@@ -194,6 +195,7 @@
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureMgr.cpp" />
     <ClCompile Include="TimeMgr.cpp" />
+    <ClCompile Include="Unit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc" />
