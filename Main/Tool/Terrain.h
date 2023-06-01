@@ -26,6 +26,7 @@ public:
 	void	Tile_Change(const D3DXVECTOR3& vPos, const int& iDrawID);
 	bool	Picking(const D3DXVECTOR3& vPos, const int& iIndex);
 	bool	Picking_Dot(const D3DXVECTOR3& vPos, const int& iIndex);
+
 private:
 	vector<TILE*>		m_vecTile;
 	CToolView*			m_pMainView = nullptr;

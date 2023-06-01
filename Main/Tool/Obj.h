@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Include.h"
+class CToolView;
 
 class CObj
 {
@@ -43,12 +44,15 @@ public:
 
 	CString				m_strObjKey		= L""; 
 	CString				m_strStateKey	= L""; 
-
+	
+	D3DXVECTOR3			m_vWorldPos = D3DXVECTOR3{};
 	bool				m_bPlay = true;
 
 	map<CString, ANIMATION*>	m_mapAni;
 	ANIMATION*			m_pCurAni = nullptr;
 	float				m_fAcc;
+
+	CToolView*			m_pMainView = nullptr;
 
 };
 

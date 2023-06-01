@@ -100,6 +100,8 @@ public:
 
 #pragma region Chan
 	CMapTool_Tab2*	m_pMapToolTab = nullptr;
+
+	void			Render_MapUnit(); // 맵툴에서 현재 선택된 유닛을 렌더링한다.
 #pragma endregion
 
 

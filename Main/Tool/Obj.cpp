@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Obj.h"
 #include "TimeMgr.h"
-
+#include "ToolView.h"
 CObj::CObj()
 {
 }
@@ -26,7 +26,8 @@ void CObj::Move_Frame(void)
 	{
 		m_fAcc = 0.f;
 		++m_pCurAni->iCurFrame;
-
+		if(nullptr != m_pMainView)
+			m_pMainView->Invalidate(FALSE);
 		if (m_pCurAni->iCurFrame == m_pCurAni->iMaxFrame)
 		{
 			m_pCurAni->iCurFrame = 0;

@@ -205,15 +205,6 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 		break;
 		case TOP_TAB_TYPE::MAP:
 		{
-			if (MAPTOOL_MODE::OBJ == m_pMapToolTab->m_eToolMode && m_pMapToolTab->m_pCurPrefabObj != nullptr)
-			{
-				CObj* pObj = m_pMapToolTab->m_pCurPrefabObj;
-
-				D3DXVECTOR3 vLocalPos{ (pObj->m_tInfo.vPos.x * -0.5f), (pObj->m_tInfo.vPos.y * -0.5f),  pObj->m_tInfo.vPos.z };
-				D3DXVECTOR3 vWorldPos = Get_Mouse() + vLocalPos;
-				m_pMapToolTab->m_pCurPrefabObj->Tool_Render(vWorldPos);
-			}
-
 			TERRIAN_TYPE eTerrian_Type = static_cast<TERRIAN_TYPE>(m_pFormView->m_pMapTool_Tab2->m_Combo_SelecMap.GetCurSel());
 			switch (eTerrian_Type)
 			{
@@ -227,7 +218,7 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 
 					m_pTerrain_Act1_View->Render();
 				}
-					
+				Render_MapUnit();
 			}
 				break;
 			case TERRIAN_TYPE::ACT2:
@@ -240,7 +231,7 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 
 					m_pTerrain_Act2_View->Render();
 				}
-					
+				Render_MapUnit();
 			}
 				break;
 			case TERRIAN_TYPE::ACT3:
@@ -253,7 +244,7 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 
 					m_pTerrain_Act3_View->Render();
 				}
-					
+				Render_MapUnit();
 			}
 				break;
 
@@ -345,6 +336,36 @@ CToolDoc* CToolView::GetDocument() const // 디버그되지 않은 버전은 인라인으로 지
 // CToolView 그리기
 #pragma endregion 안봐
 
+void CToolView::Render_MapUnit()
+{
+	if (MAPTOOL_MODE::OBJ == m_pMapToolTab->m_eToolMode && m_pMapToolTab->m_pCurPrefabObj != nullptr)
+	{
+		CObj* pObj = m_pMapToolTab->m_pCurPrefabObj;
+
+		//D3DXVECTOR3 vLocalPos{ (pObj->m_tInfo.vPos.x * -0.5f), (pObj->m_tInfo.vPos.y * -0.5f),  pObj->m_tInfo.vPos.z };
+		D3DXVECTOR3 vLocalPos{ -(pObj->m_tInfo.vPos.x), -(pObj->m_tInfo.vPos.y),  pObj->m_tInfo.vPos.z };
+		D3DXVECTOR3 vWorldPos = Get_Mouse() + vLocalPos;
+		m_pMapToolTab->m_pCurPrefabObj->Tool_Render(vWorldPos);
+	}
+
+	RECT	rc{};
+	GetClientRect(&rc);
+	int CX = rc.right - rc.left;
+	int CY = rc.bottom - rc.top;
+
+	for (int i = 0; i < (UINT)OBJ_TYPE::TYPEEND; ++i)
+	{
+		for (auto& iter : m_pMapToolTab->m_vecObjInstances[i])
+		{
+			if (nullptr == iter) continue;
+
+			/*D3DXVECTOR3 vCenter{ CX * 0.5f, CY * 0.5f, 0.f };
+			iter->m_vWorldPos = vCenter;*/
+			iter->Render();
+		}
+	}
+}
+
 void CToolView::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	CScrollView::OnLButtonDown(nFlags, point);
@@ -357,34 +378,16 @@ void CToolView::OnLButtonDown(UINT nFlags, CPoint point)
 		switch (m_eCurTopTab)
 		{
 		case TOP_TAB_TYPE::UNIT:
-			switch (m_eCurMidTab)
-			{
-			case MID_TAB_TYPE::PLAYER:
-			{
-
-			}
 			break;
-			case MID_TAB_TYPE::MONSTER:
-			{
-
-			}
+		case TOP_TAB_TYPE::TILE: 
 			break;
-			case MID_TAB_TYPE::ITEM:
-			{
-
-			}
-			break;
-			default:
-				break;
-			}
-			break;
-		case TOP_TAB_TYPE::TILE:
-		{
-			// HEEJUNE
-		}
-		break;
 		case TOP_TAB_TYPE::MAP:
 		{
+			if (MAPTOOL_MODE::OBJ == m_pMapToolTab->m_eToolMode && m_pMapToolTab->m_pCurPrefabObj != nullptr)
+			{
+				m_pMapToolTab->Instantiate();
+				Invalidate(FALSE);
+			}
 			TILE* pChangeTile = m_pFormView->m_pMapTool_Tab2->m_tSelectTile;
 
 			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)

@@ -77,6 +77,7 @@ BEGIN_MESSAGE_MAP(CMapTool_Tab2, CDialogEx)
 	ON_EN_CHANGE(IDC_EDIT4_MAP, &CMapTool_Tab2::OnEdit_ChangeRow)
 	ON_EN_CHANGE(IDC_EDIT5_MAP, &CMapTool_Tab2::OnEdit_ChangeCol)
 	ON_NOTIFY(NM_CLICK, IDC_MAP_OBJ_LISTBOX_UNIT, &CMapTool_Tab2::OnNMClickMapObjListboxUnit)
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
@@ -236,6 +237,7 @@ BOOL CMapTool_Tab2::OnInitDialog()
 		}
 	}
 
+	SetTimer(ID_TIMER, 0.001, NULL);
 #pragma endregion
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -266,6 +268,13 @@ void CMapTool_Tab2::OnDestroy()
 
 
 #pragma region Chan
+	for (int i = 0; i < (UINT)OBJ_TYPE::TYPEEND; ++i)
+	{
+		for (auto& pObject : m_vecObjInstances[i])
+			Safe_Delete(pObject);
+
+		m_vecObjInstances[i].clear();
+	}
 
 	for (int i = 0; i < (UINT)OBJ_TYPE::TYPEEND; ++i)
 	{
@@ -1426,8 +1435,7 @@ HRESULT CMapTool_Tab2::Load_UnitData(const CString & _strPath)
 	
 			pUnit->m_strObjKey = pUnit->m_strName;
 			pUnit->m_strStateKey = OBJ_STATE_STRING[(UINT)OBJ_STATE::STAND] + L"_8";
-
-			pUnit->m_tInfo.vSize = D3DXVECTOR3(1.f, 1.f, 1.f);
+			pUnit->m_mapAni.insert({ OBJ_STATE_STRING[(UINT)OBJ_STATE::STAND] , pUnit->m_pCurAni });
 		}
 
 		// 푸시백
@@ -1437,6 +1445,11 @@ HRESULT CMapTool_Tab2::Load_UnitData(const CString & _strPath)
 	CloseHandle(hFile);
 
 	return S_OK;
+}
+
+HRESULT CMapTool_Tab2::Save_UnitData() const
+{
+	return E_NOTIMPL;
 }
 
 void CMapTool_Tab2::OnCbnSelchangeMapObjComboType()
@@ -1517,23 +1530,50 @@ HRESULT CMapTool_Tab2::Set_ListCtrl(const OBJ_TYPE& _eType)
 	return S_OK;
 }
 
-CObj * const CMapTool_Tab2::Instantiate(const CUnit * const _pPrefab)
+CObj * const CMapTool_Tab2::Instantiate(const CUnit * const _pPrefab, const D3DXVECTOR3 & _vWorld)
 {
-	if (nullptr == _pPrefab) return nullptr;
+	CObj* pInstance = nullptr;
 
-	// 애초에 복사생성자 만들어 뒀으면 굳이 이거 만들 필요 없었지 화상아
-	CObj* pInstance = new CUnit(*_pPrefab);
-
-	if (nullptr != pInstance->m_pCurAni)
+	// 클론
+	if (nullptr == _pPrefab)
 	{
-		ANIMATION* pAni = new ANIMATION(*(pInstance->m_pCurAni)); // 포인터 변수는 깊은 복사
-		pInstance->m_pCurAni = pAni;
-		pInstance->m_bPlay = false;
+		if (nullptr == m_pCurPrefabObj)
+			return nullptr;
+		else
+			pInstance = new CUnit(*(static_cast<CUnit*>(m_pCurPrefabObj)));
+	}
+	else
+		pInstance = new CUnit(*_pPrefab);
 
+	// 깊은 복사
+	if (nullptr != m_pCurPrefabObj->m_pCurAni)
+	{
+		ANIMATION* pAni = new ANIMATION(*(m_pCurPrefabObj->m_pCurAni)); // 포인터 변수는 깊은 복사
+		pInstance->m_pCurAni = pAni;
+		pInstance->m_bPlay = true;
+
+		pInstance->m_mapAni.clear();
+		pInstance->m_mapAni.insert({L"stand_8", pInstance->m_pCurAni });
+	}
+
+	// 월드 포지션 세팅 (현재 커서 위치에 해당하는 타일의 중점을 유닛의 월드 포지션으로 세팅해준다).
+
+	TILE* pTile = Get_TileInMousePos();
+	
+	if (nullptr != pTile && !pTile->bCheckUnit && (pTile->byOption == 0))
+	{
+		pTile->bCheckUnit = true;
+		pInstance->m_vWorldPos = pTile->vPos;
+		pInstance->m_pMainView = m_pMainView;
+		
+		m_vecObjInstances[(UINT)pInstance->m_eType].push_back(pInstance);
 		return pInstance;
+	
 	}
 	return nullptr;
+
 }
+
 
 void CMapTool_Tab2::Mouse_Move()
 {
@@ -1546,8 +1586,45 @@ void CMapTool_Tab2::Mouse_Move()
 
 void CMapTool_Tab2::Change_Mode(const MAPTOOL_MODE & _eMode)
 {
+	if (MAPTOOL_MODE::TILE == m_eToolMode && MAPTOOL_MODE::TILE != _eMode) // 타일 편집에서 다른 편집으로 넘어가는 경우
+	{
+		m_ListTile.SetCurSel(-1);
+		m_tSelectTile = nullptr;
+	}
+
 	m_eToolMode = _eMode;
 	m_pMainView->Invalidate(FALSE);
+}
+
+TILE * CMapTool_Tab2::Get_TileInMousePos()
+{
+	TERRIAN_TYPE eTerrian_Type = static_cast<TERRIAN_TYPE>(m_pFormView->m_pMapTool_Tab2->m_Combo_SelecMap.GetCurSel());
+	int iIndex = 0;
+	switch (eTerrian_Type)
+	{
+	case TERRIAN_TYPE::ACT1:
+	{
+		iIndex = m_pMainView->m_pTerrain_Act1_View->Get_TileIndex({ float(Get_Mouse().x + GetScrollPos(0)), float(Get_Mouse().y + GetScrollPos(1)), 0.f });
+		return m_pMainView->m_pTerrain_Act1_View->m_vecActTile[iIndex];
+	}
+	break;
+	case TERRIAN_TYPE::ACT2:
+	{
+		iIndex = m_pMainView->m_pTerrain_Act2_View->Get_TileIndex({ float(Get_Mouse().x + GetScrollPos(0)), float(Get_Mouse().y + GetScrollPos(1)), 0.f });
+		return m_pMainView->m_pTerrain_Act2_View->m_vecActTile[iIndex];
+	}
+	break;
+	case TERRIAN_TYPE::ACT3:
+	{
+		iIndex = m_pMainView->m_pTerrain_Act3_View->Get_TileIndex({ float(Get_Mouse().x + GetScrollPos(0)), float(Get_Mouse().y + GetScrollPos(1)), 0.f });
+		return m_pMainView->m_pTerrain_Act3_View->m_vecActTile[iIndex];
+	}
+	break;
+	default:
+		break;
+	}
+
+	return nullptr;
 }
 
 void CMapTool_Tab2::OnNMClickMapObjListboxUnit(NMHDR *pNMHDR, LRESULT *pResult)
@@ -1628,3 +1705,17 @@ void CMapTool_Tab2::OnNMClickMapObjListboxUnit(NMHDR *pNMHDR, LRESULT *pResult)
 
 
 
+
+
+void CMapTool_Tab2::OnTimer(UINT_PTR nIDEvent)
+{
+	for (int i = 0; i < (UINT)OBJ_TYPE::TYPEEND; ++i)
+	{
+		for (auto& iter : m_vecObjInstances[i])
+			if(nullptr != iter)
+				iter->Move_Frame();
+	}
+	
+
+	CDialogEx::OnTimer(nIDEvent);
+}

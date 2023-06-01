@@ -20,9 +20,9 @@ IMPLEMENT_DYNAMIC(UnitTool_Monster, CDialogEx)
 
 UnitTool_Monster::UnitTool_Monster(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_UNIT_MONSTER, pParent)
-	, EDIT_TRANSFORM_POS_X(0)
-	, EDIT_TRANSFORM_POS_Y(0)
-	, EDIT_TRANSFORM_POS_Z(0)
+	, EDIT_TRANSFORM_POS_X(1)
+	, EDIT_TRANSFORM_POS_Y(1)
+	, EDIT_TRANSFORM_POS_Z(1)
 	, EDIT_TRANSFORM_ROT_X(0)
 	, EDIT_TRANSFORM_ROT_Y(0)
 	, EDIT_TRANSFORM_ROT_Z(0)
@@ -641,7 +641,8 @@ HRESULT UnitTool_Monster::Load_DB()
 		
 		pUnit->m_strObjKey = pUnit->m_strName;
 		pUnit->m_strStateKey = OBJ_STATE_STRING[(UINT)OBJ_STATE::STAND] + L"_8";
-		
+		pUnit->m_mapAni.insert({ OBJ_STATE_STRING[(UINT)OBJ_STATE::STAND] , pUnit->m_pCurAni });
+
 		// Path Set
 		CString strAniPath = L"../Texture/Object";
 
