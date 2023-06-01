@@ -3,6 +3,7 @@
 
 #pragma region HEEJUNE
 
+#define		VECTOR		D3DXVECTOR3
 
 #pragma endregion
 

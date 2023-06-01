@@ -25,7 +25,7 @@ HRESULT CMyTerrain::Set_Act(TERRIAN_TYPE _eType)
 	{
 	case TERRIAN_TYPE::ACT1:
 	{
-		if (FAILED(LoadTile(L"../Data/Map_Scene1.dat")))
+		if (FAILED(LoadTile(L"../Data/Save_Act1_Map.dat")))
 			return E_FAIL;
 
 		m_wstrObjKey = L"Tile";
@@ -34,7 +34,7 @@ HRESULT CMyTerrain::Set_Act(TERRIAN_TYPE _eType)
 	break;
 	case TERRIAN_TYPE::ACT2:
 	{
-		if (FAILED(LoadTile(L"../Data/Map_Scene1.dat")))
+		if (FAILED(LoadTile(L"../Data/Save_Act2_Map.dat")))
 			return E_FAIL;
 
 		m_wstrObjKey = L"Tile";
@@ -43,7 +43,7 @@ HRESULT CMyTerrain::Set_Act(TERRIAN_TYPE _eType)
 	break;
 	case TERRIAN_TYPE::ACT3:
 	{
-		if (FAILED(LoadTile(L"../Data/Map_Scene1.dat")))
+		if (FAILED(LoadTile(L"../Data/Save_Act3_Map.dat")))
 			return E_FAIL;
 
 		m_wstrObjKey = L"Tile";
@@ -53,6 +53,10 @@ HRESULT CMyTerrain::Set_Act(TERRIAN_TYPE _eType)
 	default:
 		break;
 	}
+
+	//if (FAILED(Ready_Adj()))
+	//	return E_FAIL;
+
 
 	return S_OK;
 }
@@ -224,11 +228,6 @@ HRESULT CMyTerrain::LoadTile(const TCHAR* pTilePath)
 
 			ReadFile(hFile, pTile, sizeof(TILE), &dwByte, nullptr);
 
-			/*if (pTile->eType == TERRIAN_TYPE::TYPEEND)
-			{
-				Safe_Delete(pTile);
-				continue;
-			}	*/
 			if (0 == dwByte)
 			{
 				Safe_Delete(pTile);
@@ -245,6 +244,114 @@ HRESULT CMyTerrain::LoadTile(const TCHAR* pTilePath)
 	m_iCol = iCol;
 
 	CloseHandle(hFile);
+
+	return S_OK;
+}
+
+HRESULT CMyTerrain::Ready_Adj()
+{
+	if (m_vecTile.empty())
+		return E_FAIL;
+
+	m_vecAdj.resize(m_vecTile.size());
+
+	for (int i = 0; i < m_iCol; ++i)
+	{
+		for (int j = 0; j < m_iRow; ++j)
+		{
+			int iIndex = i * m_iRow + j;
+
+			//аб
+			if (0 != (iIndex % (m_iRow * 2)))
+			{
+				if (m_vecTile[iIndex - 1]->byOption == NONETILE)
+				{
+					m_vecAdj[iIndex].push_back(m_vecTile[iIndex - 1]);
+
+				}
+			}
+			//╩С
+			if ((0 != i))
+			{
+				if (m_vecTile[iIndex - (m_iRow * 2)]->byOption == NONETILE)
+				{
+					m_vecAdj[iIndex].push_back(m_vecTile[iIndex - (m_iRow * 2)]);
+
+				}
+			}
+			//©Л
+			if (((m_iRow * 2) - 1) != (iIndex % (m_iRow * 2)))
+			{
+				if (m_vecTile[iIndex + 1]->byOption == NONETILE)
+				{
+					m_vecAdj[iIndex].push_back(m_vecTile[iIndex + 1]);
+
+				}
+			}
+			//го
+			if ((m_iCol - 1 != i))
+			{
+				if (m_vecTile[iIndex + (m_iRow * 2)]->byOption == NONETILE)
+				{
+					m_vecAdj[iIndex].push_back(m_vecTile[iIndex + (m_iRow * 2)]);
+
+				}
+			}
+			//аб╩С
+			if ((0 != i) && 0 != (iIndex % (m_iRow * 2)))
+			{
+				if ((0 != i % 2) && m_vecTile[iIndex - m_iRow]->byOption == NONETILE)
+				{
+					m_vecAdj[iIndex].push_back(m_vecTile[iIndex - m_iRow]);
+				}
+				else if ((0 == i % 2) && m_vecTile[iIndex - (m_iRow + 1)]->byOption == NONETILE)
+				{
+					m_vecAdj[iIndex].push_back(m_vecTile[iIndex - (m_iRow + 1)]);
+				}
+			}
+			//©Л╩С
+			if ((0 != i) && ((m_iRow * 2) - 1) != (iIndex % (m_iRow * 2)))
+			{
+				if ((0 != i % 2) && m_vecTile[iIndex - (m_iRow - 1)]->byOption == NONETILE)
+				{
+					m_vecAdj[iIndex].push_back(m_vecTile[iIndex - (m_iRow - 1)]);
+				}
+				else if ((0 == i % 2) && m_vecTile[iIndex - m_iRow]->byOption == NONETILE)
+				{
+					m_vecAdj[iIndex].push_back(m_vecTile[iIndex - m_iRow]);
+				}
+			}
+			//абго
+			if ((m_iCol - 1 != i) && 0 != (iIndex % (m_iRow * 2)))
+			{
+				if ((0 != i % 2) && m_vecTile[iIndex + m_iRow]->byOption == NONETILE)
+				{
+					m_vecAdj[iIndex].push_back(m_vecTile[iIndex + m_iRow]);
+				}
+				else if ((0 == i % 2) && m_vecTile[iIndex + (m_iRow - 1)]->byOption == NONETILE)
+				{
+					m_vecAdj[iIndex].push_back(m_vecTile[iIndex + (m_iRow - 1)]);
+				}
+			}
+			//аб©Л
+			if ((m_iCol - 1 != i) && ((m_iRow * 2) - 1) != (iIndex % (m_iRow * 2)))
+			{
+				if ((0 != i % 2) && m_vecTile[iIndex + (m_iRow + 1)]->byOption == NONETILE)
+				{
+					m_vecAdj[iIndex].push_back(m_vecTile[iIndex + (m_iRow + 1)]);
+				}
+				else if ((0 == i % 2) && m_vecTile[iIndex + m_iRow]->byOption == NONETILE)
+				{
+					m_vecAdj[iIndex].push_back(m_vecTile[iIndex + m_iRow]);
+				}
+			}
+
+		}
+
+	}
+
+
+
 
 	return S_OK;
 }

@@ -16,11 +16,19 @@ public:
 
 	HRESULT			Set_Act(TERRIAN_TYPE _eType);
 
-private:
-	HRESULT			LoadTile(const TCHAR* pTilePath);
-	
+	vector<TILE*>&			Get_VecTile() { return m_vecTile; }
+	vector<list<TILE*>>&	Get_VecAdj() { return m_vecAdj; }
+
+	UINT			Get_TerrianRow() { return m_iRow; }
+	UINT			Get_TerrianCol() { return m_iCol; }
 
 private:
+	HRESULT			LoadTile(const TCHAR* pTilePath);
+	HRESULT			Ready_Adj();
+
+private:
+	vector<list<TILE*>> m_vecAdj;
+
 	vector<TILE*>		m_vecTile;
 
 	UINT				m_iRow;

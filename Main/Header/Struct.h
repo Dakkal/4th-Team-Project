@@ -87,6 +87,9 @@ typedef struct tagTile
 	bool		bCheckUnit;
 	bool		bCheckTile;
 
+	int			iIndex;
+	int			iParentIdx;
+
 }TILE;
 
 

@@ -160,6 +160,9 @@ void CTerrain_Act::Create_Terrian(int _TileX, int _TileY)
 			pTile->bCheckUnit = false;
 			pTile->bCheckTile = false;
 
+			pTile->iIndex = i * _TileX + j;
+			pTile->iParentIdx = 0;
+
 			m_vecActTile.push_back(pTile);
 		}
 	}

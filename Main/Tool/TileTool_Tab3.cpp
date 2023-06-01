@@ -113,6 +113,7 @@ BOOL CTileTool_Tab3::OnInitDialog()
 
 		Sort_File(TERRIAN_TYPE::ACT1);
 	}
+	m_List_Tile.ResetContent();
 	{
 		TCHAR szPath[MAX_PATH];
 		GetCurrentDirectory(MAX_PATH, szPath);
@@ -136,6 +137,7 @@ BOOL CTileTool_Tab3::OnInitDialog()
 
 		Sort_File(TERRIAN_TYPE::ACT2);
 	}
+	m_List_Tile.ResetContent();
 	{
 		TCHAR szPath[MAX_PATH];
 		GetCurrentDirectory(MAX_PATH, szPath);
