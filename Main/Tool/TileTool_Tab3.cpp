@@ -89,13 +89,7 @@ BOOL CTileTool_Tab3::OnInitDialog()
 	m_Combo_Tile.AddString(_T("Act 2"));
 	m_Combo_Tile.AddString(_T("Act 3"));
 
-	if (m_Combo_Tile.GetCount() > 0)
-	{
-		m_Combo_Tile.SetCurSel((int)TERRIAN_TYPE::ACT1);
-	}
-
 	// 초기 리스트박스
-	if (m_Combo_Tile.GetCurSel() == (int)TERRIAN_TYPE::ACT1)
 	{
 		TCHAR szPath[MAX_PATH];
 		GetCurrentDirectory(MAX_PATH, szPath);
@@ -108,6 +102,7 @@ BOOL CTileTool_Tab3::OnInitDialog()
 		while (bWorking)
 		{
 			bWorking = finder.FindNextFile();
+
 			if (!finder.IsDots() && !finder.IsDirectory())
 			{
 				CString fileName = L"Act1_" + finder.GetFileName();
@@ -115,7 +110,81 @@ BOOL CTileTool_Tab3::OnInitDialog()
 			}
 		}
 		finder.Close();
-        
+
+		Sort_File(TERRIAN_TYPE::ACT1);
+	}
+	{
+		TCHAR szPath[MAX_PATH];
+		GetCurrentDirectory(MAX_PATH, szPath);
+		PathRemoveFileSpec(szPath);
+		lstrcat(szPath, L"\\Texture\\Tile\\Act2\\");
+		CString strPath = szPath;
+
+		CFileFind finder;
+		BOOL bWorking = finder.FindFile(strPath + _T("*.png"));
+		while (bWorking)
+		{
+			bWorking = finder.FindNextFile();
+
+			if (!finder.IsDots() && !finder.IsDirectory())
+			{
+				CString fileName = L"Act2_" + finder.GetFileName();
+				m_List_Tile.AddString(fileName);
+			}
+		}
+		finder.Close();
+
+		Sort_File(TERRIAN_TYPE::ACT2);
+	}
+	{
+		TCHAR szPath[MAX_PATH];
+		GetCurrentDirectory(MAX_PATH, szPath);
+		PathRemoveFileSpec(szPath);
+		lstrcat(szPath, L"\\Texture\\Tile\\Act3\\");
+		CString strPath = szPath;
+
+		CFileFind finder;
+		BOOL bWorking = finder.FindFile(strPath + _T("*.png"));
+		while (bWorking)
+		{
+			bWorking = finder.FindNextFile();
+			if (!finder.IsDots() && !finder.IsDirectory())
+			{
+				CString fileName = L"Act3_" + finder.GetFileName();
+				m_List_Tile.AddString(fileName);
+			}
+		}
+		finder.Close();
+
+		Sort_File(TERRIAN_TYPE::ACT3);
+	}
+	m_List_Tile.ResetContent();
+
+	if (m_Combo_Tile.GetCount() > 0)
+	{
+		m_Combo_Tile.SetCurSel((int)TERRIAN_TYPE::ACT1);
+	}
+	{
+		TCHAR szPath[MAX_PATH];
+		GetCurrentDirectory(MAX_PATH, szPath);
+		PathRemoveFileSpec(szPath);
+		lstrcat(szPath, L"\\Texture\\Tile\\Act1\\");
+		CString strPath = szPath;
+
+		CFileFind finder;
+		BOOL bWorking = finder.FindFile(strPath + _T("*.png"));
+		while (bWorking)
+		{
+			bWorking = finder.FindNextFile();
+
+			if (!finder.IsDots() && !finder.IsDirectory())
+			{
+				CString fileName = L"Act1_" + finder.GetFileName();
+				m_List_Tile.AddString(fileName);
+			}
+		}
+		finder.Close();
+
 		Sort_File(TERRIAN_TYPE::ACT1);
 	}
 
@@ -350,7 +419,6 @@ void CTileTool_Tab3::OnActTileChange()
 
 	UpdateData(FALSE);
 	// TODO: Add your control notification handler code here
-	m_pMainView->Invalidate(FALSE);
 }
 
 void CTileTool_Tab3::OnListTile()
