@@ -22,6 +22,8 @@
 
 #define		CONSOLE_OUT		false
 
+#define		KEYBOARD_SCROLL false
+
 #define		TAB_HEIGHT	30
 #define		TAB_WIDTH	10
 

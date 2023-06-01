@@ -61,6 +61,33 @@ int CMyTerrain::Update(void)
 {
 	Move_Frame();
 
+	if (KEYBOARD_SCROLL)
+	{
+		if (0.f >= __super::m_vScroll.x)
+		{
+			if (GetAsyncKeyState('A'))
+				__super::m_vScroll.x += SCROLL_SPEED * CTimeMgr::Get_Instance()->Get_TimeDelta();
+
+			if (GetAsyncKeyState('D'))
+				__super::m_vScroll.x -= SCROLL_SPEED * CTimeMgr::Get_Instance()->Get_TimeDelta();
+
+			if (0.f < __super::m_vScroll.x)
+				__super::m_vScroll.x = 0.f;
+		}
+
+		if (0.f >= __super::m_vScroll.y)
+		{
+			if (GetAsyncKeyState('W'))
+				__super::m_vScroll.y += SCROLL_SPEED * CTimeMgr::Get_Instance()->Get_TimeDelta();
+
+			if (GetAsyncKeyState('S'))
+				__super::m_vScroll.y -= SCROLL_SPEED * CTimeMgr::Get_Instance()->Get_TimeDelta();
+
+			if (0.f < __super::m_vScroll.y)
+				__super::m_vScroll.y = 0.f;
+		}
+		return 0;
+	}
 	if (0.f >= __super::m_vScroll.x)
 	{
 		if (10.f > ::Get_Mouse().x)
