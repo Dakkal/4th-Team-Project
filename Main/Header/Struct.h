@@ -12,7 +12,11 @@
 
 typedef	struct tagUnitData
 {
+#ifndef _AFX
+	wstring		strName;
+#else
 	CString	strName;
+#endif
 	int		iAttack;
 	int		iHp;
 

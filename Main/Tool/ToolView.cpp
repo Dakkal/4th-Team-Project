@@ -67,6 +67,13 @@ void CToolView::OnInitialUpdate()
 	//// MM_TEXT : 픽셀 단위로 조정하겠다는 옵션
 	//// 스크롤 가로 사이즈, 스크롤 세로 사이즈
 
+	if (FAILED(CTextureMgr::Get_Instance()->Create_TexturePath()))
+	{
+		AfxMessageBox(L"TexturePath Create Failed");
+		return;
+	}
+
+
 	SetScrollSizes(MM_TEXT, CSize(WINCX, WINCY));
 
 

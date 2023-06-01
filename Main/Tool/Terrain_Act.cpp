@@ -24,12 +24,12 @@ HRESULT CTerrain_Act::Initialize()
 	m_pMainView =	static_cast<CToolView*>(pMainFrm->m_MainSplitter.GetPane(0, 0));
 	m_pFormView = static_cast<CMyForm*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
 
-	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/00.Tile/Tool/Tile_%d.png", TEX_MULTI, L"Terrain_Tool", L"Tile", 3)))
+	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/Tile/Tool/Tile_%d.png", TEX_MULTI, L"Terrain_Tool", L"Tile", 3)))
 	{
 		AfxMessageBox(L"TileTexture Create Failed");
 		return E_FAIL;
 	}
-	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/00.Tile/Act1/Tile_%d.png", TEX_MULTI, L"Act1Terrain", L"Tile", 326)))
+	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/Tile/Act1/Tile_%d.png", TEX_MULTI, L"Act1Terrain", L"Tile", 326)))
 	{
 		AfxMessageBox(L"TileTexture Create Failed");
 		return E_FAIL;
@@ -263,6 +263,34 @@ void CTerrain_Act::Tile_LookChange(const D3DXVECTOR3 & vPos, TILE * _Tile)
 {
 	if (!_Tile)
 		return;
+
+	RECT	rc{};
+	GetClientRect(m_pMainView->m_hWnd, &rc);
+
+	int	ilEndX = rc.right - 10 + m_pMainView->GetScrollPos(0);
+
+	if ((m_vecActTile.back()->vPos.x + (TILECX * 0.5)) < vPos.x ||
+		(m_vecActTile.back()->vPos.y) < vPos.y ||
+		ilEndX <= vPos.x)
+	{
+		if (m_CurIndex != -1)
+		{
+			if (m_vecActTile[m_CurIndex]->bCheckTile)
+			{
+				m_vecActTile[m_CurIndex]->eType = m_PreType;
+				m_vecActTile[m_CurIndex]->byDrawID = m_PreID;
+			}
+			if (!m_vecActTile[m_CurIndex]->bCheckTile)
+			{
+				m_vecActTile[m_CurIndex]->eType = TERRIAN_TYPE::TYPEEND;
+				m_vecActTile[m_CurIndex]->byDrawID = 0;
+			}
+		}
+
+		m_CurIndex = -1;
+		m_PreIndex = -1;
+		return;
+	}
 
 	if (m_CurIndex == -1)
 	{

@@ -22,12 +22,12 @@ public:
 								const TCHAR* pStateKey = L"",
 								const int& iCount = 0);
 
-	 void		Release(void);
+	HRESULT		Read_ImgPath(const wstring& wstrPath);
 
-	 HRESULT		Create_TexturePath();
+
+	 void		Release(void);
 
 private:
 	map<wstring, CTexture*>		m_mapTexture;
-	list<IMGPATH*>				m_PathList;
 };
 
