@@ -18,7 +18,9 @@
 
 #pragma endregion
 
+#define		SCROLL_SPEED	500.f
 
+#define		CONSOLE_OUT		false
 
 #define		TAB_HEIGHT	30
 #define		TAB_WIDTH	10
@@ -32,8 +34,8 @@
 //#define		WINCX		1400
 //#define		WINCY		1200
 
-#define		WINCX		1100
-#define		WINCY		800
+#define		WINCX		1000
+#define		WINCY		700
 
 #define		OBJ_NOEVENT		0
 #define		OBJ_DEAD		1

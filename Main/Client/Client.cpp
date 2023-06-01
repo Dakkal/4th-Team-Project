@@ -45,6 +45,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENT));
 
+
+	if (CONSOLE_OUT)
+	{
+#ifdef UNICODE
+#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
+#else
+#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+#endif
+
+	}
 	MSG msg;
 	msg.message = WM_NULL;
 
@@ -122,7 +132,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    RECT	rc{ 0, 0, WINCX, WINCY };
    
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+   HWND hWnd = CreateWindowW(szWindowClass, L"DIABLO2 CLIENT", WS_OVERLAPPEDWINDOW,
       CW_USEDEFAULT, 0, 
 	   rc.right - rc.left,
 	   rc.bottom - rc.top,

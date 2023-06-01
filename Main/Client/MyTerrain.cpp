@@ -61,17 +61,29 @@ int CMyTerrain::Update(void)
 {
 	Move_Frame();
 
-	if (10.f > ::Get_Mouse().x)
-		__super::m_vScroll.x += 300.f * CTimeMgr::Get_Instance()->Get_TimeDelta();
+	if (0.f >= __super::m_vScroll.x)
+	{
+		if (10.f > ::Get_Mouse().x)
+			__super::m_vScroll.x += SCROLL_SPEED * CTimeMgr::Get_Instance()->Get_TimeDelta();
 
-	if (WINCX - 10 < ::Get_Mouse().x)
-		__super::m_vScroll.x -= 300.f * CTimeMgr::Get_Instance()->Get_TimeDelta();
+		if (WINCX - 10 < ::Get_Mouse().x)
+			__super::m_vScroll.x -= SCROLL_SPEED * CTimeMgr::Get_Instance()->Get_TimeDelta();
 
-	if (10.f > ::Get_Mouse().y)
-		__super::m_vScroll.y += 300.f * CTimeMgr::Get_Instance()->Get_TimeDelta();
+		if (0.f < __super::m_vScroll.x)
+			__super::m_vScroll.x = 0.f;
+	}
 
-	if (WINCY - 10 < ::Get_Mouse().y)
-		__super::m_vScroll.y -= 300.f * CTimeMgr::Get_Instance()->Get_TimeDelta();
+	if (0.f >= __super::m_vScroll.y)
+	{
+		if (10.f > ::Get_Mouse().y)
+			__super::m_vScroll.y += SCROLL_SPEED * CTimeMgr::Get_Instance()->Get_TimeDelta();
+
+		if (WINCY - 10 < ::Get_Mouse().y)
+			__super::m_vScroll.y -= SCROLL_SPEED * CTimeMgr::Get_Instance()->Get_TimeDelta();
+
+		if (0.f < __super::m_vScroll.y)
+			__super::m_vScroll.y = 0.f;
+	}
 
 	return 0;
 }
