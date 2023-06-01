@@ -1383,6 +1383,7 @@ void CMapTool_Tab2::OnButton_LoadMap()
 	}
 		break;
 	default:
+		AfxMessageBox(L"Act is None! Select Act.");
 		break;
 	}
 
