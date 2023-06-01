@@ -1,7 +1,5 @@
 #include "stdafx.h"
 #include "TextureMgr.h"
-#include "FileInfo.h"
-#include <fstream>
 
 IMPLEMENT_SINGLETON(CTextureMgr)
 
@@ -58,12 +56,55 @@ HRESULT CTextureMgr::Insert_Texture(const TCHAR * pFilePath, TEXTYPE eType, cons
 
 		if (FAILED(pTexture->Insert_Texture(pFilePath, pStateKey, iCount)))
 		{
-			AfxMessageBox(pFilePath);
+			(pFilePath);
 			return E_FAIL;
 		}
 
 		m_mapTexture.insert({ pObjKey, pTexture });
 
+	}
+	else if (eType == TEX_MULTI)
+		iter->second->Insert_Texture(pFilePath, pStateKey, iCount);
+
+
+	return S_OK;
+}
+
+HRESULT CTextureMgr::Read_ImgPath(const wstring & wstrPath)
+{
+	wifstream		fin;
+	fin.open(L"../Data/ImgPath.txt", ios::in);
+
+	if (!fin.fail())
+	{
+		TCHAR		szObjKey[MAX_STR] = L"";
+		TCHAR		szStateKey[MAX_STR] = L"";
+		TCHAR		szCnt[MAX_STR] = L"";
+		TCHAR		szPath[MAX_PATH] = L"";
+
+		wstring		wstrCombined = L"";
+
+		while (true)
+		{
+			fin.getline(szObjKey, MAX_STR, '|');
+			fin.getline(szStateKey, MAX_STR, '|');
+			fin.getline(szCnt, MAX_STR, '|');
+			fin.getline(szPath, MAX_PATH);
+
+			if (fin.eof())
+				break;
+
+			int iCount = _ttoi(szCnt);
+
+			if (FAILED(Insert_Texture(szPath, TEX_MULTI, szObjKey, szStateKey, iCount)))
+			{
+				ERR_MSG(szPath);
+				return E_FAIL;
+			}
+
+		}
+
+		fin.close();
 	}
 
 
@@ -78,37 +119,4 @@ void CTextureMgr::Release(void)
 	});
 	m_mapTexture.clear();
 
-	for_each(m_PathList.begin(), m_PathList.end(), CDeleteObj());
-	m_PathList.clear();
-
-}
-
-HRESULT CTextureMgr::Create_TexturePath()
-{
-	TCHAR szPath[MAX_PATH];
-	GetCurrentDirectory(MAX_PATH, szPath);
-	PathRemoveFileSpec(szPath);
-	lstrcat(szPath, L"\\Texture");
-
-	if (FAILED(CFileInfo::DirInfoExtraction(szPath, m_PathList)))
-		return E_FAIL;
-
-	wofstream		fout;
-	fout.open(L"../Data/ImgPath.txt", ios::out);
-
-	if (!fout.fail())
-	{
-		for (auto& iter : m_PathList)
-		{
-			fout << iter->wstrObjKey << L"|" << iter->wstrStateKey << L"|" << iter->iCount << L"|" << iter->wstrPath << endl;
-		}
-
-		fout.close();
-	}
-
-	//WinExec("notepad.exe ../Data/ImgPath.txt", SW_SHOW);
-
-
-
-	return S_OK;
 }

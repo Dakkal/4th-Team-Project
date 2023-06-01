@@ -100,17 +100,17 @@ BOOL CMapTool_Tab2::OnInitDialog()
 
 
 #pragma region Jun
-	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/00.Tile/Act1/Tile_%d.png", TEX_MULTI, L"Act1Terrain", L"Tile", 326)))
+	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/Tile/Act1/Tile_%d.png", TEX_MULTI, L"Act1Terrain", L"Tile", 326)))
 	{
 		AfxMessageBox(L"TileTexture Create Failed");
 		return E_FAIL;
 	}
-	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/00.Tile/Act2/Tile%d.png", TEX_MULTI, L"Act2Terrain", L"Tile", 32)))
+	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/Tile/Act2/Tile%d.png", TEX_MULTI, L"Act2Terrain", L"Tile", 32)))
 	{
 		AfxMessageBox(L"TileTexture Create Failed");
 		return E_FAIL;
 	}
-	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/00.Tile/Act3/Tile_%d.png", TEX_MULTI, L"Act3Terrain", L"Tile", 289)))
+	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/Tile/Act3/Tile_%d.png", TEX_MULTI, L"Act3Terrain", L"Tile", 289)))
 	{
 		AfxMessageBox(L"TileTexture Create Failed");
 		return E_FAIL;
@@ -140,7 +140,7 @@ BOOL CMapTool_Tab2::OnInitDialog()
 		TCHAR szPath[MAX_PATH];
 		GetCurrentDirectory(MAX_PATH, szPath);
 		PathRemoveFileSpec(szPath);
-		lstrcat(szPath, L"\\Texture\\00.Tile\\Act1\\");
+		lstrcat(szPath, L"\\Texture\\Tile\\Act1\\");
 		CString strPath = szPath;
 
 		CFileFind finder;
@@ -297,7 +297,6 @@ void CMapTool_Tab2::OnRadio_MiniView_Hide()
 	m_pMapTool_SubMap.ShowWindow(SW_HIDE);
 }
 
-
 void CMapTool_Tab2::OnRadio_MiniView_Show()
 {
 	Change_Mode(MAPTOOL_MODE::MAP);
@@ -342,7 +341,6 @@ void CMapTool_Tab2::OnEdit_ChangeRow()
 	UpdateData(FALSE);
 }
 
-
 void CMapTool_Tab2::OnEdit_ChangeCol()
 {
 	Change_Mode(MAPTOOL_MODE::MAP);
@@ -353,8 +351,6 @@ void CMapTool_Tab2::OnEdit_ChangeCol()
 
 	UpdateData(FALSE);
 }
-
-
 
 void CMapTool_Tab2::OnList_Tile()
 {
@@ -539,7 +535,7 @@ void CMapTool_Tab2::OnCombo_ChangeAct()
 		TCHAR szPath[MAX_PATH];
 		GetCurrentDirectory(MAX_PATH, szPath);
 		PathRemoveFileSpec(szPath);
-		lstrcat(szPath, L"\\Texture\\00.Tile\\Act1\\");
+		lstrcat(szPath, L"\\Texture\\Tile\\Act1\\");
 		CString strPath = szPath;
 
 		CFileFind finder;
@@ -574,7 +570,7 @@ void CMapTool_Tab2::OnCombo_ChangeAct()
 		TCHAR szPath[MAX_PATH];
 		GetCurrentDirectory(MAX_PATH, szPath);
 		PathRemoveFileSpec(szPath);
-		lstrcat(szPath, L"\\Texture\\00.Tile\\Act2\\");
+		lstrcat(szPath, L"\\Texture\\Tile\\Act2\\");
 		CString strPath = szPath;
 
 		CFileFind finder;
@@ -609,7 +605,7 @@ void CMapTool_Tab2::OnCombo_ChangeAct()
 		TCHAR szPath[MAX_PATH];
 		GetCurrentDirectory(MAX_PATH, szPath);
 		PathRemoveFileSpec(szPath);
-		lstrcat(szPath, L"\\Texture\\00.Tile\\Act3\\");
+		lstrcat(szPath, L"\\Texture\\Tile\\Act3\\");
 		CString strPath = szPath;
 
 		CFileFind finder;

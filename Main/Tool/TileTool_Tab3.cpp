@@ -63,17 +63,17 @@ BOOL CTileTool_Tab3::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	//텍스처 입력
-	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/00.Tile/Act1/Tile_%d.png", TEX_MULTI, L"Act1Terrain", L"Tile", 326)))
+	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/Tile/Act1/Tile_%d.png", TEX_MULTI, L"Act1Terrain", L"Tile", 326)))
 	{
 		AfxMessageBox(L"TileTexture Create Failed");
 		return E_FAIL;
 	}
-	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/00.Tile/Act2/Tile%d.png", TEX_MULTI, L"Act2Terrain", L"Tile", 32)))
+	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/Tile/Act2/Tile%d.png", TEX_MULTI, L"Act2Terrain", L"Tile", 32)))
 	{
 		AfxMessageBox(L"TileTexture Create Failed");
 		return E_FAIL;
 	}
-	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/00.Tile/Act3/Tile_%d.png", TEX_MULTI, L"Act3Terrain", L"Tile", 289)))
+	if (FAILED(CTextureMgr::Get_Instance()->Insert_Texture(L"../Texture/Tile/Act3/Tile_%d.png", TEX_MULTI, L"Act3Terrain", L"Tile", 289)))
 	{
 		AfxMessageBox(L"TileTexture Create Failed");
 		return E_FAIL;
@@ -100,7 +100,7 @@ BOOL CTileTool_Tab3::OnInitDialog()
 		TCHAR szPath[MAX_PATH];
 		GetCurrentDirectory(MAX_PATH, szPath);
 		PathRemoveFileSpec(szPath);
-		lstrcat(szPath, L"\\Texture\\00.Tile\\Act1\\");
+		lstrcat(szPath, L"\\Texture\\Tile\\Act1\\");
 		CString strPath = szPath;
 
 		CFileFind finder;
@@ -206,9 +206,13 @@ void CTileTool_Tab3::Tool_Render(const D3DXVECTOR3& _vWorld)
 		break;
 	}
 
+	if (nullptr == pTile)
+		return;
+
+
 	D3DXMATRIX matWorld, matScale, matRotZ, matTrans;
 
-	D3DXVECTOR3 vPos = pTile->vPos + _vWorld; // 
+	D3DXVECTOR3 vPos = pTile->vPos + _vWorld;
 
 	D3DXMatrixIdentity(&matWorld);
 	D3DXMatrixScaling(&matScale, pTile->vSize.x, pTile->vSize.y, pTile->vSize.z);
@@ -216,7 +220,21 @@ void CTileTool_Tab3::Tool_Render(const D3DXVECTOR3& _vWorld)
 
 	matWorld = matScale *  matTrans;
 
-	const TEXINFO*	pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Act1Terrain", L"Tile", pTile->byDrawID);
+	const TEXINFO*		pTexInfo = nullptr;
+	if (pTile->eType == TERRIAN_TYPE::ACT1)
+	{
+		pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Act1Terrain", L"Tile", pTile->byDrawID);
+	}
+	else if (pTile->eType == TERRIAN_TYPE::ACT2)
+	{
+		pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Act2Terrain", L"Tile", pTile->byDrawID);
+	}
+	else if (pTile->eType == TERRIAN_TYPE::ACT3)
+	{
+		pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Act3Terrain", L"Tile", pTile->byDrawID);
+	}
+	if (nullptr == pTexInfo)
+		return;
 
 	if (nullptr == pTexInfo) return;
 
@@ -233,8 +251,6 @@ void CTileTool_Tab3::Tool_Render(const D3DXVECTOR3& _vWorld)
 		D3DCOLOR_ARGB(255, 255, 255, 255)); // 출력할 이미지와 섞을 색상 값, 0xffffffff를 넘겨주면 원본 색상 유지
 	
 	UpdateData(FALSE);
-
-	//m_pMainView->Invalidate(FALSE);
 }
 
 void CTileTool_Tab3::Set_Ratio(D3DXMATRIX * pOut, float fRatioX, float fRatioY)
@@ -263,7 +279,7 @@ void CTileTool_Tab3::OnActTileChange()
 		TCHAR szPath[MAX_PATH];
 		GetCurrentDirectory(MAX_PATH, szPath);
 		PathRemoveFileSpec(szPath);
-		lstrcat(szPath, L"\\Texture\\00.Tile\\Act1\\");
+		lstrcat(szPath, L"\\Texture\\Tile\\Act1\\");
 		CString strPath = szPath;
 
 		CFileFind finder;
@@ -287,7 +303,7 @@ void CTileTool_Tab3::OnActTileChange()
 		TCHAR szPath[MAX_PATH];
 		GetCurrentDirectory(MAX_PATH, szPath);
 		PathRemoveFileSpec(szPath);
-		lstrcat(szPath, L"\\Texture\\00.Tile\\Act2\\");
+		lstrcat(szPath, L"\\Texture\\Tile\\Act2\\");
 		CString strPath = szPath;
 
 		CFileFind finder;
@@ -311,7 +327,7 @@ void CTileTool_Tab3::OnActTileChange()
 		TCHAR szPath[MAX_PATH];
 		GetCurrentDirectory(MAX_PATH, szPath);
 		PathRemoveFileSpec(szPath);
-		lstrcat(szPath, L"\\Texture\\00.Tile\\Act3\\");
+		lstrcat(szPath, L"\\Texture\\Tile\\Act3\\");
 		CString strPath = szPath;
 
 		CFileFind finder;

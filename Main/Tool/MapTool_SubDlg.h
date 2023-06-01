@@ -31,4 +31,5 @@ public:
 public:
 	CMiniView*	m_pMiniView;
 	
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 };

@@ -29,6 +29,7 @@ void CMapTool_SubDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CMapTool_SubDlg, CDialog)
 	ON_WM_DESTROY()
+	ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
 
@@ -52,4 +53,19 @@ void CMapTool_SubDlg::OnDestroy()
 	CDialog::OnDestroy();
 
 	Safe_Delete(m_pMiniView);
+}
+
+
+void CMapTool_SubDlg::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	CRect rectView;
+	m_pMiniView->GetClientRect(&rectView);
+
+	if (rectView.PtInRect(point))
+	{
+		return;
+	}
+
+
+	CDialog::OnLButtonDown(nFlags, point);
 }
