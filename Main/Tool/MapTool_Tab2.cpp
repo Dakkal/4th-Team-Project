@@ -194,14 +194,15 @@ BOOL CMapTool_Tab2::OnInitDialog()
 	if (nullptr != m_pMainView)
 		m_pMainView->m_pMapToolTab = this;
 
-	// 1. Load Unit Data
-	if (FAILED(Load_UnitData(L"../Data/01.Object/Player_Monster_Pivot_Origin_Recent.dat")))
+	// 1. Load Unit Prefabs
+
+	if (FAILED(Load_Unit_Prefabs(L"../Data/01.Object/Player_Monster_Pivot_Origin_Recent.dat")))
 	{
-		AfxMessageBox(L"Failed Load Unit Data");
+		AfxMessageBox(L"Failed Load Prefabs");
 		return E_FAIL;
 	}
 
-	// 2. Set ComboBox
+	// 3. Set ComboBox
 	{
 		CString OBJ_TYPE_STRING[(UINT)OBJ_TYPE::TYPEEND]{ L"Player", L"Monster", L"Npc", L"Item", L"Terrain", L"Enviornment", L"UI" };
 
@@ -212,7 +213,7 @@ BOOL CMapTool_Tab2::OnInitDialog()
 		m_cComboBox_Obj.SetCurSel(0);
 	}
 
-	// 3. Set ListControl
+	// 4. Set ListControl
 	{
 		const int iIcoSize = 48;
 
@@ -948,7 +949,6 @@ void CMapTool_Tab2::OnButton_SaveMap()
 {
 	Change_Mode(MAPTOOL_MODE::MAP);
 
-
 	UpdateData(TRUE);
 
 	TERRIAN_TYPE eTerrianType = static_cast<TERRIAN_TYPE>(m_Combo_SelecMap.GetCurSel());
@@ -992,7 +992,6 @@ void CMapTool_Tab2::OnButton_SaveMap()
 			for (auto& iter : m_pTerrain_Act1->m_vecActTile)
 				WriteFile(hFile, iter, sizeof(TILE), &dwByte, nullptr);
 		
-
 			CloseHandle(hFile);
 		}
 	}
@@ -1083,6 +1082,8 @@ void CMapTool_Tab2::OnButton_SaveMap()
 		break;
 	}
 
+	Save_Unit_Instances();
+
 	UpdateData(FALSE);
 }
 
@@ -1114,11 +1115,10 @@ void CMapTool_Tab2::OnButton_LoadMap()
 		{
 			CFileDialog		Dlg(TRUE,
 				L"dat",
-				L"Save_Act1_Map.dat",
+				L"Map_Scene1.dat",
 				OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
 				L"Data Files(*.dat) | *.dat||",
 				this);
-
 			TCHAR	szPath[MAX_PATH] = L"";
 
 			GetCurrentDirectory(MAX_PATH, szPath);
@@ -1179,6 +1179,12 @@ void CMapTool_Tab2::OnButton_LoadMap()
 				m_Slide_Col.SetPos(m_iTileY);
 
 				CloseHandle(hFile);
+
+				if (FAILED(Load_Unit_Instances(L"../Data/01.Object/map/Map_Instances.dat")))
+				{
+					AfxMessageBox(L"Failed Load Instances");
+					return;
+				}
 			}
 			m_pTerrain_Act1->m_ActTileX = m_iTileX;
 			m_pTerrain_Act1->m_ActTileY = m_iTileY;
@@ -1203,7 +1209,7 @@ void CMapTool_Tab2::OnButton_LoadMap()
 		{
 			CFileDialog		Dlg(TRUE,
 				L"dat",
-				L"Save_Act2_Map.dat",
+				L"Map_Scene1.dat",
 				OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
 				L"Data Files(*.dat) | *.dat||",
 				this);
@@ -1268,6 +1274,12 @@ void CMapTool_Tab2::OnButton_LoadMap()
 				m_Slide_Col.SetPos(m_iTileY);
 
 				CloseHandle(hFile);
+
+				if (FAILED(Load_Unit_Instances(L"../Data/01.Object/map/Map_Instances.dat")))
+				{
+					AfxMessageBox(L"Failed Load Instances");
+					return;
+				}
 			}
 			m_pTerrain_Act2->m_ActTileX = m_iTileX;
 			m_pTerrain_Act2->m_ActTileY = m_iTileY;
@@ -1292,7 +1304,7 @@ void CMapTool_Tab2::OnButton_LoadMap()
 		{
 			CFileDialog		Dlg(TRUE,
 				L"dat",
-				L"Save_Act3_Map.dat",
+				L"Map_Scene1.dat",
 				OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
 				L"Data Files(*.dat) | *.dat||",
 				this);
@@ -1338,7 +1350,6 @@ void CMapTool_Tab2::OnButton_LoadMap()
 
 						ReadFile(hFile, pTile, sizeof(TILE), &dwByte, nullptr);
 
-
 						if (0 == dwByte)
 						{
 							Safe_Delete(pTile);
@@ -1357,6 +1368,12 @@ void CMapTool_Tab2::OnButton_LoadMap()
 				m_Slide_Col.SetPos(m_iTileY);
 
 				CloseHandle(hFile);
+
+				if (FAILED(Load_Unit_Instances(L"../Data/01.Object/map/Map_Instances.dat")))
+				{
+					AfxMessageBox(L"Failed Load Instances");
+					return;
+				}
 			}
 		}
 
@@ -1378,7 +1395,7 @@ void CMapTool_Tab2::OnButton_LoadMap()
 
 #pragma region Chan
 
-HRESULT CMapTool_Tab2::Load_UnitData(const CString & _strPath)
+HRESULT CMapTool_Tab2::Load_Unit_Prefabs(const CString & _strPath)
 {
 	HANDLE	hFile = CreateFile(_strPath, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
@@ -1447,8 +1464,133 @@ HRESULT CMapTool_Tab2::Load_UnitData(const CString & _strPath)
 	return S_OK;
 }
 
-HRESULT CMapTool_Tab2::Save_UnitData() const
+HRESULT CMapTool_Tab2::Load_Unit_Instances(const CString& _strPath)
 {
+
+	HANDLE	hFile = CreateFile(_strPath, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+		return E_FAIL;
+
+	DWORD	dwByte = 0;
+	DWORD	dwStrByte = 0;
+	CUnit*	pUnit = nullptr;
+	CString OBJ_STATE_STRING[(UINT)OBJ_STATE::TYPEEND]{ L"stand", L"walk", L"dash", L"attack", L"damage", L"skill", L"die" };
+
+	while (true)
+	{
+		pUnit = new CUnit;
+
+		// 이름 문자열 세팅
+		{
+			ReadFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+			TCHAR*	pName = new TCHAR[dwStrByte];
+			ReadFile(hFile, pName, dwStrByte, &dwByte, nullptr);
+
+			if (0 == dwByte)
+			{
+				delete[]pName;
+				pName = nullptr;
+				Safe_Delete(pUnit);
+				break;
+			}
+
+			pUnit->m_strName = pName;
+			delete[]pName;
+			pName = nullptr;
+		}
+
+		// 애니메이션 세팅
+		{
+			// Animation Set
+			ANIMATION* pAni = new ANIMATION;
+
+			pAni->bLoop = false;
+			pAni->iCurFrame = 0;
+			pUnit->m_mapAni.insert({ OBJ_STATE_STRING[(UINT)OBJ_STATE::STAND], pAni });
+			pUnit->m_pCurAni = pAni;
+		}
+
+		// 나머지 멤버 변수 세팅
+		{
+			ReadFile(hFile, &(pUnit->m_tInfo), sizeof(INFO), &dwByte, nullptr);
+			ReadFile(hFile, &(pUnit->m_tStat), sizeof(STAT), &dwByte, nullptr);
+			ReadFile(hFile, &(pUnit->m_eType), sizeof(OBJ_TYPE), &dwByte, nullptr);
+			ReadFile(hFile, &(pUnit->m_eState), sizeof(OBJ_STATE), &dwByte, nullptr);
+			ReadFile(hFile, &(pUnit->m_pCurAni->fSecondPerFrame), sizeof(float), &dwByte, nullptr);
+			ReadFile(hFile, &(pUnit->m_pCurAni->iMaxFrame), sizeof(int), &dwByte, nullptr);
+			ReadFile(hFile, &(pUnit->m_vWorldPos), sizeof(D3DXVECTOR3), &dwByte, nullptr);
+
+			pUnit->m_strObjKey = pUnit->m_strName;
+			pUnit->m_strStateKey = OBJ_STATE_STRING[(UINT)OBJ_STATE::STAND] + L"_8";
+			pUnit->m_mapAni.insert({ OBJ_STATE_STRING[(UINT)OBJ_STATE::STAND] , pUnit->m_pCurAni });
+		}
+
+		// 푸시백
+		pUnit->m_pMainView = m_pMainView;
+		pUnit->m_bPlay = true;
+		m_vecObjInstances[(UINT)pUnit->m_eType].push_back(pUnit);
+	}
+
+	CloseHandle(hFile);
+
+	return S_OK;
+}
+
+HRESULT CMapTool_Tab2::Save_Unit_Instances()
+{
+	// 다이얼로그 생성
+	CFileDialog		Dlg(FALSE,	// TRUE(열기), FALSE(다른 이름으로 저장) 모드 지정	
+		L"dat", // defaule 파일 확장자명
+		L"*.dat", // 대화 상자에 표시될 최초 파일명
+		OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, // OFN_HIDEREADONLY(읽기전용 체크박스 숨김), OFN_OVERWRITEPROMPT(중복파일 저장 시 경고메세지 띄우기)
+		L"Data Files(*.dat) | *.dat||",  // 대화 상자에 표시될 파일 형식 '콤보 박스에 출력될 문자열 | 실제 사용할 필터링 문자열 ||'
+		this); // 부모 윈도우 주소
+
+	TCHAR	szPath[MAX_PATH] = L"";
+
+	GetCurrentDirectory(MAX_PATH, szPath);
+	PathRemoveFileSpec(szPath);
+	lstrcat(szPath, L"..\\Data\\01.Object\\map");
+	Dlg.m_ofn.lpstrInitialDir = szPath;
+
+	if (IDOK == Dlg.DoModal())
+	{
+		CString		strTemp = Dlg.GetPathName().GetString();
+		const TCHAR* pGetPath = strTemp.GetString();
+
+		HANDLE hFile = CreateFile(pGetPath, GENERIC_WRITE, 0, 0,
+			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+
+		if (INVALID_HANDLE_VALUE == hFile)
+			return E_FAIL;
+
+		DWORD dwByte = 0;
+		DWORD	dwStrByte = 0;
+
+		for (int i = 0; i < (UINT)OBJ_TYPE::TYPEEND; ++i)
+		{
+			for (auto& iter : m_vecObjInstances[i])
+			{
+				dwStrByte = sizeof(TCHAR) * (iter->m_strName.GetLength() + 1);
+				WriteFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+				WriteFile(hFile, iter->m_strName.GetString(), dwStrByte, &dwByte, nullptr);
+
+				WriteFile(hFile, &(iter->m_tInfo), sizeof(INFO), &dwByte, nullptr);
+				WriteFile(hFile, &(iter->m_tStat), sizeof(STAT), &dwByte, nullptr);
+				WriteFile(hFile, &(iter->m_eType), sizeof(OBJ_TYPE), &dwByte, nullptr);
+				WriteFile(hFile, &(iter->m_eState), sizeof(OBJ_STATE), &dwByte, nullptr);
+				WriteFile(hFile, &(iter->m_pCurAni->fSecondPerFrame), sizeof(float), &dwByte, nullptr);
+				WriteFile(hFile, &(iter->m_pCurAni->iMaxFrame), sizeof(int), &dwByte, nullptr);
+				WriteFile(hFile, &(iter->m_vWorldPos), sizeof(D3DXVECTOR3), &dwByte, nullptr);
+				/*	WriteFile(hFile, &(iter->m_strObjKey), sizeof(CString), &dwByte, nullptr);
+				WriteFile(hFile, &(iter->m_strStateKey), sizeof(CString), &dwByte, nullptr);*/
+			}
+
+		}
+
+		CloseHandle(hFile);
+	}
 	return E_NOTIMPL;
 }
 
@@ -1573,7 +1715,6 @@ CObj * const CMapTool_Tab2::Instantiate(const CUnit * const _pPrefab, const D3DX
 	return nullptr;
 
 }
-
 
 void CMapTool_Tab2::Mouse_Move()
 {

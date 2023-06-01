@@ -116,11 +116,13 @@ public:
 	// Methods - Control
 	afx_msg void			OnCbnSelchangeMapObjComboType();									// 오브젝트 타입 콤보 박스 선택 항목 변경시
 	afx_msg void			OnNMClickMapObjListboxUnit(NMHDR *pNMHDR, LRESULT *pResult);		// 리스트 컨트롤의 클릭 이벤트 처리 (해당 항목을 m_pCurPrefabObj에 세팅)
-	afx_msg void			OnTimer(UINT_PTR nIDEvent);											// 애니메이션 재생용 타이머
+	afx_msg void			OnTimer				(UINT_PTR nIDEvent);							// 애니메이션 재생용 타이머
 
 	// Methods - General
-	HRESULT					Load_UnitData		(const CString& _strPath);						// 오브젝트 파일에 저장되어 있는 프리팹과, 맵 파일에 저장되어 있는 인스턴스를 로드한다.
-	HRESULT					Save_UnitData		() const;										// 맵을 저장할 때 유닛 데이터도 함께 저장한다.
+	HRESULT					Load_Unit_Prefabs	(const CString& _strPath);						// 오브젝트 파일에 저장되어 있는 '프리팹'을 로드한다.
+	HRESULT					Load_Unit_Instances	(const CString& _strPath);									// 맵 파일에 저장되어 있는 '인스턴스'를 로드한다.
+	HRESULT					Save_Unit_Instances	();							// 오브젝트 '인스턴스'를 저장한다.
+	
 	const UINT				Get_IconID			(const CObj* const _pUnit) const;				// 리스트 컨트롤에 사용할 아이콘 ID 고유 번호를 생성하여 반환
 	HRESULT					Set_ListCtrl		(const OBJ_TYPE& _eType);						// 매개변수로 받은 오브젝트 타입에 맞게 리스트 컨트롤을 업데이트 한다.
 	CObj* const				Instantiate			(const CUnit* const _pPrefab = nullptr, const D3DXVECTOR3& _vWorld = D3DXVECTOR3{});	// 프리팹을 넘겨주면 인스턴스화된 오브젝트를 반환한다.
