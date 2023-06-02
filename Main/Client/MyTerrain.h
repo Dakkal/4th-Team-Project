@@ -19,8 +19,8 @@ public:
 	vector<TILE*>&			Get_VecTile() { return m_vecTile; }
 	vector<list<TILE*>>&	Get_VecAdj() { return m_vecAdj; }
 
-	UINT			Get_TerrianRow() { return m_iRow; }
-	UINT			Get_TerrianCol() { return m_iCol; }
+	int			Get_TerrianRow() { return m_iRow; }
+	int			Get_TerrianCol() { return m_iCol; }
 
 private:
 	HRESULT			LoadTile(const TCHAR* pTilePath);
@@ -31,7 +31,10 @@ private:
 
 	vector<TILE*>		m_vecTile;
 
-	UINT				m_iRow;
-	UINT				m_iCol;
+	int				m_iRow;
+	int				m_iCol;
+
+	float			m_fRealRow;
+	float				m_fRealCol;
 };
 

@@ -6,6 +6,7 @@
 
 
 CMyTerrain::CMyTerrain()
+	: m_fRealRow(0.f), m_fRealCol(0.f)
 {
 }
 
@@ -58,6 +59,23 @@ HRESULT CMyTerrain::Set_Act(TERRIAN_TYPE _eType)
 	//	return E_FAIL;
 
 
+	for (int i = 0; i < m_iCol; ++i)
+	{
+		for (int j = 0; j < m_iRow; ++j)
+		{
+			int iIndex = i * m_iRow + j;
+
+			if (m_vecTile[iIndex]->eType == TERRIAN_TYPE::TYPEEND)
+				continue;
+
+
+			if (m_fRealRow < m_vecTile[iIndex]->vPos.x)
+				m_fRealRow = m_vecTile[iIndex]->vPos.x;
+			if (m_fRealCol < m_vecTile[iIndex]->vPos.x)
+				m_fRealCol = m_vecTile[iIndex]->vPos.y;
+		}
+	}
+
 	return S_OK;
 }
 
@@ -65,9 +83,12 @@ int CMyTerrain::Update(void)
 {
 	Move_Frame();
 
+	float	MaxScrollX = (m_fRealRow * -1) + WINCX;
+	float	MaxScrollY = (m_fRealCol  * -1) + WINCY;
+
 	if (KEYBOARD_SCROLL)
 	{
-		if (0.f >= __super::m_vScroll.x)
+		if (0.f >= __super::m_vScroll.x && MaxScrollX <= __super::m_vScroll.x)
 		{
 			if (GetAsyncKeyState('A'))
 				__super::m_vScroll.x += SCROLL_SPEED * CTimeMgr::Get_Instance()->Get_TimeDelta();
@@ -77,9 +98,11 @@ int CMyTerrain::Update(void)
 
 			if (0.f < __super::m_vScroll.x)
 				__super::m_vScroll.x = 0.f;
+			if (MaxScrollX > __super::m_vScroll.x)
+				__super::m_vScroll.x = MaxScrollX;
 		}
 
-		if (0.f >= __super::m_vScroll.y)
+		if (0.f >= __super::m_vScroll.y && MaxScrollY <= __super::m_vScroll.y)
 		{
 			if (GetAsyncKeyState('W'))
 				__super::m_vScroll.y += SCROLL_SPEED * CTimeMgr::Get_Instance()->Get_TimeDelta();
@@ -89,10 +112,12 @@ int CMyTerrain::Update(void)
 
 			if (0.f < __super::m_vScroll.y)
 				__super::m_vScroll.y = 0.f;
+			if (MaxScrollY  > __super::m_vScroll.y)
+				__super::m_vScroll.y = MaxScrollY;
 		}
 		return 0;
 	}
-	if (0.f >= __super::m_vScroll.x)
+	if (0.f >= __super::m_vScroll.x && MaxScrollX <= __super::m_vScroll.x)
 	{
 		if (10.f > ::Get_Mouse().x)
 			__super::m_vScroll.x += SCROLL_SPEED * CTimeMgr::Get_Instance()->Get_TimeDelta();
@@ -102,9 +127,11 @@ int CMyTerrain::Update(void)
 
 		if (0.f < __super::m_vScroll.x)
 			__super::m_vScroll.x = 0.f;
+		if (MaxScrollX > __super::m_vScroll.x)
+			__super::m_vScroll.x = MaxScrollX;
 	}
 
-	if (0.f >= __super::m_vScroll.y)
+	if (0.f >= __super::m_vScroll.y && MaxScrollY <= __super::m_vScroll.y)
 	{
 		if (10.f > ::Get_Mouse().y)
 			__super::m_vScroll.y += SCROLL_SPEED * CTimeMgr::Get_Instance()->Get_TimeDelta();
@@ -114,6 +141,8 @@ int CMyTerrain::Update(void)
 
 		if (0.f < __super::m_vScroll.y)
 			__super::m_vScroll.y = 0.f;
+		if (MaxScrollY  > __super::m_vScroll.y)
+			__super::m_vScroll.y = MaxScrollY;
 	}
 
 	return 0;
