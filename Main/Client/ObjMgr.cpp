@@ -2,6 +2,7 @@
 #include "ObjMgr.h"
 #include "Obj.h"
 #include "Unit.h"
+#include "MyTerrain.h"
 
 IMPLEMENT_SINGLETON(CObjMgr)
 
@@ -60,6 +61,13 @@ void CObjMgr::Render()
 		for (auto& pObject : m_listObject[i])
 			pObject->Render();
 	}
+
+	CObj* pTerrain = Get_Terrain();
+
+	if (nullptr == pTerrain) return;
+
+	if (!static_cast<CMyTerrain*>(pTerrain)->Get_VecTilePathRender().empty())
+		static_cast<CMyTerrain*>(pTerrain)->Render_PathTile();
 }
 
 void CObjMgr::Release()
