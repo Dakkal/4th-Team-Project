@@ -43,8 +43,8 @@
 //#define		WINCX		1400
 //#define		WINCY		1200
 
-#define		WINCX		1000
-#define		WINCY		700
+#define		WINCX		1200
+#define		WINCY		800
 
 #define		OBJ_NOEVENT		0
 #define		OBJ_DEAD		1

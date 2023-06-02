@@ -16,11 +16,13 @@ CAstarMgr::~CAstarMgr()
 
 void CAstarMgr::Start_Astar(const D3DXVECTOR3 & vStart, const D3DXVECTOR3 & vGoal)
 {
-	Release();
 
+	Release();
 	CObj*	pTerrain = CObjMgr::Get_Instance()->Get_Terrain();
 	vector<TILE*>&	vecTile = dynamic_cast<CMyTerrain*>(pTerrain)->Get_VecTile();
 	vector<TILE*>& vecTilePathRender = dynamic_cast<CMyTerrain*>(pTerrain)->Get_VecTilePathRender();
+	dynamic_cast<CMyTerrain*>(pTerrain)->Init_PathTile();
+
 	if (vecTile.empty())
 		return;
 	

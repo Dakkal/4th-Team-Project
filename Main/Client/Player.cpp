@@ -83,7 +83,6 @@ void CPlayer::Move_Astar()
 
 		if (3.f >= fDistance)
 			BestList.pop_front();
-
 	}
 	else
 	{
