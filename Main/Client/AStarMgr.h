@@ -2,23 +2,22 @@
 
 #include "Include.h"
 
-class CObj;
-class CAStarMgr
+class CAstarMgr
 {
-	DECLARE_SINGLETON(CAStarMgr)
+	DECLARE_SINGLETON(CAstarMgr)
 
-public:
-	CAStarMgr();
-	~CAStarMgr();
+private:
+	CAstarMgr();
+	~CAstarMgr();
 
 public:
 	list<TILE*>&	Get_BestList() { return m_BestList; }
 
 public:
-	void	Start_AStar(const VECTOR& vStart, const VECTOR& vGaol);
+	void		Start_Astar(const D3DXVECTOR3& vStart, const D3DXVECTOR3& vGoal);
 
-	bool	Make_Route(int iStartIdx, int iGoalIdx);
-	void	Make_BestRoute(int iStartIdx, int iGoalIdx);
+	bool		Make_Route(int iStartIdx, int iGoalIdx);
+	void		Make_BestList(int iStartIdx, int iGoalIdx);
 
 public:
 	bool		Picking_Dot(const D3DXVECTOR3& vPos, const int& iIndex);
@@ -34,11 +33,6 @@ private:
 	list<int>		m_CloseList;
 	list<TILE*>		m_BestList;
 
-	int				m_iStartIdx = 0;
-
-	CObj*					m_pTerrian = nullptr;
-	vector<TILE*>			m_vecTile;
-	vector<list<TILE*>>		m_vecAdj;
-
+	int				m_iStartIdx;
 };
 

@@ -1,84 +1,145 @@
 #include "stdafx.h"
-#include "AStarMgr.h"
+#include "AstarMgr.h"
 #include "ObjMgr.h"
 #include "MyTerrain.h"
 
-IMPLEMENT_SINGLETON(CAStarMgr)
+IMPLEMENT_SINGLETON(CAstarMgr)
 
-CAStarMgr::CAStarMgr()
+CAstarMgr::CAstarMgr() : m_iStartIdx(0)
 {
 }
 
-
-CAStarMgr::~CAStarMgr()
+CAstarMgr::~CAstarMgr()
 {
 	Release();
 }
 
-void CAStarMgr::Start_AStar(const VECTOR & vStart, const VECTOR & vGaol)
+void CAstarMgr::Start_Astar(const D3DXVECTOR3 & vStart, const D3DXVECTOR3 & vGoal)
 {
 	Release();
 
-	m_pTerrian = CObjMgr::Get_Instance()->Get_Terrain();
-	m_vecTile = static_cast<CMyTerrain*>(m_pTerrian)->Get_VecTile();
-	m_vecAdj = static_cast<CMyTerrain*>(m_pTerrian)->Get_VecAdj();
-
-	if (m_vecTile.empty())
+	CObj*	pTerrain = CObjMgr::Get_Instance()->Get_Terrain();
+	vector<TILE*>&	vecTile = dynamic_cast<CMyTerrain*>(pTerrain)->Get_VecTile();
+	vector<TILE*>& vecTilePathRender = dynamic_cast<CMyTerrain*>(pTerrain)->Get_VecTilePathRender();
+	if (vecTile.empty())
 		return;
-
+	
 	m_iStartIdx = Get_TileIndex(vStart);
 
-	int iGoalIdx = Get_TileIndex(vGaol);
+	int iGoalIdx = Get_TileIndex(vGoal);
 
-	if (0 > m_iStartIdx || 0 > iGoalIdx || (UINT)m_iStartIdx >= m_vecTile.size())
+	if (0 > m_iStartIdx || 0 > iGoalIdx || (size_t)m_iStartIdx >= vecTile.size() || (size_t)iGoalIdx >= vecTile.size())
 		return;
 
 	if (m_iStartIdx == iGoalIdx)
 		return;
 
-	if (NONETILE == m_vecTile[iGoalIdx]->byOption)
+	if (0 != vecTile[iGoalIdx]->byOption)
 		return;
 
+	vecTilePathRender[m_iStartIdx]->byDrawID = TILE_PATH_RENDER_OPEN;
+
 	if (Make_Route(m_iStartIdx, iGoalIdx))
-		Make_BestRoute(m_iStartIdx, iGoalIdx);
+		Make_BestList(m_iStartIdx, iGoalIdx);
 }
 
-bool CAStarMgr::Make_Route(int iStartIdx, int iGoalIdx)
+bool CAstarMgr::Make_Route(int iStartIdx, int iGoalIdx)
 {
-	if (m_vecTile.empty() || m_vecAdj.empty())
+	CObj* pTerrain = CObjMgr::Get_Instance()->Get_Terrain();
+	vector<TILE*>& vecTile = dynamic_cast<CMyTerrain*>(pTerrain)->Get_VecTile();
+	vector<list<TILE*>>& vecAdj = dynamic_cast<CMyTerrain*>(pTerrain)->Get_VecAdj();
+	vector<TILE*>& vecTilePathRender = dynamic_cast<CMyTerrain*>(pTerrain)->Get_VecTilePathRender();
+
+	if (vecTile.empty() || vecAdj.empty())
 		return false;
 
 	if (!m_OpenList.empty())
 		m_OpenList.pop_front();
 
 	m_CloseList.push_back(iStartIdx);
+	//vecTilePathRender[iStartIdx]->byDrawID = 2;
 
-	for (auto& iter : m_vecAdj[iStartIdx])
+	for (auto& iter : vecAdj[iStartIdx])
 	{
+		if (iGoalIdx == iter->iIndex)
+		{
+			iter->iParentIdx = iStartIdx;
+			return true;
+		}
 
-
-
+		if (false == Check_Close(iter->iIndex) &&
+			false == Check_Open(iter->iIndex))
+		{
+			iter->iParentIdx = iStartIdx;
+			m_OpenList.push_back(iter->iIndex);
+			vecTilePathRender[iter->iIndex]->byDrawID = TILE_PATH_RENDER_OPEN;
+		}
 
 	}
 
+	if (m_OpenList.empty())
+		return false;
 
+	int iOriginStart = m_iStartIdx;
+
+	m_OpenList.sort([&vecTile, &iGoalIdx, &iOriginStart](int Dst, int Src) ->bool {
+
+		D3DXVECTOR3		vPCost1 = vecTile[iOriginStart]->vPos - vecTile[Dst]->vPos;
+		D3DXVECTOR3		vPCost2 = vecTile[iOriginStart]->vPos - vecTile[Src]->vPos;
+
+		D3DXVECTOR3		vGCost1 = vecTile[iGoalIdx]->vPos - vecTile[Dst]->vPos;
+		D3DXVECTOR3		vGCost2 = vecTile[iGoalIdx]->vPos - vecTile[Src]->vPos;
+
+		float	fCost1 = D3DXVec3Length(&vPCost1) + D3DXVec3Length(&vGCost1);
+		float	fCost2 = D3DXVec3Length(&vPCost2) + D3DXVec3Length(&vGCost2);
+
+		return fCost1 < fCost2;
+	});
+
+	return Make_Route(m_OpenList.front(), iGoalIdx);
 }
 
-void CAStarMgr::Make_BestRoute(int iStartIdx, int iGoalIdx)
+void CAstarMgr::Make_BestList(int iStartIdx, int iGoalIdx)
 {
+	CObj* pTerrain = CObjMgr::Get_Instance()->Get_Terrain();
+	vector<TILE*>& vecTile = dynamic_cast<CMyTerrain*>(pTerrain)->Get_VecTile();
+	vector<TILE*>& vecTilePathRender = dynamic_cast<CMyTerrain*>(pTerrain)->Get_VecTilePathRender();
+
+	if (vecTile.empty())
+		return;
+
+	m_BestList.push_front(vecTile[iGoalIdx]);
+	vecTilePathRender[iGoalIdx]->byDrawID = TILE_PATH_RENDER_BEST;
+
+	int iRouteIdx = vecTile[iGoalIdx]->iParentIdx;
+
+	while (true)
+	{
+		if (iRouteIdx == iStartIdx)
+			break;
+
+		m_BestList.push_front(vecTile[iRouteIdx]);
+		vecTilePathRender[iRouteIdx]->byDrawID = TILE_PATH_RENDER_BEST;
+
+		iRouteIdx = vecTile[iRouteIdx]->iParentIdx;
+
+	}
 }
 
-bool CAStarMgr::Picking_Dot(const D3DXVECTOR3 & vPos, const int & iIndex)
+bool CAstarMgr::Picking_Dot(const D3DXVECTOR3 & vPos, const int & iIndex)
 {
-	if (m_vecTile.empty())
+	CObj*	pTerrain = CObjMgr::Get_Instance()->Get_Terrain();
+	vector<TILE*>&	vecTile = dynamic_cast<CMyTerrain*>(pTerrain)->Get_VecTile();
+
+	if (vecTile.empty())
 		return false;
 
 	D3DXVECTOR3		vPoint[4]{
 
-		{ m_vecTile[iIndex]->vPos.x,m_vecTile[iIndex]->vPos.y + (TILECY / 2.f), 0.f },
-		{ m_vecTile[iIndex]->vPos.x + (TILECX / 2.f),m_vecTile[iIndex]->vPos.y, 0.f },
-		{ m_vecTile[iIndex]->vPos.x,m_vecTile[iIndex]->vPos.y - (TILECY / 2.f), 0.f },
-		{ m_vecTile[iIndex]->vPos.x - (TILECX / 2.f),m_vecTile[iIndex]->vPos.y , 0.f }
+		{ vecTile[iIndex]->vPos.x,vecTile[iIndex]->vPos.y + (TILECY / 2.f), 0.f },
+		{ vecTile[iIndex]->vPos.x + (TILECX / 2.f),vecTile[iIndex]->vPos.y, 0.f },
+		{ vecTile[iIndex]->vPos.x,vecTile[iIndex]->vPos.y - (TILECY / 2.f), 0.f },
+		{ vecTile[iIndex]->vPos.x - (TILECX / 2.f),vecTile[iIndex]->vPos.y , 0.f }
 	};
 
 	D3DXVECTOR3			vDir[4]{
@@ -119,12 +180,15 @@ bool CAStarMgr::Picking_Dot(const D3DXVECTOR3 & vPos, const int & iIndex)
 	return true;
 }
 
-int CAStarMgr::Get_TileIndex(const D3DXVECTOR3 & vPos)
+int CAstarMgr::Get_TileIndex(const D3DXVECTOR3 & vPos)
 {
-	if (m_vecTile.empty())
+	CObj*	pTerrain = CObjMgr::Get_Instance()->Get_Terrain();
+	vector<TILE*>&	vecTile = dynamic_cast<CMyTerrain*>(pTerrain)->Get_VecTile();
+
+	if (vecTile.empty())
 		return -1;
 
-	for (size_t index = 0; index < m_vecTile.size(); ++index)
+	for (size_t index = 0; index < vecTile.size(); ++index)
 	{
 		if (Picking_Dot(vPos, index))
 		{
@@ -135,14 +199,15 @@ int CAStarMgr::Get_TileIndex(const D3DXVECTOR3 & vPos)
 	return -1;
 }
 
-void CAStarMgr::Release()
+void CAstarMgr::Release()
 {
 	m_CloseList.clear();
 	m_OpenList.clear();
+
 	m_BestList.clear();
 }
 
-bool CAStarMgr::Check_Close(int iIndex)
+bool CAstarMgr::Check_Close(int iIndex)
 {
 	for (int& iCloseIdx : m_CloseList)
 	{
@@ -153,15 +218,13 @@ bool CAStarMgr::Check_Close(int iIndex)
 	return false;
 }
 
-bool CAStarMgr::Check_Open(int iIndex)
+bool CAstarMgr::Check_Open(int iIndex)
 {
 	for (int& iOpenIdx : m_OpenList)
 	{
 		if (iIndex == iOpenIdx)
 			return true;
 	}
-
-
 
 	return false;
 }

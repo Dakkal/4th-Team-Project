@@ -16,6 +16,7 @@ HRESULT CStage::Ready_Scene()
 {
 #pragma region PUBLIC
 #pragma endregion
+
 #pragma region HEEJUN
 	CObj*	pTerrian = new CMyTerrain;
 	if (nullptr == pTerrian)
@@ -24,6 +25,7 @@ HRESULT CStage::Ready_Scene()
 
 	CObjMgr::Get_Instance()->Add_Object(CObjMgr::TERRAIN, pTerrian);
 #pragma endregion
+
 #pragma region CHAN
 
 	if (FAILED(CObjMgr::Get_Instance()->Load_Unit_Instances(L"../Data/01.Object/map/Map_Instances.dat")))
@@ -33,6 +35,7 @@ HRESULT CStage::Ready_Scene()
 	if (nullptr == pPlayer)
 		return E_FAIL;
 	pPlayer->Initialize();
+
 	CObjMgr::Get_Instance()->Add_Object(CObjMgr::PLAYER, pPlayer);
 #pragma endregion
 

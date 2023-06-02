@@ -8,30 +8,38 @@ public:
 
 public:
 	// CObj을(를) 통해 상속됨
-	virtual HRESULT Initialize(void) override;
-	virtual int Update(void) override;
-	virtual void Late_Update(void) override;
-	virtual void Render(void) override;
-	virtual void Release(void) override;
+	virtual HRESULT			Initialize(void)	override;
+	virtual int				Update(void)		override;
+	virtual void			Late_Update(void)	override;
+	virtual void			Render(void)		override;
+	virtual void			Release(void)		override;
 
-	HRESULT			Set_Act(TERRIAN_TYPE _eType);
+public:
+	vector<TILE*>&			Get_VecTile()				{ return m_vecTile; }
+	vector<list<TILE*>>&	Get_VecAdj()				{ return m_vecAdj; }
+	vector<TILE*>&			Get_VecTilePathRender()		{ return m_vecTilePathRender; }
 
-	vector<TILE*>&			Get_VecTile() { return m_vecTile; }
-	vector<list<TILE*>>&	Get_VecAdj() { return m_vecAdj; }
+	UINT					Get_TerrianRow()			{ return m_iRow; }
+	UINT					Get_TerrianCol()			{ return m_iCol; }
 
-	UINT			Get_TerrianRow() { return m_iRow; }
-	UINT			Get_TerrianCol() { return m_iCol; }
+	HRESULT					Set_Act(TERRIAN_TYPE _eType);
+
+public:
+	void					Render_PathTile();
+	void					Init_PathTile();
 
 private:
-	HRESULT			LoadTile(const TCHAR* pTilePath);
-	HRESULT			Ready_Adj();
+	HRESULT					LoadTile(const TCHAR* pTilePath);
+	HRESULT					Ready_Adjacency();
+	HRESULT					Ready_PathRender();
 
 private:
-	vector<list<TILE*>> m_vecAdj;
+	vector<list<TILE*>>		m_vecAdj;
 
-	vector<TILE*>		m_vecTile;
+	vector<TILE*>			m_vecTile;
+	vector<TILE*>			m_vecTilePathRender;
 
-	UINT				m_iRow;
-	UINT				m_iCol;
+	UINT					m_iRow;
+	UINT					m_iCol;
 };
 

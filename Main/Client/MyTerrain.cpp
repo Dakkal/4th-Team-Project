@@ -54,12 +54,17 @@ HRESULT CMyTerrain::Set_Act(TERRIAN_TYPE _eType)
 		break;
 	}
 
-	//if (FAILED(Ready_Adj()))
-	//	return E_FAIL;
+	if (FAILED(Ready_Adjacency()))
+		return E_FAIL;
+
+	if (FAILED(Ready_PathRender()))
+		return E_FAIL;
+
 
 
 	return S_OK;
 }
+
 
 int CMyTerrain::Update(void)
 {
@@ -191,11 +196,97 @@ void CMyTerrain::Render(void)
 	}
 }
 
+void CMyTerrain::Render_PathTile()
+{
+	D3DXMATRIX		matWorld, matTrans;
+
+	int iScrollX = (int)__super::m_vScroll.x;
+
+
+	int		iCullX = int(-m_vScroll.x) / TILECX;
+	int		iCullY = int(-m_vScroll.y) / (TILECY / 2);
+
+	int		iCullEndX = WINCX / (TILECX)+3;
+	int		iCullEndY = WINCY / (TILECY / 2) + 3;
+
+	for (int i = iCullY; i < iCullY + iCullEndY; ++i)
+	{
+		for (int j = iCullX; j < iCullX + iCullEndX; ++j)
+		{
+			int		iIndex = i * m_iRow + j;
+
+			if (0 > iIndex || (size_t)iIndex >= m_vecTilePathRender.size())
+				continue;
+
+			D3DXMatrixIdentity(&matWorld);
+			D3DXMatrixTranslation(&matTrans,
+				m_vecTilePathRender[iIndex]->vPos.x + m_vScroll.x,
+				m_vecTilePathRender[iIndex]->vPos.y + m_vScroll.y,
+				m_vecTilePathRender[iIndex]->vPos.z);
+
+			matWorld = matTrans;
+
+			if (m_vecTile[iIndex]->eType == TERRIAN_TYPE::TYPEEND)
+				continue;
+
+		/*	switch (m_vecTile[iIndex]->eType)
+			{
+			case TERRIAN_TYPE::ACT1:
+				m_wstrStateKey = L"Act1";
+				break;
+			case TERRIAN_TYPE::ACT2:
+				m_wstrStateKey = L"Act2";
+				break;
+			case TERRIAN_TYPE::ACT3:
+				m_wstrStateKey = L"Act3";
+				break;
+			default:
+				break;
+			}*/
+
+
+			if (m_vecTilePathRender[iIndex]->byDrawID == TILE_PATH_RENDER_CLOSE) continue;
+
+			const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Tile", L"Tool", m_vecTilePathRender[iIndex]->byDrawID);
+
+			//const TEXINFO*		pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(m_wstrObjKey.c_str(), m_wstrStateKey.c_str(), m_vecTile[iIndex]->byDrawID);
+			if (nullptr == pTexInfo)
+				continue;
+
+
+			float		fX = pTexInfo->tImgInfo.Width / 2.f;
+			float		fY = pTexInfo->tImgInfo.Height / 2.f;
+
+			CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
+
+			CDevice::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture,
+				nullptr,
+				&D3DXVECTOR3(fX, fY, 0.f),
+				nullptr,
+				D3DCOLOR_ARGB(255, 255, 255, 255));
+		}
+	}
+}
+
+void CMyTerrain::Init_PathTile()
+{
+	for (int i = 0; i < m_vecTilePathRender.size(); ++i)
+	{
+		if (nullptr == m_vecTilePathRender[i]) continue;
+			m_vecTilePathRender[i]->byDrawID = TILE_PATH_RENDER_CLOSE;
+	}
+}
+
 void CMyTerrain::Release(void)
 {
 	for_each(m_vecTile.begin(), m_vecTile.end(), CDeleteObj());
 	m_vecTile.clear();
 	m_vecTile.shrink_to_fit();
+
+
+	for_each(m_vecTilePathRender.begin(), m_vecTilePathRender.end(), CDeleteObj());
+	m_vecTilePathRender.clear();
+	m_vecTilePathRender.shrink_to_fit();
 }
 
 HRESULT CMyTerrain::LoadTile(const TCHAR* pTilePath)
@@ -248,8 +339,9 @@ HRESULT CMyTerrain::LoadTile(const TCHAR* pTilePath)
 	return S_OK;
 }
 
-HRESULT CMyTerrain::Ready_Adj()
+HRESULT CMyTerrain::Ready_Adjacency()
 {
+	
 	if (m_vecTile.empty())
 		return E_FAIL;
 
@@ -261,6 +353,7 @@ HRESULT CMyTerrain::Ready_Adj()
 		{
 			int iIndex = i * m_iRow + j;
 
+			/*
 			//аб
 			if (0 != (iIndex % (m_iRow * 2)))
 			{
@@ -297,6 +390,8 @@ HRESULT CMyTerrain::Ready_Adj()
 
 				}
 			}
+			*/
+
 			//аб╩С
 			if ((0 != i) && 0 != (iIndex % (m_iRow * 2)))
 			{
@@ -350,10 +445,34 @@ HRESULT CMyTerrain::Ready_Adj()
 
 	}
 
-
-
-
 	return S_OK;
+	
+
+
+}
+
+HRESULT CMyTerrain::Ready_PathRender()
+{
+	if (m_vecTile.empty())
+		return E_FAIL;
+
+	const int iSize = m_vecTile.size();
+
+	m_vecTilePathRender.reserve(iSize);
+
+	for (int i = 0; i < iSize; ++i)
+	{
+		TILE* pTile = new TILE;
+
+		if (nullptr == pTile) continue;
+
+		pTile->vPos = m_vecTile[i]->vPos;
+		pTile->vSize = m_vecTile[i]->vSize;
+		pTile->byDrawID = TILE_PATH_RENDER_CLOSE;
+		m_vecTilePathRender.push_back(pTile);
+	}
+
+	return E_NOTIMPL;
 }
 
 

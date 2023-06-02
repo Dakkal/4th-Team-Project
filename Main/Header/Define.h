@@ -17,13 +17,19 @@
 #define		UNIT_MAX_AD		100.f
 #define		UNIT_MAX_SPEED	500.f
 
+#define		TILE_PATH_RENDER_CLOSE	2
+#define		TILE_PATH_RENDER_BEST	3
+#define		TILE_PATH_RENDER_OPEN	4
+
+#define		UNIT_DEFALUT_SPEED		300.f
+
 #pragma endregion
 
 #define		SCROLL_SPEED	500.f
 
 #define		CONSOLE_OUT		false
 
-#define		KEYBOARD_SCROLL false
+#define		KEYBOARD_SCROLL true
 
 #define		TAB_HEIGHT	30
 #define		TAB_WIDTH	10

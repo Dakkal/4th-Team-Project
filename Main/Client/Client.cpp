@@ -46,7 +46,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENT));
 
 
-	if (CONSOLE_OUT)
+	/*if (CONSOLE_OUT)
 	{
 #ifdef UNICODE
 #pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
@@ -54,7 +54,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 #pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 #endif
 
-	}
+	}*/
 	MSG msg;
 	msg.message = WM_NULL;
 

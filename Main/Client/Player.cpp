@@ -2,6 +2,11 @@
 #include "Player.h"
 #include "TextureMgr.h"
 #include "Device.h"
+#include "TimeMgr.h"
+#include "AStarMgr.h"
+#include "ObjMgr.h"
+#include "MyTerrain.h"
+
 CPlayer::CPlayer()
 {
 }
@@ -23,6 +28,13 @@ HRESULT CPlayer::Initialize(void)
 }
 int CPlayer::Update(void)
 {
+	if (GetAsyncKeyState(VK_LBUTTON))
+	{
+		CAstarMgr::Get_Instance()->Start_Astar(m_tInfo.vPos, Get_Mouse() - __super::m_vScroll);
+	}
+
+	Move_Astar();
+
 	D3DXMATRIX matScale, matTrans;
 	D3DXMatrixIdentity(&m_tInfo.matWorld);
 	D3DXMatrixScaling(&matScale, m_tInfo.vSize.x, m_tInfo.vSize.y, m_tInfo.vSize.z);
@@ -31,6 +43,7 @@ int CPlayer::Update(void)
 		m_tInfo.vPos.y + __super::m_vScroll.y,
 		m_tInfo.vPos.z);
 	m_tInfo.matWorld = matScale * matTrans;
+
 	return 0;
 }
 void CPlayer::Late_Update(void)
@@ -52,4 +65,29 @@ void CPlayer::Render(void)
 }
 void CPlayer::Release(void)
 {
+}
+
+void CPlayer::Move_Astar()
+{
+	list<TILE*>& BestList = CAstarMgr::Get_Instance()->Get_BestList();
+	CObj* pTerrain = CObjMgr::Get_Instance()->Get_Terrain();
+
+	if (!BestList.empty())
+	{
+		D3DXVECTOR3		vDir = BestList.front()->vPos - m_tInfo.vPos;
+
+		float fDistance = D3DXVec3Length(&vDir);
+		D3DXVec3Normalize(&vDir, &vDir);
+
+		m_tInfo.vPos += vDir * UNIT_DEFALUT_SPEED * CTimeMgr::Get_Instance()->Get_TimeDelta();
+
+		if (3.f >= fDistance)
+			BestList.pop_front();
+
+	}
+	else
+	{
+		if (nullptr != pTerrain)
+			dynamic_cast<CMyTerrain*>(pTerrain)->Init_PathTile();
+	}
 }
