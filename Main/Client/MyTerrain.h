@@ -42,7 +42,7 @@ private:
 
 	float					m_fRealRow;
 	float					m_fRealCol;
-	UINT					m_iRow;
-	UINT					m_iCol;
+	int					m_iRow;
+	int					m_iCol;
 };
 

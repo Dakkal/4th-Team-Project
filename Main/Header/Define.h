@@ -10,12 +10,18 @@
 
 #pragma region CHAN
 
-#define		UNIT_CX		100
-#define		UNIT_CY		100
+//#define		WINCX					1400
+//#define		WINCY					1200
 
-#define		UNIT_MAX_HP		300.f
-#define		UNIT_MAX_AD		100.f
-#define		UNIT_MAX_SPEED	500.f
+#define		WINCX				1200
+#define		WINCY				800
+
+#define		UNIT_CX					100
+#define		UNIT_CY					100
+
+#define		UNIT_MAX_HP				300.f
+#define		UNIT_MAX_AD				100.f
+#define		UNIT_MAX_SPEED			500.f
 
 #define		TILE_PATH_RENDER_CLOSE	2
 #define		TILE_PATH_RENDER_BEST	3
@@ -25,9 +31,9 @@
 
 #pragma endregion
 
-#define		SCROLL_SPEED	500.f
+#define		SCROLL_SPEED			500.f
 
-#define		CONSOLE_OUT		false
+#define		CONSOLE_OUT				false
 
 #define		KEYBOARD_SCROLL true
 
@@ -37,14 +43,6 @@
 
 #define		TOOL_CX		1000
 
-//#define		WINCX		1280
-//#define		WINCY		720
-
-//#define		WINCX		1400
-//#define		WINCY		1200
-
-#define		WINCX		1200
-#define		WINCY		800
 
 #define		OBJ_NOEVENT		0
 #define		OBJ_DEAD		1
